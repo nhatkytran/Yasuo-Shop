@@ -1,0 +1,29 @@
+{
+  "name": "yasuo-api",
+  "version": "1.0.0",
+  "description": "This API provides programmatic access to a vast collection of merchandise related to the popular game League of Legends (LoL).  Integrate this API into your application to offer users a convenient way to browse, search, and potentially purchase officially licensed LoL merchandise.",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "NODE_ENV=development ts-node-dev --inspect --respawn --transpile-only src/server.ts",
+    "dev-data": "ts-node-dev --inspect --transpile-only dev-data/import-dev-data",
+    "test": "jest --detectOpenHandles"
+  },
+  "dependencies": {
+    "config": "^3.3.11",
+    "dayjs": "^1.11.10",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1",
+    "morgan": "^1.10.0",
+    "pino": "^8.20.0",
+    "pino-pretty": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/config": "^3.3.4",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  }
+}

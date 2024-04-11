@@ -1,0 +1,32 @@
+{
+  "name": "Jimei Palace Aatrox 1/6 Scale Statue",
+  "price": {
+    "default": 489.99
+  },
+  "editions": ["limited", "preorder"],
+  "images": [
+    "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf457399168c2b817/659873e5dc766225e97ebf22/CPX_JIMEIAatrox_Ecomm_1.png",
+    "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt89dfd42e7f74b53c/659873ecb177905168d03a9e/CPX_JIMEIAatrox_Ecomm_2.png",
+    "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt22ca74b9ff5f11e1/659873ef254eff1860747d10/CPX_JIMEIAatrox_Ecomm_3.png",
+    "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf91e46d4e3487a00/659873efb782f004d658660c/CPX_JIMEIAatrox_Ecomm_4.png",
+    "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf81f7dcca5d4645b/659873f0a2c41f7aeddb2298/CPX_JIMEIAatrox_Ecomm_5.png",
+    "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt220cca1809cd7e17/659873efc11c0f6728cf907d/CPX_JIMEIAatrox_Ecomm_6.png"
+  ],
+  "information": {
+    "type": "statue",
+    "warning": "This product is a collector's item intended for ages 14+",
+    "quote": "Now, hear the silence of annihilation.",
+    "descriptions": [
+      "Once a mighty Shuriman champion remade as an Ascended, Aatrox helped halt the onslaught of the Void during the Icathian rebellion. However, in time, with no monarch or existential threat to defend against, Aatrox and the other Sunborn began to clash in a war for the ruins of the world.",
+      "Caged into his own sword for centuries by Targonian intervention, Aatrox was finally freed when a foolish mortal attempted to wield the blade.",
+      "Now set on destroying all of creation in an attempt to end his suffering, The Darkin Blade brings war and death wherever he goes."
+    ],
+    "features": ["LED sword, eyes, and wings lighting effect"],
+    "approximateDimensions": {
+      "height": [18.1, 46],
+      "width": [14.9, 37.9],
+      "depth": [12.7, 32.2]
+    },
+    "funFact": "Made in partnership with our friends at Jimei Palace."
+  }
+}
