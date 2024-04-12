@@ -11,12 +11,13 @@ import Product from '../src/models/product.model';
 const getData = (fileName: string) =>
   JSON.parse(fs.readFileSync(path.join(__dirname, fileName), 'utf-8'));
 
-const productsData = getData('products.json');
+const productsData = getData('./products/products.json');
+const productsEnUsData = getData('./products/products.en-us.json');
 
 // yarn dev-data --import
 const importData = async () => {
   try {
-    await Promise.all([Product.create(productsData)]);
+    await Promise.all([Product.create({ ...productsData, productsEnUsData })]);
 
     console.log('Data import - Successful!');
   } catch (error) {

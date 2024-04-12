@@ -1,14 +1,145 @@
-const regex = /src="([^"]+)"/g;
+'use strict';
 
-let sentence = `
-<div class="swiper-wrapper"><div class="swiper-slide swiper-slide-active swiper-slide-thumb-active" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu is-loaded"><img width="96" height="96" src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf457399168c2b817/659873e5dc766225e97ebf22/CPX_JIMEIAatrox_Ecomm_1.png?auto=webp&amp;width=105&amp;quality=85" alt="CPX JIMEIAatrox_Ecomm_1" class="sc-aXZVg kajdYD"></div></div><div class="swiper-slide swiper-slide-next" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu is-loaded"><img width="96" height="96" src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt89dfd42e7f74b53c/659873ecb177905168d03a9e/CPX_JIMEIAatrox_Ecomm_2.png?auto=webp&amp;width=105&amp;quality=85" alt="CPX JIMEIAatrox_Ecomm_2" class="sc-aXZVg kajdYD"></div></div><div class="swiper-slide" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu is-loaded"><img width="96" height="96" src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt22ca74b9ff5f11e1/659873ef254eff1860747d10/CPX_JIMEIAatrox_Ecomm_3.png?auto=webp&amp;width=105&amp;quality=85" alt="CPX JIMEIAatrox_Ecomm_3" class="sc-aXZVg kajdYD"></div></div><div class="swiper-slide" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu is-loaded"><img width="96" height="96" src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf91e46d4e3487a00/659873efb782f004d658660c/CPX_JIMEIAatrox_Ecomm_4.png?auto=webp&amp;width=105&amp;quality=85" alt="CPX JIMEIAatrox_Ecomm_4" class="sc-aXZVg kajdYD"></div></div><div class="swiper-slide" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu is-loaded"><img width="96" height="96" src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf81f7dcca5d4645b/659873f0a2c41f7aeddb2298/CPX_JIMEIAatrox_Ecomm_5.png?auto=webp&amp;width=105&amp;quality=85" alt="CPX JIMEIAatrox_Ecomm_5" class="sc-aXZVg kajdYD"></div></div><div class="swiper-slide" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu is-loaded"><img width="96" height="96" src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt220cca1809cd7e17/659873efc11c0f6728cf907d/CPX_JIMEIAatrox_Ecomm_6.png?auto=webp&amp;width=105&amp;quality=85" alt="CPX JIMEIAatrox_Ecomm_6" class="sc-aXZVg kajdYD"></div></div><div class="swiper-slide" style="height: 104.6px; margin-bottom: 22px;"><div class="theme__StyledAspectRatio-sc-35h5ms-25 dgakzO style__StyledLazyImage-sc-16qs2ng-0 ezUXQu"><div class="style__StyledLazyImageLoader-sc-16qs2ng-1 bNEMMD lazy-image-loader"></div></div></div></div>
-`;
+// This API are created by on data of this website:
+// So this code is create to get data from HTML faster
 
-const matches = [];
-let match;
+// Helpers
 
-while ((match = regex.exec(sentence)) !== null) {
-  matches.push(match[1]);
+const getContentOf = selector => {
+  return document
+    .querySelector(selector)
+    ?.textContent.replace(/\n\s+/g, ' ')
+    .trim();
+};
+
+const getContentsOf = (selector, conditions = {}) => {
+  let els = [...document.querySelectorAll(selector)];
+  if (!els.length) return;
+
+  const { filterCond } = conditions;
+
+  if (filterCond) els = els.filter(filterCond);
+
+  return els.map(el => el.textContent.replace(/\n\s+/g, ' ').trim());
+};
+
+// Selectors
+
+const productName = getContentOf('h1.theme__StyledHeadingH4-sc-35h5ms-9');
+const price = Number(
+  getContentOf('.theme__StyleLabelBase-sc-35h5ms-16').replace('$', '')
+);
+// editions
+// images
+
+// type
+// optional
+const sizes = getContentsOf(
+  '.style__StyledOptionBody-sc-1853n6s-2 button span'
+);
+// warning
+// shippingDays
+// quote
+const descriptions = getContentsOf(
+  'div[aria-labelledby="product-description"] p',
+  { filterCond: paragraph => !paragraph.querySelector('strong') }
+);
+// approximateDimensions
+// funFact
+// series
+
+let materials = [...document.querySelectorAll('p strong')];
+if (materials.length) {
+  materials = materials.find(strong => strong.textContent === 'Materials:');
+  if (materials) {
+    materials = materials.parentElement.nextElementSibling; // ul
+    materials = [...materials.querySelectorAll('li')].map(li =>
+      li.textContent.replace(/\n\s+/g, ' ').trim()
+    );
+  }
 }
 
-console.log(JSON.stringify(matches.map((link) => link.split("?")[0])));
+// Start adding information
+
+const product = {};
+
+productName && (product.name = productName);
+price && (product.price = { default: price });
+// editions
+// images
+
+product.information = {};
+
+// type
+// optional
+sizes.length && (product.information.sizes = sizes);
+// warning
+// shippingDays
+// quote
+descriptions.length && (product.information.descriptions = descriptions);
+// approximateDimensions
+// funFact
+// series
+materials.length && (product.information.materials = materials);
+
+// properties enum
+
+(type => {
+  product.information.type = type;
+})(
+  {
+    figure: 'figure',
+    game: 'game',
+    cloth: 'cloth',
+    item: 'item',
+  }.cloth
+);
+
+// images
+const images = [...document.querySelectorAll('.swiper-wrapper img')].map(
+  image => image.getAttribute('src').split('?')[0]
+);
+
+product.images = images;
+
+// Result
+
+console.log(product);
+
+const orders = ['name', 'price', 'editions', 'images'];
+// 'information'
+const ordersInformation = [
+  'type',
+  'optional',
+  'sizes',
+  'warning',
+  'shippingDays',
+  'quote',
+  'descriptions',
+  'features',
+  'approximateDimensions',
+  'funFact',
+  'series',
+  'materials',
+];
+
+let finalJSON = '{';
+
+orders.forEach(order => {
+  if (product.hasOwnProperty(order)) {
+    finalJSON += `"${order}": ${JSON.stringify(product[order])},`;
+  }
+});
+
+finalJSON += `"information": {`;
+
+ordersInformation.forEach(order => {
+  if (product.information.hasOwnProperty(order)) {
+    finalJSON += `"${order}": ${JSON.stringify(product.information[order])},`;
+  }
+});
+
+finalJSON += '}';
+finalJSON += '}';
+
+console.log(finalJSON);

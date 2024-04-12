@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Jimei Palace Aatrox 1/6 Scale Statue",
+    "price": { "default": 489.99 },
+    "editions": ["limited", "preorder"],
+    "information": {
+      "type": "figure",
+      "category": "features",
+      "warning": "This product is a collector's item intended for ages 14+",
+      "quote": "Now, hear the silence of annihilation.",
+      "descriptions": [
+        "Once a mighty Shuriman champion remade as an Ascended, Aatrox helped halt the onslaught of the Void during the Icathian rebellion. However, in time, with no monarch or existential threat to defend against, Aatrox and the other Sunborn began to clash in a war for the ruins of the world.",
+        "Caged into his own sword for centuries by Targonian intervention, Aatrox was finally freed when a foolish mortal attempted to wield the blade.",
+        "Now set on destroying all of creation in an attempt to end his suffering, The Darkin Blade brings war and death wherever he goes."
+      ],
+      "features": ["LED sword, eyes, and wings lighting effect"],
+      "approximateDimensions": {
+        "height": [18.1, 46],
+        "width": [14.9, 37.9],
+        "depth": [12.7, 32.2]
+      },
+      "funFact": "Made in partnership with our friends at Jimei Palace."
+    }
+  },
+  {
+    "name": "Blood Moon Aatrox Figure",
+    "price": { "default": 29.99 },
+    "editions": ["special"],
+    "information": {
+      "type": "figure",
+      "optional": {
+        "title": "Blood Moon Aatrox Merch Summoner Icon",
+        "image": "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt19b858380d96d280/63ebdc3d6495981254659086/BloodMoonAatrox_final_2560x2560.jpg?width=104"
+      },
+      "quote": "I am your reckoner, mortals.",
+      "descriptions": [
+        "Blood Moon Aatrox approaches as the World Ender as he lands in the Series 4 line as Special Edition #05."
+      ],
+      "features": [
+        "Aatrox in his Blood Moon skin",
+        "Collectible Series 4 box",
+        "Exclusive League of Legends Blood Moon Aatrox In-Game Summoner Icon"
+      ],
+      "approximateDimensions": {
+        "height": [5.1, 12.8],
+        "width": [4.0, 10.0]
+      },
+      "series": "Blood Moon Aatrox Figure is number #05 in Series 4"
+    }
+  },
+  {
+    "name": "Blood Moon Collectible Masks Set",
+    "price": { "default": 49.99 },
+    "information": {
+      "type": "item",
+      "descriptions": [
+        "Prepare for a Blood Moon rite with the Blood Moon Collectible Masks Set!",
+        "This trio of demonic masks comes with a display base as red as the Blood Moon itself, featuring Blood Moon iconography and a foldable backdrop showcasing the owners of the masks:",
+        "Blood Moon Talon - The indiscriminate demon assassin",
+        "Blood Moon Jhin - Blood Moon cult master of ceremonies",
+        "Blood Moon Yasuo - Blood Moon cult ceremonial executioner"
+      ],
+      "materials": ["Zinc Alloy Masks"]
+    }
+  },
+  {
+    "name": "Blood Moon Masks Tee",
+    "price": { "default": 29.99 },
+    "information": {
+      "type": "cloth",
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "descriptions": [
+        "Call forth the power of the Blood Moon Jhin, Yasuo, and Talon in the Blood Moon Masks Tee.",
+        "Fully certified for a wide range of activities from demonic possession rituals to work-from-home video calls, our Blood Moon Masks Tee is made of 100% cotton for cult-like comfort."
+      ]
+    }
+  }
+]

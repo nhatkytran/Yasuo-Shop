@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema(
   {
@@ -6,20 +6,29 @@ const schema = new mongoose.Schema(
     price: {
       default: { type: Number, required: true },
       saleAmount: { type: Number, default: 0 },
-      currency: { type: String, default: "USD" },
+      currency: { type: String, default: 'USD' },
     },
-    editions: [String],
+    editions: {
+      type: [String],
+      enum: ['limited', 'preorder', 'special'],
+    },
     images: [String],
     information: {
       type: {
         type: String,
-        enum: ["statue", "game", "cloth", "item"],
+        enum: ['figure', 'game', 'cloth', 'item'],
+        required: true,
+      },
+      category: {
+        type: String,
+        enum: ['featured', 'sale'],
         required: true,
       },
       optional: {
         title: { type: String },
         image: { type: String },
       },
+      sizes: [String],
       warning: { type: String },
       shippingDays: { type: Number, default: 7 },
       quote: { type: String },
@@ -31,6 +40,8 @@ const schema = new mongoose.Schema(
         depth: [Number],
       },
       funFact: { type: String },
+      series: { type: String },
+      materials: [String],
     },
   },
   {
@@ -41,6 +52,6 @@ const schema = new mongoose.Schema(
   }
 );
 
-const Product = mongoose.model("Product", schema, "products");
+const Product = mongoose.model('Product', schema, 'products');
 
 export default Product;
