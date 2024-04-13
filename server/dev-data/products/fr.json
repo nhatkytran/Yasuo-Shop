@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Statue Aatrox à l'échelle 1/6 par Jimei Palace",
+    "price": { "default": 523.99, "currency": "EUR" },
+    "editions": {
+      "en": ["limited", "preorder"],
+      "other": ["ÉDITION LIMITÉE", "PRÉCOMMANDER"]
+    },
+    "information": {
+      "warning": "Ce produit est un objet de collection ne convenant pas aux enfants de moins de 14 ans.",
+      "quote": "Écoute le silence de l'annihilation.",
+      "descriptions": [
+        "Aatrox était jadis un puissant champion de Shurima. Une fois transfiguré, il contribua à arrêter l'avancée du Néant lors de la rébellion d'Icathia. Cependant, avec le temps, privés de monarque à défendre et de menaces existentielles à juguler, Aatrox et les autres Fils du soleil se retournèrent les uns contre les autres dans ce qui devint rapidement une guerre pour les ruines de leur propre monde.",
+        "Après avoir passé des siècles dans sa propre épée, piégé par les Targoniens, Aatrox retrouva finalement sa liberté lorsqu'un mortel fut assez sot pour essayer de porter cette arme.",
+        "Cherchant désormais à mettre un terme à sa souffrance, l'Épée des Darkin se consacre entièrement à l'oblitération, apportant la mort et la guerre partout où elle passe."
+      ],
+      "features": ["Épée, yeux et ailes illuminés par LED."],
+      "funFact": "Créée en partenariat avec nos amis de Jimei Palace."
+    }
+  }
+]

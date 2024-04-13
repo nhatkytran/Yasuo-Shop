@@ -72,7 +72,7 @@ product.information = {};
 
 // type
 // optional
-sizes.length && (product.information.sizes = sizes);
+sizes?.length && (product.information.sizes = sizes);
 // warning
 // shippingDays
 // quote
@@ -96,11 +96,12 @@ materials.length && (product.information.materials = materials);
 );
 
 // images
-const images = [...document.querySelectorAll('.swiper-wrapper img')].map(
-  image => image.getAttribute('src').split('?')[0]
-);
 
-product.images = images;
+let images = [...document.querySelectorAll('.swiper-wrapper img')];
+if (images.length) {
+  images = images.map(image => image.getAttribute('src').split('?')[0]);
+  product.images = images;
+}
 
 // Result
 

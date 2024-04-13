@@ -1,6 +1,10 @@
 [
   {
     "name": "Jimei Palace Aatrox 1/6 Scale Statue",
+    "price": { "default": 489.99 },
+    "editions": {
+      "en": ["limited", "preorder"]
+    },
     "images": [
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf457399168c2b817/659873e5dc766225e97ebf22/CPX_JIMEIAatrox_Ecomm_1.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt89dfd42e7f74b53c/659873ecb177905168d03a9e/CPX_JIMEIAatrox_Ecomm_2.png",
@@ -8,20 +12,63 @@
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf91e46d4e3487a00/659873efb782f004d658660c/CPX_JIMEIAatrox_Ecomm_4.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf81f7dcca5d4645b/659873f0a2c41f7aeddb2298/CPX_JIMEIAatrox_Ecomm_5.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt220cca1809cd7e17/659873efc11c0f6728cf907d/CPX_JIMEIAatrox_Ecomm_6.png"
-    ]
+    ],
+    "information": {
+      "type": "figure",
+      "category": "featured",
+      "warning": "This product is a collector's item intended for ages 14+",
+      "quote": "Now, hear the silence of annihilation.",
+      "descriptions": [
+        "Once a mighty Shuriman champion remade as an Ascended, Aatrox helped halt the onslaught of the Void during the Icathian rebellion. However, in time, with no monarch or existential threat to defend against, Aatrox and the other Sunborn began to clash in a war for the ruins of the world.",
+        "Caged into his own sword for centuries by Targonian intervention, Aatrox was finally freed when a foolish mortal attempted to wield the blade.",
+        "Now set on destroying all of creation in an attempt to end his suffering, The Darkin Blade brings war and death wherever he goes."
+      ],
+      "features": ["LED sword, eyes, and wings lighting effect."],
+      "approximateDimensions": {
+        "height": [18.1, 46],
+        "width": [14.9, 37.9],
+        "depth": [12.7, 32.2]
+      },
+      "funFact": "Made in partnership with our friends at Jimei Palace."
+    }
   },
   {
     "name": "Blood Moon Aatrox Figure",
+    "price": { "default": 29.99 },
+    "editions": ["special"],
     "images": [
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt00022796bbbd3873/60ee0fbe6554cc2ee3b455cf/Aatrox_figure_Thumbnail.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt8385719430b36f63/60ee0fc86554cc2ee3b455d3/Aatrox_figure_0005_DSC06998.jpg",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltc19529e4a1194a5d/60ee0fcb2a120025e58468cb/Aatrox_figure_0004_DSC06952.jpg",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt3434bdfeed428735/60ee0fcedd52f525eb2bea94/Aatrox_figure_0003_DSC06979.jpg",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltb2d3945ce6681b53/60ee0fd116291c305a36abc1/Aatrox_figure_0002_DSC06956.jpg"
-    ]
+    ],
+    "information": {
+      "type": "figure",
+      "category": "featured",
+      "optional": {
+        "title": "Blood Moon Aatrox Merch Summoner Icon",
+        "image": "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt19b858380d96d280/63ebdc3d6495981254659086/BloodMoonAatrox_final_2560x2560.jpg?width=104"
+      },
+      "quote": "I am your reckoner, mortals.",
+      "descriptions": [
+        "Blood Moon Aatrox approaches as the World Ender as he lands in the Series 4 line as Special Edition #05."
+      ],
+      "features": [
+        "Aatrox in his Blood Moon skin",
+        "Collectible Series 4 box",
+        "Exclusive League of Legends Blood Moon Aatrox In-Game Summoner Icon"
+      ],
+      "approximateDimensions": {
+        "height": [5.1, 12.8],
+        "width": [4.0, 10.0]
+      },
+      "series": "Blood Moon Aatrox Figure is number #05 in Series 4"
+    }
   },
   {
     "name": "Blood Moon Collectible Masks Set",
+    "price": { "default": 49.99 },
     "images": [
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf02f26d6208e1f69/60cbcaafeefdde56c1144bd7/Bloodmoonmasks_0000_Thumbnail.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltb9681f4ffd415ac9/60cbcab40ece0255888d88dc/Bloodmoonmasks_0001_腥红之月-7.png",
@@ -29,16 +76,38 @@
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf48c9ce709598d8e/63efbb4d2def01638b8cdcfc/BloodMoon_Masks_Lineup_Shot_1.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltaff6616f4ef732e8/63efbb53f05e9612a5238718/BloodMoon_Masks_Front_Jhin_Shot_1.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt43b3e3b5ecee732e/63efbb548be1bb109f4d3da9/BloodMoon_Masks_Front_Yasuo_Shot_1.png"
-    ]
+    ],
+    "information": {
+      "type": "item",
+      "category": "featured",
+      "descriptions": [
+        "Prepare for a Blood Moon rite with the Blood Moon Collectible Masks Set!",
+        "This trio of demonic masks comes with a display base as red as the Blood Moon itself, featuring Blood Moon iconography and a foldable backdrop showcasing the owners of the masks:",
+        "Blood Moon Talon - The indiscriminate demon assassin",
+        "Blood Moon Jhin - Blood Moon cult master of ceremonies",
+        "Blood Moon Yasuo - Blood Moon cult ceremonial executioner"
+      ],
+      "materials": ["Zinc Alloy Masks"]
+    }
   },
   {
     "name": "Blood Moon Masks Tee",
+    "price": { "default": 29.99 },
     "images": [
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt3355ac0ba3a4eb1e/60cbcc425a50fc37590b2bda/Bloodmoon_tshirt_0000_1-(1).png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltdd6d255925f28275/60cbcc47b930a53616fa34e5/Bloodmoon_tshirt_0001_2.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltc52e4c2eb42be4ae/60cbcc4ce1b3f7481347d57d/Bloodmoon_tshirt_0003_3.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blte6d84bd0c509f362/63efbb19b2f58063895b6983/BloodMoon_T-Shirt_Detail_Back_Shot_1.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blte0d2229a46b95e87/60cbcc49610188558e3b416b/Bloodmoon_tshirt_0002_8.png"
-    ]
+    ],
+    "information": {
+      "type": "cloth",
+      "category": "featured",
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "descriptions": [
+        "Call forth the power of the Blood Moon Jhin, Yasuo, and Talon in the Blood Moon Masks Tee.",
+        "Fully certified for a wide range of activities from demonic possession rituals to work-from-home video calls, our Blood Moon Masks Tee is made of 100% cotton for cult-like comfort."
+      ]
+    }
   }
 ]
