@@ -27,7 +27,12 @@ const getContentsOf = (selector, conditions = {}) => {
 
 const productName = getContentOf('h1.theme__StyledHeadingH4-sc-35h5ms-9');
 const price = Number(
-  getContentOf('.theme__StyleLabelBase-sc-35h5ms-16').replace('$', '')
+  getContentOf(
+    '.theme__StyleLabelBase-sc-35h5ms-16.theme__StyledLabelLarge-sc-35h5ms-17'
+  )
+    ?.replace('$', '')
+    ?.replace('€', '')
+    ?.replace(',', '.')
 );
 // editions
 // images
@@ -44,6 +49,7 @@ const descriptions = getContentsOf(
   'div[aria-labelledby="product-description"] p',
   { filterCond: paragraph => !paragraph.querySelector('strong') }
 );
+const features = getContentsOf('.children ul li');
 // approximateDimensions
 // funFact
 // series
@@ -76,7 +82,8 @@ sizes?.length && (product.information.sizes = sizes);
 // warning
 // shippingDays
 // quote
-descriptions.length && (product.information.descriptions = descriptions);
+descriptions?.length && (product.information.descriptions = descriptions);
+features?.length && (product.information.features = features);
 // approximateDimensions
 // funFact
 // series

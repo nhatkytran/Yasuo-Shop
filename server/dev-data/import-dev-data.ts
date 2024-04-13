@@ -17,12 +17,23 @@ const getDataOther = (filename: string, originData: any) => {
   const dataOther = getData(filename);
 
   return originData.map((data: any, index: number) => {
+    let optional;
+    if (data.information?.optional) {
+      optional = {
+        optional: {
+          ...data.information.optional,
+          ...dataOther.information?.optional,
+        },
+      };
+    }
+
     return {
       ...data,
       ...dataOther[index],
       information: {
         ...data.information,
         ...dataOther[index].information,
+        ...(optional && optional),
       },
     };
   });
@@ -36,8 +47,8 @@ const importData = async () => {
   try {
     // products
     await Promise.all([
-      ProductEnUS.create(productsDataEnUS),
-      ProductFR.create(productDataFR),
+      ProductEnUS.insertMany(productsDataEnUS),
+      ProductFR.insertMany(productDataFR),
     ]);
 
     console.log('Data import - Successful!');

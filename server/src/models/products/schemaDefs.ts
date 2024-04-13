@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 export const schemaDefs = {
   name: { type: String, required: true },
   price: {
@@ -8,7 +10,7 @@ export const schemaDefs = {
   editions: {
     en: {
       type: [String],
-      enum: ['limited', 'preorder', 'special'],
+      enum: ['limited edition', 'preorder', 'special edition'],
     },
     other: { type: [String] },
   },
@@ -29,10 +31,13 @@ export const schemaDefs = {
       image: { type: String },
     },
     sizes: [String],
+    platforms: [String],
+    regions: [String],
+    check: { type: String },
     warning: { type: String },
     shippingDays: { type: Number, default: 7 },
     quote: { type: String },
-    descriptions: [String],
+    descriptions: { type: [mongoose.Schema.Types.Mixed] },
     features: [String],
     approximateDimensions: {
       height: [Number],

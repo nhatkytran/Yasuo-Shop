@@ -3,7 +3,7 @@
     "name": "Jimei Palace Aatrox 1/6 Scale Statue",
     "price": { "default": 489.99 },
     "editions": {
-      "en": ["limited", "preorder"]
+      "en": ["limited edition", "preorder"]
     },
     "images": [
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf457399168c2b817/659873e5dc766225e97ebf22/CPX_JIMEIAatrox_Ecomm_1.png",
@@ -35,7 +35,9 @@
   {
     "name": "Blood Moon Aatrox Figure",
     "price": { "default": 29.99 },
-    "editions": ["special"],
+    "editions": {
+      "en": ["special edition"]
+    },
     "images": [
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt00022796bbbd3873/60ee0fbe6554cc2ee3b455cf/Aatrox_figure_Thumbnail.png",
       "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt8385719430b36f63/60ee0fc86554cc2ee3b455d3/Aatrox_figure_0005_DSC06998.jpg",
@@ -107,6 +109,251 @@
       "descriptions": [
         "Call forth the power of the Blood Moon Jhin, Yasuo, and Talon in the Blood Moon Masks Tee.",
         "Fully certified for a wide range of activities from demonic possession rituals to work-from-home video calls, our Blood Moon Masks Tee is made of 100% cotton for cult-like comfort."
+      ]
+    }
+  },
+  {
+    "name": "Ruined King: A League of Legends Story Collector's Edition",
+    "price": { "default": 77.99 },
+    "editions": {
+      "en": ["limited edition"]
+    },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt34b101428ada7d64/618afe31ffff3679072234eb/Casper-CE-Thumbnail-edit.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt6af2d03760947735/619846c637c855238d66cf9e/T_full_display_(US_CAN).png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt5935c0b4a24f27f6/618afe386676ac790d1b9fbf/Carousel1.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt6517e9c979aba4f4/618afe3cd6ef6a585adf389e/Carousel2.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt490d7af4bca25863/618afe40a1ce11650a8d42dd/Carousel3.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltfc5260fd7e49dd75/618afe46953e1e65040094db/Carousel4.png"
+    ],
+    "information": {
+      "type": "game",
+      "category": "featured",
+      "platforms": [
+        "Switch",
+        "Steam",
+        "GOG",
+        "Epic Games",
+        "Xbox One / Series X/S",
+        "Playstation 5/4"
+      ],
+      "regions": ["North America", "Asia", "Oceania"],
+      "check": "I understand the game code is non-refundable and non-exchangeable. The game region and platform I need are selected.",
+      "descriptions": [
+        "We're excited to offer the Ruined King: A League of Legends Story Collector's Edition exclusively here at Riot Merch. Quantities are extremely limited. The Collector's Edition includes:",
+        [
+          "Digital Deluxe version of Ruined King: A League of Legends Story game*",
+          "Exclusive Art Book",
+          "Exclusive 12 inch Vinyl OST",
+          "Insulated Bilgewater Mug",
+          "Themed leather notebook and pencil",
+          "Exclusive Joe Mad sketch",
+          "Cloth map of Bilgewater",
+          "Golden Kraken Coin"
+        ],
+        "*Voucher code for Digital Deluxe version of Ruined King: A League of Legends Story game emailed within an hour of purchase and is non-refundable",
+        "Developed by Airship Syndicate and featuring the art style of legendary comic book artist Joe Madureira, creators of Battle Chasers and Darksiders, Ruined King: A League of Legends Story is the first Riot Forge game that invites you to explore the League of Legends universe. In this immersive turn-based RPG, you will have the freedom to configure your party and control an unlikely group of League of Legends champions, explore the bustling city of Bilgewater and the mysterious Shadow Isles, and experience the Lane Initiative System."
+      ]
+    }
+  },
+  {
+    "name": "Renektoy Plush",
+    "price": { "default": 34.99 },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltbb7d7161cb12d606/65f9f946611972a2d3647596/Ecomm-Image-Promo-Renektoy-Standard-Plushecomm_image_01.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt41dfc0abc76b8b95/65f9f94e0c744d5e107c2194/Ecomm-Image-Promo-Renektoy-Standard-Plushecomm_image_02.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltb085c2518ff2f4e7/65f9f94e5a287dc863f2f8e3/Ecomm-Image-Promo-Renektoy-Standard-Plushecomm_image_03.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltfc370b31f7169ba2/65f9f94ea93acb5693313184/Ecomm-Image-Promo-Renektoy-Standard-Plushecomm_image_04.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt32e2a4375fefda9e/65f9f94e8330b3ccef02fead/Ecomm-Image-Promo-Renektoy-Standard-Plushecomm_image_05.png"
+    ],
+    "information": {
+      "type": "item",
+      "category": "featured",
+      "warning": "This item typically ships within 2 weeks from purchase.",
+      "descriptions": [
+        "Feeling a little rough around the edges? Let Renektoy take a chomp at it!",
+        "Renektoy never backs down from a challenge - except for when their plush sword breaks... But fear not, with your help, you can patch it up and embark on endless adventures together, slicing through obstacles with joy and determination!",
+        "Don't keep Renektoy on the sidelines; bring this cuddly champion home and let the fun begin!"
+      ]
+    }
+  },
+  {
+    "name": "Song of Nunu: A League Of Legends Story Collector's Edition",
+    "price": { "default": 79.99 },
+    "editions": {
+      "en": ["limited edition"]
+    },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf140489ccb85d557/64f9066755996b45c006c562/Song_of_Nunu_Ecomm_Image_1.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt1d19dca287a41132/64f90673e3f72f6c8696a2c9/Song_of_Nunu_Ecomm_Image_2.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltc9d0736609108478/64f906701f65390cda9a1c4b/Song_of_Nunu_Ecomm_Image_3.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt95e5f8b39b62e75e/64f90676bb60f763e347f4b6/Song_of_Nunu_Ecomm_Image_4.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt4de6bf3bd115d47a/64f906779e7ba6c2ffca961b/Song_of_Nunu_Ecomm_Image_5.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt2e921eb33c74d3d0/64f9067720c4f930f86fb44a/Song_of_Nunu_Ecomm_Image_5_copy.png"
+    ],
+    "information": {
+      "type": "game",
+      "category": "featured",
+      "platforms": [
+        "Switch",
+        "Steam",
+        "GOG",
+        "Epic Games",
+        "Playstation 5/4",
+        "XBox One / Series X/S"
+      ],
+      "regions": ["North America", "Asia", "Oceania"],
+      "check": "I understand the game code is non-refundable and non-exchangeable. The game region and platform I need are selected.",
+      "descriptions": [
+        "Friendship is a special kind of magic!",
+        "Song of Nunu: A League of Legends Story™ is a single-player story adventure developed by Tequila Works. Join best friends Nunu and Willump on a journey across the frozen wilds of the Freljord. United by their endless imagination and shared love of snowball fights, the two will have to work together to uncover the magic lying hidden beneath the ice.",
+        "Song of Nunu: A League of Legends Story™ Collector's Edition includes:",
+        [
+          "Digital game code for Song of Nunu: A League of Legends Story™*",
+          "Collector's Edition box",
+          "Exclusive Art Book",
+          "Exclusive Willump Plush",
+          "Exclusive Poro Plush",
+          "Pop-Up Diorama",
+          "5 Collectible Enamel Pins",
+          "1 B&W Collectible Print",
+          "4 Foil embossed Freljord Postcards"
+        ],
+        "*Game code for Song of Nunu: A League of Legends Story™ will be emailed on launch day and is non-refundable with the exception of the PlayStation 4/5, Xbox Series X|S, and Xbox One editions. To complete your experience with either the PlayStation 4/5, Xbox Series X|S, and Xbox One editions, the game must be purchased separately.",
+        "Song of Nunu: A League of Legends Story™ Collector's Edition is available exclusively on the Riot Games Merch store. Quantities are extremely limited.",
+        "Collector's Edition orders will also receive a limited edition Nunu Plush Hat free of charge while supplies last!",
+        "Adventure awaits in Song of Nunu: A League of Legends Story™."
+      ]
+    }
+  },
+  {
+    "name": "Akali's Kitchen Tee",
+    "price": { "default": 29.99 },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltcbaff205e98fee65/65f9fbde0780b91f1861e2f3/Ecomm-Image-Promo-Akali-Kitchen-Tee-ecomm_image_01.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt1fe08a068da924b8/65f9fbe4edb2c7eefd372be7/Ecomm-Image-Promo-Akali-Kitchen-Tee-ecomm_image_02.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf9641c058c87f7ce/65f9fbe5fc8631f578d723e3/Ecomm-Image-Promo-Akali-Kitchen-Tee-ecomm_image_03.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt2de9b762c341fcf5/65f9fbe47a44b01c2354adf6/Ecomm-Image-Promo-Akali-Kitchen-Tee-ecomm_image_04.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blta08a26904e554ad0/65f9fbe4fc8631a816d723df/Ecomm-Image-Promo-Akali-Kitchen-Tee-ecomm_image_05.png"
+    ],
+    "information": {
+      "type": "cloth",
+      "category": "featured",
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "descriptions": [
+        "Indulge your taste for both style and strength with our Akali's Kitchen tee! Adorned with a bold graphic of the Shadow Assassin savoring a bowl of delectable ramen on the front, this tee asserts that even in battle, there's always time for a satisfying slurp. Embrace the flavor of victory and let your fashion speak volumes about your passion for gaming and gastronomy!"
+      ],
+      "features": ["100% cotton", "Screenprinted graphics"]
+    }
+  },
+  {
+    "name": "Worlds 2023 Tibbers Plush",
+    "price": {
+      "default": 38.99,
+      "saleAmount": 18.99
+    },
+    "editions": {
+      "en": ["limited edition"]
+    },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt9778adbdbc857028/65136e294f2fa842c4699543/Worlds-2023_Tibbers_Ecomm_2560x2560.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltb6e1c11740f76997/65136e339a51529e1b8bff36/Worlds_2023_Tibbers_Ecomm_Image_2.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltecb6afb15208d98b/65136e3599db76a67bf57ab6/Worlds_2023_Tibbers_Ecomm_Image_3.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltdaaeb3bd6829b42e/65136e37bc1384754c7d468f/Worlds_2023_Tibbers_Ecomm_Image_4.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt9dc8e22819da3916/65136e382a06d72582f4f4ea/Worlds_2023_Tibbers_Ecomm_Image_5.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blta802ed1b4680a38e/65136e436f86ad0cb946e414/Worlds_2023_Tibbers_Ecomm_Image_6.png"
+    ],
+    "information": {
+      "type": "item",
+      "category": "sale",
+      "descriptions": [
+        "THE GRIND THE GLORY",
+        "This is Worlds. Where everything you love about League of Legends reaches its peak. For 22 teams and 12 regions, these upcoming weeks in South Korea will put their mastery of the game to the test.",
+        "Get a taste of the glory that waits at the end of the grind with the Worlds 2023 Tibbers Plush.",
+        "Only available during Worlds, don't miss your chance to add this limited edition Tibbers to your collection!"
+      ]
+    }
+  },
+  {
+    "name": "Battle Academia Yuumi Cushion",
+    "price": {
+      "default": 35,
+      "saleAmount": 14
+    },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt5c9a7c59afc8fa24/5f5943573294543ad29a289f/07-29-2020000733988_Yuumi_Cushion_prdctimges.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltea87fa966b672e78/5f7ce9dc02e6b80ebf901343/AMU09169.jpg",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf31e22934ead7e32/5f7ce9e2df178b0ea98485aa/AMU09276.jpg"
+    ],
+    "information": {
+      "type": "item",
+      "category": "sale",
+      "descriptions": [
+        "A powerful channeler of magic, the acting head of Durandal Academy uses the academic registry book as a focus object to generate apocalyptic levels of energy... often while perched on a terrified student's head."
+      ],
+      "approximateDimensions": {
+        "height": [14, 39],
+        "width": [16, 46],
+        "depth": [7, 17]
+      },
+      "funFact": "100% Polyester"
+    }
+  },
+  {
+    "name": "Battle Academia Keychain Pack",
+    "price": {
+      "default": 45,
+      "saleAmount": 9
+    },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt20a8ab55e6c01d53/604be4e43c41f30bce485816/BA_keychain_00.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt025d98ab8bfb96a5/604be4e9f9638443346d7ad3/BA_keychain_01.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltb78a13e4723e19f3/604be4ebc7198e3af48f9ecb/BA_keychain_02.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt7ca0820baf1c01e6/604be4ed2d310e5a62e1a9a6/BA_keychain_03.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf11469a5fb1809ea/604be4f03c41f30bce48581a/BA_keychain_04.png"
+    ],
+    "information": {
+      "type": "item",
+      "category": "sale",
+      "descriptions": [
+        "Durandal God-Weapon Academy is represented as a 6-piece keychain pack. Made from durable acrylic, bring the students, professor, and principal of Durandal anywhere you go.",
+        "Battle Academia Keychain Pack Features:",
+        [
+          "Battle Principal Yuumi",
+          "Battle Academia Katarina",
+          "Battle Professor Graves",
+          "Battle Academia Ezreal",
+          "Battle Academia Jayce",
+          "Battle Academia Lux"
+        ]
+      ]
+    }
+  },
+  {
+    "name": "Battle Academia Durandal Class Zip-Up Hoodie (Unisex)",
+    "price": {
+      "default": 65,
+      "saleAmount": 25
+    },
+    "images": [
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt88e7f74220bfca4f/604be50c5aedc043351b87ef/BA_hoody_00.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltca49343167b16845/604be5125aedc043351b87f3/BA_hoody_01.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt6b6e9f0f90a79693/604be515acf0d53d70c5ea4d/BA_hoody_02.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt156f82fb19c1bca3/604be518fef76d094c704788/BA_hoody_03.png",
+      "https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt98d8711e59c1eecb/604be51bfef76d094c70478c/BA_hoody_04.png"
+    ],
+    "information": {
+      "type": "cloth",
+      "category": "sale",
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "descriptions": [
+        "Prepare for class with the Durandal Class Hoodie. The premium build of this hoodie will prep you for any lecture Professor Graves has to give.",
+        "Battle Academia Durandal Zip-Up Hoodie Features:",
+        [
+          "Embroidered Durandal God-Weapon Academy crest chest hit",
+          "Front zip-up",
+          "Battle Academia logo hemtag"
+        ]
       ]
     }
   }

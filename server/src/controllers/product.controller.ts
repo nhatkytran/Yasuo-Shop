@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import logger from '../utils/logger';
-import Product from '../models/product.model';
+import ProductEnUS from '../models/products/productEnUs.model';
 
 export const getAllProducts = async (
   req: Request,
@@ -9,7 +9,7 @@ export const getAllProducts = async (
   next: NextFunction
 ) => {
   try {
-    const products = await Product.find();
+    const products = await ProductEnUS.find();
 
     res
       .status(200)
