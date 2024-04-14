@@ -25,9 +25,12 @@
       ],
       "features": ["LED sword, eyes, and wings lighting effect."],
       "approximateDimensions": {
-        "height": [18.1, 46],
-        "width": [14.9, 37.9],
-        "depth": [12.7, 32.2]
+        "value": [
+          [18.1, 46],
+          [14.9, 37.9],
+          [12.7, 32.2]
+        ],
+        "en": ["height", "width", "depth"]
       },
       "funFact": "Made in partnership with our friends at Jimei Palace."
     }
@@ -62,8 +65,11 @@
         "Exclusive League of Legends Blood Moon Aatrox In-Game Summoner Icon"
       ],
       "approximateDimensions": {
-        "height": [5.1, 12.8],
-        "width": [4.0, 10.0]
+        "value": [
+          [5.1, 12.8],
+          [4.0, 10.0]
+        ],
+        "en": ["height", "width"]
       },
       "series": "Blood Moon Aatrox Figure is number #05 in Series 4"
     }
@@ -292,9 +298,12 @@
         "A powerful channeler of magic, the acting head of Durandal Academy uses the academic registry book as a focus object to generate apocalyptic levels of energy... often while perched on a terrified student's head."
       ],
       "approximateDimensions": {
-        "height": [14, 39],
-        "width": [16, 46],
-        "depth": [7, 17]
+        "value": [
+          [14, 39],
+          [16, 46],
+          [7, 17]
+        ],
+        "en": ["height", "width", "depth"]
       },
       "funFact": "100% Polyester"
     }

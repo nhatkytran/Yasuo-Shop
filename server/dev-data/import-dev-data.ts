@@ -14,9 +14,11 @@ const getData = (fileName: string) =>
   JSON.parse(fs.readFileSync(path.join(__dirname, fileName), 'utf-8'));
 
 const getDataOther = (filename: string, originData: any) => {
-  const dataOther = getData(filename);
+  const dataOthers = getData(filename);
 
   return originData.map((data: any, index: number) => {
+    const dataOther = dataOthers[index];
+
     let optional;
     if (data.information?.optional) {
       optional = {
@@ -27,13 +29,24 @@ const getDataOther = (filename: string, originData: any) => {
       };
     }
 
+    let approximateDimensions;
+    if (data.information?.approximateDimensions) {
+      approximateDimensions = {
+        approximateDimensions: {
+          ...data.information.approximateDimensions,
+          ...dataOther.information?.approximateDimensions,
+        },
+      };
+    }
+
     return {
       ...data,
-      ...dataOther[index],
+      ...dataOther,
       information: {
         ...data.information,
-        ...dataOther[index].information,
+        ...dataOther.information,
         ...(optional && optional),
+        ...(approximateDimensions && approximateDimensions),
       },
     };
   });

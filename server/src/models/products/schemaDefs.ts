@@ -40,9 +40,9 @@ export const schemaDefs = {
     descriptions: { type: [mongoose.Schema.Types.Mixed] },
     features: [String],
     approximateDimensions: {
-      height: [Number],
-      width: [Number],
-      depth: [Number],
+      value: [[Number]],
+      en: [String],
+      other: [String],
     },
     funFact: { type: String },
     series: { type: String },

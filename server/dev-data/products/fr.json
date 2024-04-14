@@ -15,6 +15,9 @@
         "Cherchant désormais à mettre un terme à sa souffrance, l'Épée des Darkin se consacre entièrement à l'oblitération, apportant la mort et la guerre partout où elle passe."
       ],
       "features": ["Épée, yeux et ailes illuminés par LED."],
+      "approximateDimensions": {
+        "other": ["hauteur", "largeur", "profondeur"]
+      },
       "funFact": "Créée en partenariat avec nos amis de Jimei Palace."
     }
   },
@@ -38,6 +41,9 @@
         "Boîte de collection de la 4e série",
         "Icone d'invocateur exclusif Aatrox lune de sang pour League of Legends"
       ],
+      "approximateDimensions": {
+        "other": ["hauteur", "largeur"]
+      },
       "series": "Aatrox lune de sang est la figurine N°05 de la 4e série."
     }
   },
@@ -175,7 +181,10 @@
     "information": {
       "descriptions": [
         "Étant une puissante canalisatrice de magie, la directrice suppléante de l'Académie de Durandal se sert du registre de l'Académie comme catalyseur afin de générer des niveaux d'énergie apocalyptiques... tout en se perchant sur la tête d'étudiants effrayés."
-      ]
+      ],
+      "approximateDimensions": {
+        "other": ["hauteur", "largeur", "profondeur"]
+      }
     }
   },
   {
