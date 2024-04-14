@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express';
 
-import productsRouter from './products.route';
+import productsRouter from './product.route';
 
 const routes = (app: Express) => {
   app.get('/', (req: Request, res: Response) =>

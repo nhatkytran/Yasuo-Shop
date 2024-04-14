@@ -1,16 +1,21 @@
 import express from 'express';
 import morgan from 'morgan';
+import path from 'path';
 
 import routes from './routes/routes';
 import trackLanguage from './middleware/trackLanguage';
-
-const { NODE_ENV } = process.env;
+import AppError from './utils/appError';
+import globalErrorHandler from './controllers/errorController';
+import isDev from './utils/isDev';
 
 const init = () => {
   const app = express();
 
   // GET /route 304 9.789 ms - - -> Route information
-  if (NODE_ENV === 'development') app.use(morgan('dev'));
+  if (isDev()) app.use(morgan('dev'));
+
+  // Config static files
+  app.use(express.static(path.join(__dirname, 'public')));
 
   // Parse data for req.body and multipart form
   app.use(express.json({ limit: '10kb' }));
@@ -20,6 +25,19 @@ const init = () => {
   app.use(trackLanguage);
 
   routes(app);
+
+  // Unhandled routes
+  app.all('*', (req, _, next) =>
+    next(
+      new AppError({
+        message: `${req.originalUrl} not found!`,
+        statusCode: 404,
+      })
+    )
+  );
+
+  // Handle Global Error
+  app.use(globalErrorHandler);
 
   return app;
 };
