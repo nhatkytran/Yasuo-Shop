@@ -12,7 +12,9 @@ const trackLanguage = (req: Request, res: Response, next: NextFunction) => {
       statusCode: 400,
     });
 
-  res.locals.language = language || config.get<string>('defaultLanguage');
+  res.locals.language = (language ||
+    config.get<string>('defaultLanguage')) as string;
+
   next();
 };
 

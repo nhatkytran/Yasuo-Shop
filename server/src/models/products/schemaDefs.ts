@@ -1,5 +1,49 @@
 import mongoose from 'mongoose';
 
+export type ProductInput = {
+  name: string;
+  price: {
+    default: number;
+    saleAmount: number;
+    currency: string;
+  };
+  editions: {
+    en: ('limited edition' | 'preorder' | 'special edition')[];
+    other: string[];
+  };
+  images: string[];
+  information: {
+    type: 'figure' | 'game' | 'cloth' | 'item';
+    category: 'featured' | 'sale';
+    optional: {
+      title: string;
+      image: string;
+    };
+    sizes: string[];
+    platforms: string[];
+    regions: string[];
+    check: string;
+    warning: string;
+    shippingDays: number;
+    quote: string;
+    descriptions: (string | string[])[];
+    features: string[];
+    approximateDimensions: {
+      value: number[][];
+      en: ('height' | 'width' | 'depth')[];
+      other: string[];
+    };
+    funFact: string;
+    series: string;
+    materials: string;
+  };
+};
+
+export interface ProductDocument extends ProductInput, mongoose.Document {
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export const schemaDefs = {
   name: { type: String, required: true },
   price: {
@@ -51,7 +95,7 @@ export const schemaDefs = {
 };
 
 export const schemaSups = {
-  timestamps: true,
+  timestamps: true, // createdAt, updatedAt
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
   id: false,
