@@ -1,6 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
+import hpp from 'hpp';
+import config from 'config';
 
 import routes from './routes/routes';
 import trackLanguage from './middleware/trackLanguage';
@@ -21,9 +23,13 @@ const init = () => {
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
+  // Prevent parameter polution
+  app.use(hpp({ whitelist: config.get('parameterWhiteList') }));
+
   // Check query 'language', default: 'en-us'
   app.use(trackLanguage);
 
+  // Routes: product, user,...
   routes(app);
 
   // Unhandled routes
