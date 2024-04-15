@@ -7,14 +7,14 @@ import config from 'config';
 import routes from './routes/routes';
 import trackLanguage from './middleware/trackLanguage';
 import AppError from './utils/appError';
-import globalErrorHandler from './controllers/errorController';
-import isDev from './utils/isDev';
+import globalErrorHandler from './controllers/error.controller';
+import env from './utils/env';
 
 const init = () => {
   const app = express();
 
   // GET /route 304 9.789 ms - - -> Route information
-  if (isDev()) app.use(morgan('dev'));
+  if (env.dev) app.use(morgan('dev'));
 
   // Config static files
   app.use(express.static(path.join(__dirname, 'public')));

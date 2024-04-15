@@ -1,10 +1,17 @@
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model, QueryOptions, Types } from 'mongoose';
 
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument } from '../models/products/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
 import removeEmptyArray from '../utils/removeEmptyArray';
+
+const getProductModel = (language: string): Model<ProductDocument> => {
+  let ProductModel: Model<ProductDocument> = ProductEnUS; // 'en-us'
+  if (language === 'fr') ProductModel = ProductFR;
+
+  return ProductModel;
+};
 
 type FindAllProducts = ({
   language,
@@ -23,8 +30,7 @@ export const findAllProducts: FindAllProducts = async ({
   reqQuery = {},
   findOptions = {},
 }) => {
-  let ProductModel: Model<ProductDocument> = ProductEnUS; // 'en-us'
-  if (language === 'fr') ProductModel = ProductFR;
+  const ProductModel = getProductModel(language);
 
   const features = await APIFeatures({
     model: ProductModel,
@@ -39,4 +45,29 @@ export const findAllProducts: FindAllProducts = async ({
   return products.map(product =>
     removeEmptyArray(product.toJSON())
   ) as ProductDocument[];
+};
+
+// query: FilterQuery<ProductDocument>,
+//   options: QueryOptions = { lean: true }
+
+type FindProductByID = ({
+  language,
+  productID,
+}: {
+  language: string;
+  productID: string;
+  options?: QueryOptions;
+}) => Promise<ProductDocument | null>;
+
+export const findProductByID: FindProductByID = async ({
+  language,
+  productID,
+  options = {}, // name: true, price: true,...
+}) => {
+  const ProductModel = getProductModel(language);
+
+  const product = await ProductModel.findById(productID, options);
+
+  if (!product) return null;
+  return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
