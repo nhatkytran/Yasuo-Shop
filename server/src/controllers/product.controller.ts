@@ -6,7 +6,7 @@ import isDev from '../utils/isDev';
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
-    if (isDev()) console.log(req.query);
+    if (isDev()) console.log('req.query ->', req.query);
 
     const products = await findAllProducts({
       language: res.locals.language,
@@ -15,6 +15,11 @@ export const getAllProducts = catchAsync(
 
     res
       .status(200)
-      .json({ status: 'success', language: res.locals.language, products });
+      .json({
+        status: 'success',
+        language: res.locals.language,
+        numResults: products.length,
+        products,
+      });
   }
 );
