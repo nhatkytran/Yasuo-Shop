@@ -4,6 +4,7 @@ import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument } from '../models/products/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
+import removeEmptyArray from '../utils/removeEmptyArray';
 
 type FindAllProducts = ({
   language,
@@ -33,5 +34,9 @@ export const findAllProducts: FindAllProducts = async ({
 
   features.filter().sort().project().paginate();
 
-  return features.result();
+  const products = await features.result();
+
+  return products.map(product =>
+    removeEmptyArray(product.toJSON())
+  ) as ProductDocument[];
 };
