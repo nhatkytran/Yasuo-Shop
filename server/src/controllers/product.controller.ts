@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
+import { QueryOptions } from 'mongoose';
 
 import env from '../utils/env';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import { findAllProducts, findProductByID } from '../services/product.service';
-import { QueryOptions } from 'mongoose';
+import { GetProductInput } from '../schemas/product.schema';
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
@@ -28,26 +29,22 @@ interface GetProductOptions extends QueryOptions {
   fields?: string | string[];
 }
 
-// schema Zod for param
 export const getProduct = catchAsync(
   async (
-    req: Request<{ id?: string }, {}, {}, GetProductOptions>,
+    req: Request<GetProductInput['params'], {}, {}, GetProductOptions>,
     res: Response
   ) => {
-    const { id } = req.params;
+    const language: string = res.locals.language;
+    const productID = req.params.productID;
     const options = { ...req.query };
 
-    if (env.dev) console.log(id, options);
+    if (env.dev) console.log(productID, options);
 
-    const product = await findProductByID({
-      language: res.locals.language,
-      productID: id!,
-      options,
-    });
+    const product = await findProductByID({ language, productID, options });
 
     if (!product)
       throw new AppError({
-        message: `Product with ID '${id}' not found!`,
+        message: `Product with ID '${productID}' not found!`,
         statusCode: 404,
       });
 

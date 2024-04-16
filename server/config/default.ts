@@ -19,9 +19,8 @@ const parameterWhiteList = [
   'information.type',
   'information.category',
   'shippingDays',
-  //
-  'sort',
-  'fields',
+  'sort', // Advanced API
+  'fields', // Advanced API
 ];
 
 export default {

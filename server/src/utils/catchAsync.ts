@@ -1,14 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 
-type AsyncVoidFunction = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => Promise<void>;
-
+// Generic here because sometimes we want to define type of params, query,...
 const catchAsync =
-  (asyncCallback: AsyncVoidFunction) =>
-  (req: Request, res: Response, next: NextFunction) =>
+  <Req extends Request, Res extends Response>(
+    asyncCallback: (req: Req, res: Res, next: NextFunction) => Promise<void>
+  ) =>
+  (req: Req, res: Res, next: NextFunction) =>
     asyncCallback(req, res, next).catch(next);
 
 export default catchAsync;
