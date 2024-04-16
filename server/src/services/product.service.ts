@@ -131,3 +131,19 @@ export const findAndUpdateProduct: FindAndUpdateProduct = async ({
   if (!product) return null;
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
+
+type FindAndDeleteProduct = ({
+  language,
+  productID,
+}: {
+  language: string;
+  productID: string;
+}) => Promise<void>;
+
+export const findAndDeleteProduct: FindAndDeleteProduct = async ({
+  language,
+  productID,
+}) => {
+  const ProductModel = getProductModel(language);
+  await ProductModel.findByIdAndDelete(productID);
+};

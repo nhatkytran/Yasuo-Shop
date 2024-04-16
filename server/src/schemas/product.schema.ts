@@ -77,6 +77,9 @@ export const updateProductSchema = object({
   }),
 });
 
+export const deleteProductSchema = object({ ...params });
+
 export type GetProductInput = TypeOf<typeof getProductSchema>;
 export type CreateProductInput = TypeOf<typeof createProductSchema>;
 export type UpdateProductInput = TypeOf<typeof updateProductSchema>;
+export type DeleteProductInput = TypeOf<typeof deleteProductSchema>;

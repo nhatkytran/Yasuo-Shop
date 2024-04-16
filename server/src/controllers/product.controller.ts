@@ -7,11 +7,13 @@ import AppError from '../utils/appError';
 import {
   createProduct,
   findAllProducts,
+  findAndDeleteProduct,
   findAndUpdateProduct,
   findProductByID,
 } from '../services/product.service';
 import {
   CreateProductInput,
+  DeleteProductInput,
   GetProductInput,
   UpdateProductInput,
 } from '../schemas/product.schema';
@@ -72,7 +74,7 @@ export const createNewProduct = catchAsync(
 
     const product = await createProduct({ language, input });
 
-    res.status(200).json({
+    res.status(201).json({
       status: 'success',
       language,
       numResults: 1,
@@ -102,6 +104,22 @@ export const updateProduct = catchAsync(
       language,
       numResults: product ? 1 : 0,
       product,
+    });
+  }
+);
+
+export const deleteProduct = catchAsync(
+  async (req: Request<DeleteProductInput['params']>, res: Response) => {
+    const language: string = res.locals.language;
+    const productID: string = req.params.productID;
+
+    await findAndDeleteProduct({ language, productID });
+
+    res.status(204).json({
+      status: 'success',
+      language,
+      numResults: 0,
+      product: null,
     });
   }
 );

@@ -4,6 +4,7 @@ import validate from '../middleware/validateResource';
 
 import {
   createNewProduct,
+  deleteProduct,
   getAllProducts,
   getProduct,
   updateProduct,
@@ -11,6 +12,7 @@ import {
 
 import {
   createProductSchema,
+  deleteProductSchema,
   getProductSchema,
   updateProductSchema,
 } from '../schemas/product.schema';
@@ -25,6 +27,7 @@ productsRouter
 productsRouter
   .route('/:productID')
   .get(validate(getProductSchema), getProduct)
-  .patch(validate(updateProductSchema), updateProduct);
+  .patch(validate(updateProductSchema), updateProduct)
+  .delete(validate(deleteProductSchema), deleteProduct);
 
 export default productsRouter;
