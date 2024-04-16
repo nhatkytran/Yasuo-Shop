@@ -6,226 +6,168 @@
       "en": ["limited edition", "preorder"],
       "other": ["ÉDITION LIMITÉE", "PRÉCOMMANDER"]
     },
-    "information": {
-      "warning": "Ce produit est un objet de collection ne convenant pas aux enfants de moins de 14 ans.",
-      "quote": "Écoute le silence de l'annihilation.",
-      "descriptions": [
-        "Aatrox était jadis un puissant champion de Shurima. Une fois transfiguré, il contribua à arrêter l'avancée du Néant lors de la rébellion d'Icathia. Cependant, avec le temps, privés de monarque à défendre et de menaces existentielles à juguler, Aatrox et les autres Fils du soleil se retournèrent les uns contre les autres dans ce qui devint rapidement une guerre pour les ruines de leur propre monde.",
-        "Après avoir passé des siècles dans sa propre épée, piégé par les Targoniens, Aatrox retrouva finalement sa liberté lorsqu'un mortel fut assez sot pour essayer de porter cette arme.",
-        "Cherchant désormais à mettre un terme à sa souffrance, l'Épée des Darkin se consacre entièrement à l'oblitération, apportant la mort et la guerre partout où elle passe."
-      ],
-      "features": ["Épée, yeux et ailes illuminés par LED."],
-      "approximateDimensions": {
-        "other": ["hauteur", "largeur", "profondeur"]
-      },
-      "funFact": "Créée en partenariat avec nos amis de Jimei Palace."
-    }
+    "warning": "Ce produit est un objet de collection ne convenant pas aux enfants de moins de 14 ans.",
+    "quote": "Écoute le silence de l'annihilation.",
+    "descriptions": [
+      "Aatrox était jadis un puissant champion de Shurima. Une fois transfiguré, il contribua à arrêter l'avancée du Néant lors de la rébellion d'Icathia. Cependant, avec le temps, privés de monarque à défendre et de menaces existentielles à juguler, Aatrox et les autres Fils du soleil se retournèrent les uns contre les autres dans ce qui devint rapidement une guerre pour les ruines de leur propre monde.",
+      "Après avoir passé des siècles dans sa propre épée, piégé par les Targoniens, Aatrox retrouva finalement sa liberté lorsqu'un mortel fut assez sot pour essayer de porter cette arme.",
+      "Cherchant désormais à mettre un terme à sa souffrance, l'Épée des Darkin se consacre entièrement à l'oblitération, apportant la mort et la guerre partout où elle passe."
+    ],
+    "features": ["Épée, yeux et ailes illuminés par LED."],
+    "approximateDimensions": { "other": ["hauteur", "largeur", "profondeur"] },
+    "funFact": "Créée en partenariat avec nos amis de Jimei Palace."
   },
   {
     "name": "Figurine Aatrox lune de sang",
     "price": { "default": 31.99, "currency": "EUR" },
-    "editions": {
-      "en": ["special edition"],
-      "other": ["ÉDITION SPÉCIALE"]
+    "editions": { "en": ["special edition"], "other": ["ÉDITION SPÉCIALE"] },
+    "optional": {
+      "title": "Icone d'invocateur Produit dérivé Aatrox lune de sang"
     },
-    "information": {
-      "optional": {
-        "title": "Icone d'invocateur Produit dérivé Aatrox lune de sang"
-      },
-      "quote": "Je viens pour vous juger, mortels.",
-      "descriptions": [
-        "Aatrox lune de sang arrive: le Fossoyeur des mondes devient l'édition spéciale N°05 de notre 4e série de figurines."
-      ],
-      "features": [
-        "Aatrox dans son skin Lune de sang",
-        "Boîte de collection de la 4e série",
-        "Icone d'invocateur exclusif Aatrox lune de sang pour League of Legends"
-      ],
-      "approximateDimensions": {
-        "other": ["hauteur", "largeur"]
-      },
-      "series": "Aatrox lune de sang est la figurine N°05 de la 4e série."
-    }
+    "quote": "Je viens pour vous juger, mortels.",
+    "descriptions": [
+      "Aatrox lune de sang arrive: le Fossoyeur des mondes devient l'édition spéciale N°05 de notre 4e série de figurines."
+    ],
+    "features": [
+      "Aatrox dans son skin Lune de sang",
+      "Boîte de collection de la 4e série",
+      "Icone d'invocateur exclusif Aatrox lune de sang pour League of Legends"
+    ],
+    "approximateDimensions": { "other": ["hauteur", "largeur"] },
+    "series": "Aatrox lune de sang est la figurine N°05 de la 4e série."
   },
   {
     "name": "Ensemble de masques de collection Lune de sang",
     "price": { "default": 52.99, "currency": "EUR" },
-    "information": {
-      "descriptions": [
-        "Préparez-vous pour le rituel de la Lune de sang avec l'ensemble de masques de collection Lune de sang!",
-        "Ce trio de masques démoniaques est accompagné d'un socle aussi rouge que la lune elle-même. Ce dernier porte le symbole de la Lune de sang et possède un arrière-plan pliable à l'effigie des propriétaires des masques:",
-        "Talon lune de sang - l'impitoyable démon assassin",
-        "Jhin lune de sang - le maître des cérémonies de la secte de la Lune de sang",
-        "Yasuo lune de sang - le bourreau cérémoniel de la secte de la Lune de sang"
-      ]
-    }
+    "descriptions": [
+      "Préparez-vous pour le rituel de la Lune de sang avec l'ensemble de masques de collection Lune de sang!",
+      "Ce trio de masques démoniaques est accompagné d'un socle aussi rouge que la lune elle-même. Ce dernier porte le symbole de la Lune de sang et possède un arrière-plan pliable à l'effigie des propriétaires des masques:",
+      "Talon lune de sang - l'impitoyable démon assassin",
+      "Jhin lune de sang - le maître des cérémonies de la secte de la Lune de sang",
+      "Yasuo lune de sang - le bourreau cérémoniel de la secte de la Lune de sang"
+    ]
   },
   {
     "name": "T-shirt Masques de la Lune de sang",
     "price": { "default": 31.99, "currency": "EUR" },
-    "information": {
-      "descriptions": [
-        "Faites appel au pouvoir de la Lune de sang aux côtés de Jhin lune de sang, Yasuo lune de sang et Talon lune de sang avec ce t-shirt Masques de la Lune de sang.",
-        "Entièrement certifié pour un large éventail d'activités, des rituels de possession démoniaque aux réunions vidéo en télétravail, notre t-shirt Masques de la Lune de sang 100% coton vous offrira un confort digne d'un membre de cet ordre mystique."
-      ]
-    }
+    "descriptions": [
+      "Faites appel au pouvoir de la Lune de sang aux côtés de Jhin lune de sang, Yasuo lune de sang et Talon lune de sang avec ce t-shirt Masques de la Lune de sang.",
+      "Entièrement certifié pour un large éventail d'activités, des rituels de possession démoniaque aux réunions vidéo en télétravail, notre t-shirt Masques de la Lune de sang 100% coton vous offrira un confort digne d'un membre de cet ordre mystique."
+    ]
   },
   {
     "name": "L'édition collector de Ruined King: A League of Legends Story",
     "price": { "default": 82.79, "currency": "EUR" },
-    "editions": {
-      "en": ["limited edition"],
-      "other": ["ÉDITION LIMITÉE"]
-    },
-    "information": {
-      "regions": ["Europe"],
-      "check": "Je comprends que ce code de jeu n'est ni remboursable, ni échangeable. La région de jeu et la plateforme dont j'ai besoin sont sélectionnées.",
-      "descriptions": [
-        "Nous sommes ravis de proposer l'édition collector de Ruined King: A League of Legends Story, en exclusivité sur la boutique des Produits dérivés Riot. Les quantités sont très limitées. L'édition collector comprend:",
-        [
-          "Version numérique spéciale du jeu Ruined King: A League of Legends Story*",
-          "Livre d'illustrations exclusif",
-          "Bande originale du jeu sur vinyle 12 pouces exclusif",
-          "Mug isotherme de Bilgewater",
-          "Carnet avec couverture en cuir et stylo assortis",
-          "Esquisse exclusive de Joe Mad",
-          "Carte en tissu de Bilgewater",
-          "Pièce de kraken d'or"
-        ],
-        "*Code de téléchargement pour la version numérique spéciale du jeu Ruined King: A League of Legends Story envoyé par e-mail dans l'heure après l'achat, transaction non remboursable.",
-        "Développé par Airship Syndicate (les créateurs de Battle Chasers et Darksiders) et illustré par le légendaire artiste de bandes dessinées Joe Madureira, Ruined King: A League of Legends Story est le premier jeu Riot Forge qui vous permet d'explorer l'univers de League of Legends. Dans ce jeu de rôle immersif au tour par tour, vous aurez la possibilité de former votre équipe et de prendre le contrôle de plusieurs champions de League of Legends. Explorez la tumultueuse Bilgewater et les mystérieuses Îles obscures, et découvrez le système d'initiative des voies."
-      ]
-    }
+    "editions": { "en": ["limited edition"], "other": ["ÉDITION LIMITÉE"] },
+    "regions": ["Europe"],
+    "check": "Je comprends que ce code de jeu n'est ni remboursable, ni échangeable. La région de jeu et la plateforme dont j'ai besoin sont sélectionnées.",
+    "descriptions": [
+      "Nous sommes ravis de proposer l'édition collector de Ruined King: A League of Legends Story, en exclusivité sur la boutique des Produits dérivés Riot. Les quantités sont très limitées. L'édition collector comprend:",
+      [
+        "Version numérique spéciale du jeu Ruined King: A League of Legends Story*",
+        "Livre d'illustrations exclusif",
+        "Bande originale du jeu sur vinyle 12 pouces exclusif",
+        "Mug isotherme de Bilgewater",
+        "Carnet avec couverture en cuir et stylo assortis",
+        "Esquisse exclusive de Joe Mad",
+        "Carte en tissu de Bilgewater",
+        "Pièce de kraken d'or"
+      ],
+      "*Code de téléchargement pour la version numérique spéciale du jeu Ruined King: A League of Legends Story envoyé par e-mail dans l'heure après l'achat, transaction non remboursable.",
+      "Développé par Airship Syndicate (les créateurs de Battle Chasers et Darksiders) et illustré par le légendaire artiste de bandes dessinées Joe Madureira, Ruined King: A League of Legends Story est le premier jeu Riot Forge qui vous permet d'explorer l'univers de League of Legends. Dans ce jeu de rôle immersif au tour par tour, vous aurez la possibilité de former votre équipe et de prendre le contrôle de plusieurs champions de League of Legends. Explorez la tumultueuse Bilgewater et les mystérieuses Îles obscures, et découvrez le système d'initiative des voies."
+    ]
   },
   {
     "name": "Peluche Renekton jouet",
     "price": { "default": 36.99, "currency": "EUR" },
-    "information": {
-      "warning": "Cet article est généralement livré 2 semaines après confirmation de votre achat.",
-      "descriptions": [
-        "Vous avez l'impression d'être un peu brut de décoffrage? Renekton jouet saura sans doute vous aider!",
-        "Renekton jouet n'est pas du genre à baisser les bras face à un défi... Sauf si sa lame en peluche se casse, bien sûr. Mais n'ayez crainte! Vous pouvez l'aider à la réparer pour l'emmener avec vous dans de multiples aventures, où vous découperez chaque obstacle avec joie et détermination!",
-        "Ne mettez pas Renekton jouet sur la touche: ramenez ce champion câlin chez vous, et commencez vos aventures dès maintenant!"
-      ]
-    }
+    "warning": "Cet article est généralement livré 2 semaines après confirmation de votre achat.",
+    "descriptions": [
+      "Vous avez l'impression d'être un peu brut de décoffrage? Renekton jouet saura sans doute vous aider!",
+      "Renekton jouet n'est pas du genre à baisser les bras face à un défi... Sauf si sa lame en peluche se casse, bien sûr. Mais n'ayez crainte! Vous pouvez l'aider à la réparer pour l'emmener avec vous dans de multiples aventures, où vous découperez chaque obstacle avec joie et détermination!",
+      "Ne mettez pas Renekton jouet sur la touche: ramenez ce champion câlin chez vous, et commencez vos aventures dès maintenant!"
+    ]
   },
   {
     "name": "Édition collector de Song of Nunu: A League of Legends Story",
     "price": { "default": 79.99, "currency": "EUR" },
-    "editions": {
-      "en": ["limited edition"],
-      "other": ["ÉDITION LIMITÉE"]
-    },
-    "information": {
-      "regions": ["Europe"],
-      "check": "Je comprends que ce code de jeu n'est ni remboursable, ni échangeable. La région de jeu et la plateforme dont j'ai besoin sont sélectionnées.",
-      "descriptions": [
-        "L'amitié est la plus étonnante des magies!",
-        "Song of Nunu: A League of Legends Story™ est une aventure en solo développée par Tequila Works. Joignez-vous à Nunu et Willump, les meilleurs amis du monde, et explorez les étendues glacées de Freljord. Unis par leur imagination infinie et leur amour des batailles de boules de neige, les deux héros devront travailler ensemble pour découvrir la magie qui se cache sous la glace.",
-        "L'édition collector de Song of Nunu: A League of Legends Story™ comprend:",
-        [
-          "Un code pour le jeu numérique Song of Nunu: A League of Legends Story™*",
-          "La boîte de l'édition collector",
-          "Un livre d'illustrations exclusif",
-          "Une peluche de Willump exclusive",
-          "Une peluche de Poro exclusive",
-          "Un diorama dépliable",
-          "5 pin's en émail à collectionner",
-          "1 impression à collectionner en noir et blanc",
-          "4 cartes postales de Freljord en relief"
-        ],
-        "*Le code du jeu Song of Nunu: A League of Legends Story™ sera envoyé par courrier électronique le jour de la sortie du jeu (sauf pour les éditions PlayStation 4/5, Xbox Series X|S et Xbox One) et n'est pas remboursable. Afin de parfaire votre expérience avec l'édition PlayStation 4/5, Xbox Series X|S ou Xbox One, vous devrez acheter le jeu séparément.",
-        "L'édition collector de Song of Nunu: A League of Legends Story™ est exclusivement disponible dans la boutique officielle de Riot Games. Les quantités sont extrêmement limitées.",
-        "Les commandes de l'édition collector donneront également droit à un chapeau en peluche de Nunu, gratuit et en édition limitée, dans la limite des stocks disponibles!",
-        "L'aventure vous attend dans Song of Nunu: A League of Legends Story™."
-      ]
-    }
+    "editions": { "en": ["limited edition"], "other": ["ÉDITION LIMITÉE"] },
+    "regions": ["Europe"],
+    "check": "Je comprends que ce code de jeu n'est ni remboursable, ni échangeable. La région de jeu et la plateforme dont j'ai besoin sont sélectionnées.",
+    "descriptions": [
+      "L'amitié est la plus étonnante des magies!",
+      "Song of Nunu: A League of Legends Story™ est une aventure en solo développée par Tequila Works. Joignez-vous à Nunu et Willump, les meilleurs amis du monde, et explorez les étendues glacées de Freljord. Unis par leur imagination infinie et leur amour des batailles de boules de neige, les deux héros devront travailler ensemble pour découvrir la magie qui se cache sous la glace.",
+      "L'édition collector de Song of Nunu: A League of Legends Story™ comprend:",
+      [
+        "Un code pour le jeu numérique Song of Nunu: A League of Legends Story™*",
+        "La boîte de l'édition collector",
+        "Un livre d'illustrations exclusif",
+        "Une peluche de Willump exclusive",
+        "Une peluche de Poro exclusive",
+        "Un diorama dépliable",
+        "5 pin's en émail à collectionner",
+        "1 impression à collectionner en noir et blanc",
+        "4 cartes postales de Freljord en relief"
+      ],
+      "*Le code du jeu Song of Nunu: A League of Legends Story™ sera envoyé par courrier électronique le jour de la sortie du jeu (sauf pour les éditions PlayStation 4/5, Xbox Series X|S et Xbox One) et n'est pas remboursable. Afin de parfaire votre expérience avec l'édition PlayStation 4/5, Xbox Series X|S ou Xbox One, vous devrez acheter le jeu séparément.",
+      "L'édition collector de Song of Nunu: A League of Legends Story™ est exclusivement disponible dans la boutique officielle de Riot Games. Les quantités sont extrêmement limitées.",
+      "Les commandes de l'édition collector donneront également droit à un chapeau en peluche de Nunu, gratuit et en édition limitée, dans la limite des stocks disponibles!",
+      "L'aventure vous attend dans Song of Nunu: A League of Legends Story™."
+    ]
   },
   {
     "name": "T-shirt Cuisine d'Akali",
     "price": { "default": 31.99, "currency": "EUR" },
-    "information": {
-      "descriptions": [
-        "Goûtez au mélange du style et de la force avec notre t-shirt Cuisine d'Akali! Orné d'une illustration audacieuse à l'avant représentant l'Assassin rebelle en train de savourer un délicieux bol de ramen, ce t-shirt affirme que même au combat, il y a toujours le temps de profiter d'un bon repas. Prenez goût à la victoire et laissez votre style en dire long sur votre passion pour les jeux et la gastronomie!"
-      ],
-      "features": ["100% coton", "Motifs sérigraphiés"]
-    }
+    "descriptions": [
+      "Goûtez au mélange du style et de la force avec notre t-shirt Cuisine d'Akali! Orné d'une illustration audacieuse à l'avant représentant l'Assassin rebelle en train de savourer un délicieux bol de ramen, ce t-shirt affirme que même au combat, il y a toujours le temps de profiter d'un bon repas. Prenez goût à la victoire et laissez votre style en dire long sur votre passion pour les jeux et la gastronomie!"
+    ],
+    "features": ["100% coton", "Motifs sérigraphiés"]
   },
   {
     "name": "Peluche Tibbers du Mondial 2023",
-    "price": {
-      "default": 40.99,
-      "saleAmount": 20.49,
-      "currency": "EUR"
-    },
-    "editions": {
-      "en": ["limited edition"],
-      "other": ["ÉDITION LIMITÉE"]
-    },
-    "information": {
-      "descriptions": [
-        "THE GRIND THE GLORY",
-        "C'est ça, le Mondial. Le moment où tout ce que vous aimez dans League of Legends atteint des sommets. Pour 22 équipes et 12 régions, les prochaines semaines en Corée du Sud seront l'occasion de repousser les limites de leurs capacités.",
-        "Partagez la gloire qui attend les vainqueurs avec la peluche Tibbers du Mondial 2023.",
-        "Ne manquez pas l'occasion d'ajouter ce Tibbers en édition limitée à votre collection. Uniquement disponible pendant le Mondial!"
-      ]
-    }
+    "price": { "default": 40.99, "saleAmount": 20.49, "currency": "EUR" },
+    "editions": { "en": ["limited edition"], "other": ["ÉDITION LIMITÉE"] },
+    "descriptions": [
+      "THE GRIND THE GLORY",
+      "C'est ça, le Mondial. Le moment où tout ce que vous aimez dans League of Legends atteint des sommets. Pour 22 équipes et 12 régions, les prochaines semaines en Corée du Sud seront l'occasion de repousser les limites de leurs capacités.",
+      "Partagez la gloire qui attend les vainqueurs avec la peluche Tibbers du Mondial 2023.",
+      "Ne manquez pas l'occasion d'ajouter ce Tibbers en édition limitée à votre collection. Uniquement disponible pendant le Mondial!"
+    ]
   },
   {
     "name": "Coussin Proviseur Yuumi de l'Académie",
-    "price": {
-      "default": 37,
-      "saleAmount": 14.8,
-      "currency": "EUR"
-    },
-    "information": {
-      "descriptions": [
-        "Étant une puissante canalisatrice de magie, la directrice suppléante de l'Académie de Durandal se sert du registre de l'Académie comme catalyseur afin de générer des niveaux d'énergie apocalyptiques... tout en se perchant sur la tête d'étudiants effrayés."
-      ],
-      "approximateDimensions": {
-        "other": ["hauteur", "largeur", "profondeur"]
-      }
-    }
+    "price": { "default": 37, "saleAmount": 14.8, "currency": "EUR" },
+    "descriptions": [
+      "Étant une puissante canalisatrice de magie, la directrice suppléante de l'Académie de Durandal se sert du registre de l'Académie comme catalyseur afin de générer des niveaux d'énergie apocalyptiques... tout en se perchant sur la tête d'étudiants effrayés."
+    ],
+    "approximateDimensions": { "other": ["hauteur", "largeur", "profondeur"] }
   },
   {
     "name": "Porte-clés de l'Académie du combat",
-    "price": {
-      "default": 47.5,
-      "saleAmount": 9.5,
-      "currency": "EUR"
-    },
-    "information": {
-      "descriptions": [
-        "L'Académie de l'Arme divine Durandal est représentée sous la forme d'un porte-clés à 6 éléments. Fabriqué en acrylique durable, il vous permet d'emporter les élèves, le professeur et le proviseur de Durandal où que vous alliez.",
-        "Caractéristiques du porte-clés de l'Académie du combat:",
-        [
-          "Proviseur Yuumi de l'Académie",
-          "Katarina de l'Académie du combat",
-          "Professeur Graves de l'Académie",
-          "Ezreal de l'Académie du combat",
-          "Jayce de l'Académie du combat",
-          "Lux de l'Académie du combat"
-        ]
+    "price": { "default": 47.5, "saleAmount": 9.5, "currency": "EUR" },
+    "descriptions": [
+      "L'Académie de l'Arme divine Durandal est représentée sous la forme d'un porte-clés à 6 éléments. Fabriqué en acrylique durable, il vous permet d'emporter les élèves, le professeur et le proviseur de Durandal où que vous alliez.",
+      "Caractéristiques du porte-clés de l'Académie du combat:",
+      [
+        "Proviseur Yuumi de l'Académie",
+        "Katarina de l'Académie du combat",
+        "Professeur Graves de l'Académie",
+        "Ezreal de l'Académie du combat",
+        "Jayce de l'Académie du combat",
+        "Lux de l'Académie du combat"
       ]
-    }
+    ]
   },
   {
     "name": "Pull à capuche avec fermeture éclair Académie de Durandal (unisexe)",
-    "price": {
-      "default": 67.5,
-      "saleAmount": 40.5,
-      "currency": "EUR"
-    },
-    "information": {
-      "descriptions": [
-        "Préparez-vous aux cours avec le pull à capuche de Durandal. La qualité premium de ce pull à capuche vous préparera à tous les cours du Professeur Graves.",
-        "Caractéristiques du pull à capuche avec fermeture éclair Académie de Durandal:",
-        [
-          "Blason brodé de l'Académie de l'Arme divine Durandal sur la poitrine",
-          "Fermeture éclair à l'avant",
-          "Étiquette personnalisée avec le logo de l'Académie du combat"
-        ]
+    "price": { "default": 67.5, "saleAmount": 40.5, "currency": "EUR" },
+    "descriptions": [
+      "Préparez-vous aux cours avec le pull à capuche de Durandal. La qualité premium de ce pull à capuche vous préparera à tous les cours du Professeur Graves.",
+      "Caractéristiques du pull à capuche avec fermeture éclair Académie de Durandal:",
+      [
+        "Blason brodé de l'Académie de l'Arme divine Durandal sur la poitrine",
+        "Fermeture éclair à l'avant",
+        "Étiquette personnalisée avec le logo de l'Académie du combat"
       ]
-    }
+    ]
   }
 ]

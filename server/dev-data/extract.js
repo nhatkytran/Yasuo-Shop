@@ -3,6 +3,9 @@
 // This API are created by on data of this website:
 // So this code is create to get data from HTML faster
 
+// There is a change in data -> information
+// Change code before using this file again
+
 // Helpers
 
 const getContentOf = selector => {

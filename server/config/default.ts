@@ -16,8 +16,8 @@ const parameterWhiteList = [
   'price.default',
   'price.saleAmount',
   'price.currency',
-  'information.type',
-  'information.category',
+  'type',
+  'category',
   'shippingDays',
   'sort', // Advanced API
   'fields', // Advanced API

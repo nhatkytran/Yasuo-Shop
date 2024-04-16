@@ -1,4 +1,4 @@
-import { FilterQuery, Model, QueryOptions, Types } from 'mongoose';
+import { FilterQuery, Model, QueryOptions, Types, UpdateQuery } from 'mongoose';
 
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
@@ -99,5 +99,35 @@ export const createProduct: CreateProduct = async ({ language, input }) => {
 
   const product = await ProductModel.create(input);
 
+  return removeEmptyArray(product.toJSON()) as ProductDocument;
+};
+
+type FindAndUpdateProduct = ({
+  language,
+  productID,
+  update,
+  options,
+}: {
+  language: string;
+  productID: string;
+  update: UpdateQuery<ProductDocument>;
+  options: QueryOptions;
+}) => Promise<ProductDocument | null>;
+
+export const findAndUpdateProduct: FindAndUpdateProduct = async ({
+  language,
+  productID,
+  update,
+  options,
+}) => {
+  const ProductModel = getProductModel(language);
+
+  const product = await ProductModel.findByIdAndUpdate(
+    productID,
+    update,
+    options
+  );
+
+  if (!product) return null;
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };

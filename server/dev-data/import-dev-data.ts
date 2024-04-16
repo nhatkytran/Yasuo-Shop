@@ -20,21 +20,21 @@ const getDataOther = (filename: string, originData: any) => {
     const dataOther = dataOthers[index];
 
     let optional;
-    if (data.information?.optional) {
+    if (data.optional) {
       optional = {
         optional: {
-          ...data.information.optional,
-          ...dataOther.information?.optional,
+          ...data.optional,
+          ...dataOther.optional,
         },
       };
     }
 
     let approximateDimensions;
-    if (data.information?.approximateDimensions) {
+    if (data.approximateDimensions) {
       approximateDimensions = {
         approximateDimensions: {
-          ...data.information.approximateDimensions,
-          ...dataOther.information?.approximateDimensions,
+          ...data.approximateDimensions,
+          ...dataOther.approximateDimensions,
         },
       };
     }
@@ -42,12 +42,8 @@ const getDataOther = (filename: string, originData: any) => {
     return {
       ...data,
       ...dataOther,
-      information: {
-        ...data.information,
-        ...dataOther.information,
-        ...(optional && optional),
-        ...(approximateDimensions && approximateDimensions),
-      },
+      ...(optional && optional),
+      ...(approximateDimensions && approximateDimensions),
     };
   });
 };

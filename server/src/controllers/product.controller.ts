@@ -7,22 +7,26 @@ import AppError from '../utils/appError';
 import {
   createProduct,
   findAllProducts,
+  findAndUpdateProduct,
   findProductByID,
 } from '../services/product.service';
-import { CreateProductInput, GetProductInput } from '../schemas/product.schema';
+import {
+  CreateProductInput,
+  GetProductInput,
+  UpdateProductInput,
+} from '../schemas/product.schema';
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
     if (env.dev) console.log('req.query ->', req.query);
 
-    const products = await findAllProducts({
-      language: res.locals.language,
-      reqQuery: req.query,
-    });
+    const language: string = res.locals.language;
+
+    const products = await findAllProducts({ language, reqQuery: req.query });
 
     res.status(200).json({
       status: 'success',
-      language: res.locals.language,
+      language,
       numResults: products.length,
       products,
     });
@@ -54,7 +58,7 @@ export const getProduct = catchAsync(
 
     res.status(200).json({
       status: 'success',
-      language: res.locals.language,
+      language,
       numResults: 1,
       product,
     });
@@ -70,8 +74,33 @@ export const createNewProduct = catchAsync(
 
     res.status(200).json({
       status: 'success',
-      language: res.locals.language,
+      language,
       numResults: 1,
+      product,
+    });
+  }
+);
+
+export const updateProduct = catchAsync(
+  async (
+    req: Request<UpdateProductInput['params'], {}, UpdateProductInput['body']>,
+    res: Response
+  ) => {
+    const language: string = res.locals.language;
+    const productID: string = req.params.productID;
+    const update = { ...req.body };
+
+    const product = await findAndUpdateProduct({
+      language,
+      productID,
+      update,
+      options: { new: true, runValidators: true },
+    });
+
+    res.status(200).json({
+      status: 'success',
+      language,
+      numResults: product ? 1 : 0,
       product,
     });
   }
