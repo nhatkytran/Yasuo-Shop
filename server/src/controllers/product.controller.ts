@@ -4,8 +4,12 @@ import { QueryOptions } from 'mongoose';
 import env from '../utils/env';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import { findAllProducts, findProductByID } from '../services/product.service';
-import { GetProductInput } from '../schemas/product.schema';
+import {
+  createProduct,
+  findAllProducts,
+  findProductByID,
+} from '../services/product.service';
+import { CreateProductInput, GetProductInput } from '../schemas/product.schema';
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
@@ -47,6 +51,22 @@ export const getProduct = catchAsync(
         message: `Product with ID '${productID}' not found!`,
         statusCode: 404,
       });
+
+    res.status(200).json({
+      status: 'success',
+      language: res.locals.language,
+      numResults: 1,
+      product,
+    });
+  }
+);
+
+export const createNewProduct = catchAsync(
+  async (req: Request<{}, {}, CreateProductInput['body']>, res: Response) => {
+    const language: string = res.locals.language;
+    const input = { ...req.body };
+
+    const product = await createProduct({ language, input });
 
     res.status(200).json({
       status: 'success',

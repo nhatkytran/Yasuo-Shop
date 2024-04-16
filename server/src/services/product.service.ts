@@ -2,11 +2,13 @@ import { FilterQuery, Model, QueryOptions, Types } from 'mongoose';
 
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
-import { ProductDocument } from '../models/products/schemaDefs';
+import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
 import removeEmptyArray from '../utils/removeEmptyArray';
 
 const getProductModel = (language: string): Model<ProductDocument> => {
+  if (!language) throw new Error('DevError: No language provided!');
+
   let ProductModel: Model<ProductDocument> = ProductEnUS; // 'en-us'
   if (language === 'fr') ProductModel = ProductFR;
 
@@ -82,5 +84,20 @@ export const findProductByID: FindProductByID = async ({
   const product = await ProductModel.findById(productID, selectOptions);
 
   if (!product) return null;
+  return removeEmptyArray(product.toJSON()) as ProductDocument;
+};
+
+type CreateProduct = ({
+  input,
+}: {
+  language: string;
+  input: ProductInput;
+}) => Promise<ProductDocument>;
+
+export const createProduct: CreateProduct = async ({ language, input }) => {
+  const ProductModel = getProductModel(language);
+
+  const product = await ProductModel.create(input);
+
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };

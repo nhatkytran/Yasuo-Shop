@@ -4,48 +4,48 @@ export type ProductInput = {
   name: string;
   price: {
     default: number;
-    saleAmount: number;
-    currency: string;
+    saleAmount?: number;
+    currency?: string;
   };
-  editions: {
+  editions?: {
     en: ('limited edition' | 'preorder' | 'special edition')[];
-    other: string[];
+    other?: string[];
   };
   images: string[];
   information: {
     type: 'figure' | 'game' | 'cloth' | 'item';
     category: 'featured' | 'sale';
-    optional: {
+    optional?: {
       title: string;
       image: string;
     };
-    sizes: string[];
-    platforms: string[];
-    regions: string[];
-    check: string;
-    warning: string;
-    shippingDays: number;
-    quote: string;
+    sizes?: string[];
+    platforms?: string[];
+    regions?: string[];
+    check?: string;
+    warning?: string;
+    shippingDays?: number;
+    quote?: string;
     descriptions: (string | string[])[];
-    features: string[];
-    approximateDimensions: {
+    features?: string[];
+    approximateDimensions?: {
       value: number[][];
       en: ('height' | 'width' | 'depth')[];
-      other: string[];
+      other?: string[];
     };
-    funFact: string;
-    series: string;
-    materials: string;
+    funFact?: string;
+    series?: string;
+    materials?: string[];
   };
 };
 
 export interface ProductDocument extends ProductInput, mongoose.Document {
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const schemaDefs = {
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   price: {
     default: { type: Number, required: true },
     saleAmount: { type: Number, default: 0 },

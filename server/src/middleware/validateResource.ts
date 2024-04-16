@@ -16,7 +16,13 @@ const validate =
       next();
     } catch (error: any) {
       const message: string = error.errors
-        .map((err: any) => `${err.code}: ${err.message}`)
+        .map((err: any) => {
+          const { code, expected, message, path } = err;
+
+          return `${code} - ${expected}: ${message} - ${path
+            .slice(1)
+            .join('.')}`;
+        })
         .join('; ');
 
       // All errors that are thrown by middleware will be handled in Global Error Handling

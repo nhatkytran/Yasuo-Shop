@@ -1,12 +1,22 @@
 import express from 'express';
 
-import { getAllProducts, getProduct } from '../controllers/product.controller';
+import {
+  createNewProduct,
+  getAllProducts,
+  getProduct,
+} from '../controllers/product.controller';
 import validate from '../middleware/validateResource';
-import { getProductSchema } from '../schemas/product.schema';
+import {
+  createProductSchema,
+  getProductSchema,
+} from '../schemas/product.schema';
 
 const productsRouter = express.Router();
 
-productsRouter.route('/').get(getAllProducts);
+productsRouter
+  .route('/')
+  .get(getAllProducts)
+  .post(validate(createProductSchema), createNewProduct);
 
 productsRouter.get('/:productID', validate(getProductSchema), getProduct);
 
