@@ -50,23 +50,36 @@ export const findAllProducts: FindAllProducts = async ({
 // query: FilterQuery<ProductDocument>,
 //   options: QueryOptions = { lean: true }
 
+interface FindProductByIDOptions extends QueryOptions {
+  fields?: string | string[];
+}
+
 type FindProductByID = ({
   language,
   productID,
 }: {
   language: string;
   productID: string;
-  options?: QueryOptions;
+  options?: FindProductByIDOptions;
 }) => Promise<ProductDocument | null>;
 
 export const findProductByID: FindProductByID = async ({
   language,
   productID,
-  options = {}, // name: true, price: true,...
+  options = {},
 }) => {
   const ProductModel = getProductModel(language);
 
-  const product = await ProductModel.findById(productID, options);
+  // { name: true, price.default: true,... } -> projecting
+  let selectOptions: { [key: string]: true } = {};
+  let { fields } = options;
+
+  if (fields) {
+    if (!Array.isArray(fields)) fields = fields.split(',');
+    fields.forEach(field => (selectOptions[field] = true));
+  }
+
+  const product = await ProductModel.findById(productID, selectOptions);
 
   if (!product) return null;
   return removeEmptyArray(product.toJSON()) as ProductDocument;

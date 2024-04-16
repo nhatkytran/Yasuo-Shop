@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 
+import env from '../utils/env';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import { findAllProducts, findProductByID } from '../services/product.service';
-import env from '../utils/env';
+import { QueryOptions } from 'mongoose';
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
@@ -23,26 +24,38 @@ export const getAllProducts = catchAsync(
   }
 );
 
+interface GetProductOptions extends QueryOptions {
+  fields?: string | string[];
+}
+
 // schema Zod for param
-// implement options
-export const getProduct = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
+export const getProduct = catchAsync(
+  async (
+    req: Request<{ id?: string }, {}, {}, GetProductOptions>,
+    res: Response
+  ) => {
+    const { id } = req.params;
+    const options = { ...req.query };
 
-  const product = await findProductByID({
-    language: res.locals.language,
-    productID: id,
-  });
+    if (env.dev) console.log(id, options);
 
-  if (!product)
-    throw new AppError({
-      message: `Product with ID '${id}' not found!`,
-      statusCode: 404,
+    const product = await findProductByID({
+      language: res.locals.language,
+      productID: id!,
+      options,
     });
 
-  res.status(200).json({
-    status: 'success',
-    language: res.locals.language,
-    numResults: 1,
-    product,
-  });
-});
+    if (!product)
+      throw new AppError({
+        message: `Product with ID '${id}' not found!`,
+        statusCode: 404,
+      });
+
+    res.status(200).json({
+      status: 'success',
+      language: res.locals.language,
+      numResults: 1,
+      product,
+    });
+  }
+);
