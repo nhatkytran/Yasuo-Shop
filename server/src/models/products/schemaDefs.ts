@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 
+type Price = {
+  default: number;
+  saleAmount?: number;
+  currency?: string;
+};
+
 export type ProductInput = {
   name: string;
-  price: {
-    default: number;
-    saleAmount?: number;
-    currency?: string;
-  };
+  price: Price;
   editions?: {
     en: ('limited edition' | 'preorder' | 'special edition')[];
     other?: string[];
@@ -95,4 +97,13 @@ export const schemaSups = {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
   id: false,
+};
+
+export const virtutalProperties = (schema: mongoose.Schema) => {
+  schema.virtual('price.priceAfterSale').get(function () {
+    const price: Price = this.price as Price;
+
+    if (price.saleAmount !== 0)
+      return Number((price.default - price.saleAmount!).toFixed(2));
+  });
 };
