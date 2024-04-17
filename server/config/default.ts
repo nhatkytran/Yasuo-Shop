@@ -25,6 +25,7 @@ const parameterWhiteList = [
 
 export default {
   port: 1337,
+  bcryptSaltFactor: 12,
   databaseURL,
   defaultLanguage: 'en-us',
   languageSupport: ['en-us', 'fr'],

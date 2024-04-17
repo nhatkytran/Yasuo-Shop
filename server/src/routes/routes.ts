@@ -1,8 +1,10 @@
 import { Express, Request, Response } from 'express';
 
+import userRouter from './user.route';
 import productsRouter from './product.route';
 
 const routes = (app: Express) => {
+  // Health check route
   app.get('/', (req: Request, res: Response) =>
     res.status(200).json({
       status: 'success',
@@ -10,6 +12,10 @@ const routes = (app: Express) => {
     })
   );
 
+  // Users, Authentication, Authorization,...
+  app.use('/api/v1/users', userRouter);
+
+  // Products -> stats, crud,...
   app.use('/api/v1/products', productsRouter);
 };
 
