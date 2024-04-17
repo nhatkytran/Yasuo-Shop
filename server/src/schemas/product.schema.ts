@@ -31,17 +31,31 @@ const payloadOptional = {
 };
 
 const Name = string();
+
 const Price = object({
   default: number(),
-  saleAmount: number().optional(),
+  saleAmount: number().gte(0).optional(),
   currency: string().optional(),
-});
+}).refine(
+  price => {
+    if (!price.saleAmount) return true;
+    return price.saleAmount <= price.default;
+  },
+  {
+    message: 'Sale amount cannot be greater than default price',
+    path: ['saleAmount'],
+  }
+);
+
 const Images = array(string());
+
 const Type = literal('figure')
   .or(literal('game'))
   .or(literal('cloth'))
   .or(literal('item'));
+
 const Category = literal('featured').or(literal('sale'));
+
 const Descriptions = array(string().or(array(string())));
 
 const params = {
