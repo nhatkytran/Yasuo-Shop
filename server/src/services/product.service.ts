@@ -71,6 +71,28 @@ export const calcProductStats: CalcProductStats = async ({ language }) => {
   ]);
 };
 
+interface Editions {}
+
+type FindProductEditions = ({ language }: { language: string }) => Promise<any>;
+
+export const findProductEditions: FindProductEditions = async ({
+  language,
+}) => {
+  const ProductModel = getProductModel(language);
+
+  return await ProductModel.aggregate([
+    { $unwind: { path: '$editions.en', preserveNullAndEmptyArrays: true } },
+    {
+      $group: {
+        _id: { $toUpper: '$editions.en' },
+        numProducts: { $sum: 1 },
+        productID: { $push: '$_id' },
+      },
+    },
+    { $sort: { numProducts: -1 } },
+  ]);
+};
+
 // CRUD //////////
 
 type FindAllProducts = ({

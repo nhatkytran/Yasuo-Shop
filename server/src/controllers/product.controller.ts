@@ -12,6 +12,7 @@ import {
   findAndDeleteProduct,
   findAndUpdateProduct,
   findProductByID,
+  findProductEditions,
 } from '../services/product.service';
 
 import {
@@ -30,6 +31,16 @@ export const getProductStats = catchAsync(
     const stats = await calcProductStats({ language });
 
     res.status(200).json({ status: 'success', language, stats });
+  }
+);
+
+export const getProductEditions = catchAsync(
+  async (req: Request, res: Response) => {
+    const language: string = res.locals.language;
+
+    const products = await findProductEditions({ language });
+
+    res.status(200).json({ status: 'success', language, products });
   }
 );
 

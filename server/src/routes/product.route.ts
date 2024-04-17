@@ -7,6 +7,7 @@ import {
   deleteProduct,
   getAllProducts,
   getProduct,
+  getProductEditions,
   getProductStats,
   updateProduct,
 } from '../controllers/product.controller';
@@ -23,6 +24,7 @@ const productsRouter = express.Router();
 // ADVANCED //////////
 
 productsRouter.route('/stats').get(getProductStats);
+productsRouter.route('/editions').get(getProductEditions);
 
 // CRUD //////////
 
