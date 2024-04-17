@@ -6,6 +6,8 @@ import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
 import removeEmptyArray from '../utils/removeEmptyArray';
 
+// Helper functions //////////
+
 const getProductModel = (language: string): Model<ProductDocument> => {
   if (!language) throw new Error('DevError: No language provided!');
 
@@ -14,6 +16,62 @@ const getProductModel = (language: string): Model<ProductDocument> => {
 
   return ProductModel;
 };
+
+// ADVANCED //////////
+
+interface Stats {
+  _id: string;
+  currency: string;
+  numProducts: number;
+  avgShippingDays: number;
+  avgPrice: number;
+  minPrice: number;
+  maxPrice: number;
+  avgSaleAmount: number;
+  minSaleAmount: number;
+  maxSaleAmount: number;
+  avgPriceAfterSale: number;
+  minPriceAfterSale: number;
+  maxPriceAfterSale: number;
+}
+
+type CalcProductStats = ({
+  language,
+}: {
+  language: string;
+}) => Promise<Stats[]>;
+
+export const calcProductStats: CalcProductStats = async ({ language }) => {
+  const ProductModel = getProductModel(language);
+
+  const priceDefault = '$price.default';
+  const saleAmount = '$price.saleAmount';
+  const priceAlterSale = { $subtract: ['$price.default', '$price.saleAmount'] };
+
+  return await ProductModel.aggregate<Stats>([
+    { $match: {} }, // Match all documents
+    {
+      $group: {
+        _id: { $toUpper: '$category' },
+        numProducts: { $sum: 1 },
+        avgShippingDays: { $avg: '$shippingDays' },
+        avgPrice: { $avg: priceDefault },
+        minPrice: { $min: priceDefault },
+        maxPrice: { $max: priceDefault },
+        avgSaleAmount: { $avg: saleAmount },
+        minSaleAmount: { $min: saleAmount },
+        maxSaleAmount: { $max: saleAmount },
+        avgPriceAfterSale: { $avg: priceAlterSale },
+        minPriceAfterSale: { $min: priceAlterSale },
+        maxPriceAfterSale: { $max: priceAlterSale },
+      },
+    },
+    { $addFields: { currency: 'USD' } },
+    { $sort: { numProducts: 1, avgPrice: 1 } },
+  ]);
+};
+
+// CRUD //////////
 
 type FindAllProducts = ({
   language,

@@ -4,19 +4,36 @@ import { QueryOptions } from 'mongoose';
 import env from '../utils/env';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
+
 import {
+  calcProductStats,
   createProduct,
   findAllProducts,
   findAndDeleteProduct,
   findAndUpdateProduct,
   findProductByID,
 } from '../services/product.service';
+
 import {
   CreateProductInput,
   DeleteProductInput,
   GetProductInput,
   UpdateProductInput,
 } from '../schemas/product.schema';
+
+// ADVANCED //////////
+
+export const getProductStats = catchAsync(
+  async (req: Request, res: Response) => {
+    const language: string = res.locals.language;
+
+    const stats = await calcProductStats({ language });
+
+    res.status(200).json({ status: 'success', language, stats });
+  }
+);
+
+// CRUD //////////
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
