@@ -1,9 +1,11 @@
 import { TypeOf, object, string } from 'zod';
 
+const Email = { email: string().email() };
+
 export const signupUserSchema = object({
   body: object({
+    ...Email,
     name: string(),
-    email: string().email(),
     password: string()
       .min(8)
       .regex(
@@ -17,7 +19,11 @@ export const signupUserSchema = object({
   }),
 });
 
+export const emailSchema = object({ params: object({ ...Email }) });
+
 export type SignupUserInput = Omit<
   TypeOf<typeof signupUserSchema>,
   'body.passwordConfirm'
 >;
+
+export type EmailInput = TypeOf<typeof emailSchema>;

@@ -7,11 +7,14 @@ export type UserInput = {
   photo?: string;
   active?: boolean;
   ban?: boolean;
+  googleID?: string;
+  activateToken?: string;
 };
 
 export interface UserDocument extends UserInput, mongoose.Document {
   createdAt?: Date;
   updatedAt?: Date;
+  createActivateToken(): string;
 }
 
 export const schemaDefs = {
@@ -21,6 +24,8 @@ export const schemaDefs = {
   photo: { type: String, default: '/img/users/default.png' },
   active: { type: Boolean, default: false },
   ban: { type: Boolean, default: false },
+  googleID: { type: String, select: false },
+  activateToken: { type: String, select: false },
 };
 
 export const schemaSups = {

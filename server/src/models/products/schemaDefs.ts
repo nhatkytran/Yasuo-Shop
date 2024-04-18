@@ -101,7 +101,7 @@ export const schemaSups = {
 
 export const virtutalProperties = (schema: mongoose.Schema) => {
   schema.virtual('price.priceAfterSale').get(function () {
-    const price: Price = this.price as Price;
+    const price = this.price as Price;
 
     if (price.saleAmount !== 0)
       return Number((price.default - price.saleAmount!).toFixed(2));

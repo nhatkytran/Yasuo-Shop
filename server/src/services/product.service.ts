@@ -9,8 +9,6 @@ import removeEmptyArray from '../utils/removeEmptyArray';
 // Helper functions //////////
 
 const getProductModel = (language: string): Model<ProductDocument> => {
-  if (!language) throw new Error('DevError: No language provided!');
-
   let ProductModel: Model<ProductDocument> = ProductEnUS; // 'en-us'
   if (language === 'fr') ProductModel = ProductFR;
 

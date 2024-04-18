@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import config from 'config';
 
 import { UserDocument, schemaDefs, schemaSups } from './schemaDefs';
+import { createTokens } from '../../utils/tokenAndHash';
 
 const schema = new mongoose.Schema(schemaDefs, schemaSups);
 
@@ -18,6 +19,14 @@ schema.pre('save', async function (next) {
 
   next();
 });
+
+schema.methods.createActivateToken = function () {
+  const { token, hash } = createTokens({ timeoutMinute: 2 });
+
+  this.activateToken = hash;
+
+  return token;
+};
 
 const User = mongoose.model<UserDocument>('User', schema, 'users');
 
