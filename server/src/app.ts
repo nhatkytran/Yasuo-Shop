@@ -23,6 +23,10 @@ const init = () => {
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
+  // Set EJS as the view engine and set views directory
+  app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname, 'views'));
+
   // Prevent parameter polution
   app.use(hpp({ whitelist: config.get('parameterWhiteList') }));
 

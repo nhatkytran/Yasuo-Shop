@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { omit } from 'lodash';
 
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
@@ -9,12 +10,32 @@ import {
   createUser,
   findUser,
 } from '../services/user.service';
+import Email from '../utils/sendEmail';
 
 export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
     const user = await createUser({ input: req.body });
 
-    res.status(200).json({ status: 'success', user });
+    const token = await createActionToken({ user, type: 'activate' });
+
+    try {
+      await new Email(user).sendWelcome({ oAuth: false, code: token });
+    } catch (error: any) {
+      user.activateToken = undefined;
+      await user.save({ validateModifiedOnly: true });
+
+      throw new AppError({
+        message:
+          'Something went wrong sending email! Please activate account manually.',
+        statusCode: 500,
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your activate code is sent to your email! Please check.',
+      user: omit(user.toJSON(), 'password', 'ban'),
+    });
   }
 );
 
@@ -44,6 +65,19 @@ export const getActivateCode = catchAsync(
       });
 
     const token = await createActionToken({ user, type: 'activate' });
+
+    try {
+      await new Email(user).sendWelcome({ oAuth: false, code: token });
+    } catch (error: any) {
+      user.activateToken = undefined;
+      await user.save({ validateModifiedOnly: true });
+
+      throw new AppError({
+        message:
+          'Something went wrong sending email! Please activate account manually.',
+        statusCode: 500,
+      });
+    }
 
     res.status(200).json({
       status: 'success',

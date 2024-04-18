@@ -9,10 +9,28 @@ type CreateUser = ({ input }: { input: UserInput }) => Promise<UserDocument>;
 export const createUser: CreateUser = async ({ input }) => {
   const { name, email, password } = input; // Prevent user input -> active: true
 
-  const user = await User.create({ name, email, password });
+  return await User.create({ name, email, password });
 
-  return omit(user.toJSON(), 'password', 'ban') as UserDocument;
+  // return omit(user.toJSON(), 'password', 'ban') as UserDocument;
 };
+
+// type RemoveUserFields = ({
+//   user,
+//   fields,
+// }: {
+//   user: UserDocument;
+//   fields: Array<keyof UserDocument>;
+// }) => Promise<void>;
+
+// const removeUserFields: RemoveUserFields = async ({ user, fields }) => {
+//   fields.forEach(field => {
+//     if (user[field] !== undefined) {
+//       user[field as string] = undefined;
+//     }
+//   });
+
+//   await user.save({ validateModifiedOnly: true });
+// };
 
 type FindUser = ({
   query,

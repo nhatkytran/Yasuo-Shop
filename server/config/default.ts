@@ -1,7 +1,20 @@
 import createDB from '../src/utils/createDB';
 
-const { DATABASE, DATABASE_NAME, DATABASE_PASSWORD, DATABASE_COLLECTION_NAME } =
-  process.env;
+const {
+  DATABASE,
+  DATABASE_NAME,
+  DATABASE_PASSWORD,
+  DATABASE_COLLECTION_NAME,
+  EMAIL_AUTHOR,
+  MAILTRAP_HOST,
+  MAILTRAP_PORT,
+  MAILTRAP_USERNAME,
+  MAILTRAP_PASSWORD,
+  BREVO_HOST,
+  BREVO_PORT,
+  BREVO_KEY_NAME,
+  BREVO_KEY_VALUE,
+} = process.env;
 
 // Database
 const databaseURL = createDB(DATABASE as string, {
@@ -30,4 +43,13 @@ export default {
   defaultLanguage: 'en-us',
   languageSupport: ['en-us', 'fr'],
   parameterWhiteList,
+  emailAuthor: EMAIL_AUTHOR,
+  mailtrapHost: MAILTRAP_HOST,
+  mailtrapPort: Number(MAILTRAP_PORT),
+  mailtrapUsername: MAILTRAP_USERNAME,
+  mailtrapPassword: MAILTRAP_PASSWORD,
+  brevoHost: BREVO_HOST,
+  brevoPort: Number(BREVO_PORT),
+  brevoKeyName: BREVO_KEY_NAME,
+  brevoKeyValue: BREVO_KEY_VALUE,
 };

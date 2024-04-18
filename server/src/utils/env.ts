@@ -5,6 +5,10 @@ const env = new (class Env {
     return NODE_ENV === 'development';
   }
 
+  public get test(): boolean {
+    return NODE_ENV === 'test';
+  }
+
   public get prod(): boolean {
     return NODE_ENV === 'production';
   }
