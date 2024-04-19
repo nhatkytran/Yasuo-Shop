@@ -9,12 +9,14 @@ export type UserInput = {
   ban?: boolean;
   googleID?: string;
   activateToken?: string;
+  forgotPasswordToken?: string;
 };
 
 export interface UserDocument extends UserInput, mongoose.Document {
   createdAt?: Date;
   updatedAt?: Date;
   createActivateToken(): string;
+  createForgotPasswordToken(): string;
 }
 
 export const schemaDefs = {
@@ -26,6 +28,7 @@ export const schemaDefs = {
   ban: { type: Boolean, default: false },
   googleID: { type: String, select: false },
   activateToken: { type: String, select: false },
+  forgotPasswordToken: { type: String, select: false },
 };
 
 export const schemaSups = {

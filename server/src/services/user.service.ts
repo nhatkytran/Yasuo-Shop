@@ -14,10 +14,28 @@ interface UserAndToken extends UserObject {
   token: string;
 }
 
+// Throw error when user created by OAuth: google,...
+const preventOAuthUser = (oAuth?: any): void => {
+  if (Boolean(oAuth))
+    throw new AppError({
+      message: 'This feature only supports accounts created manually!',
+      statusCode: 403,
+    });
+};
+
+// Throw error when user is already active
+const preventActiveUser = (active?: any): void => {
+  if (Boolean(active))
+    throw new AppError({
+      message: 'User is already active!',
+      statusCode: 400,
+    });
+};
+
 // Helper - Create tokens
 
 interface CreateActionTokenOptions extends UserObject {
-  type: 'activate';
+  type: 'activate' | 'forgotPassword';
 }
 
 const createActionToken = async ({
@@ -27,6 +45,7 @@ const createActionToken = async ({
   let token: string;
 
   if (type === 'activate') token = user.createActivateToken();
+  if (type === 'forgotPassword') token = user.createForgotPasswordToken();
 
   await user.save({ validateBeforeSave: false });
 
@@ -39,7 +58,7 @@ interface HandleSendEmailsOptions extends UserObject {
   token?: string;
   sendMethod: keyof Email;
   field?: keyof UserDocument;
-  errorMessage: string;
+  errorMessage?: string;
 }
 
 export const handleSendEmails = async ({
@@ -57,6 +76,9 @@ export const handleSendEmails = async ({
 
     if (sendMethod === 'sendActivate' && token)
       await email.sendActivate({ code: token });
+
+    if (sendMethod === 'sendForgotPassword' && token)
+      await email.sendForgotPassword({ code: token });
   } catch (error: any) {
     if (field)
       await User.updateOne({ _id: user._id }, { $unset: { [field]: 1 } });
@@ -117,20 +139,11 @@ export const findUser: FindUser = async ({ query }) => {
 
 // Get activate code //////////
 
-type CreateActivateToken = ({ user }: UserObject) => Promise<string>;
-
-export const createActivateToken: CreateActivateToken = async ({ user }) => {
-  if (user.googleID)
-    throw new AppError({
-      message: 'Getting activate code only supports accounts created manually!',
-      statusCode: 403,
-    });
-
-  if (user.active)
-    throw new AppError({
-      message: 'User is already active!',
-      statusCode: 400,
-    });
+export const createActivateToken = async ({
+  user,
+}: UserObject): Promise<string> => {
+  preventOAuthUser(user.googleID);
+  preventActiveUser(user.active);
 
   return await createActionToken({ user, type: 'activate' });
 };
@@ -144,7 +157,6 @@ export const sendActivateTokenEmail = async ({
     token,
     sendMethod: 'sendActivate',
     field: 'activateToken',
-    errorMessage: 'Please activate account manually.',
   });
 
 // Activate user -> active: true //////////
@@ -152,11 +164,8 @@ export const sendActivateTokenEmail = async ({
 type ActivateUser = ({ user, token }: UserAndToken) => Promise<void>;
 
 export const activateUser: ActivateUser = async ({ user, token }) => {
-  if (user.active)
-    throw new AppError({
-      message: 'User is already active!',
-      statusCode: 400,
-    });
+  preventOAuthUser(user.googleID);
+  preventActiveUser(user.active);
 
   if (!user.activateToken)
     throw new AppError({
@@ -178,3 +187,24 @@ export const activateUser: ActivateUser = async ({ user, token }) => {
 
   await user.save({ validateModifiedOnly: true });
 };
+
+// Forgot password code //////////
+
+export const createForgotPasswordToken = async ({
+  user,
+}: UserObject): Promise<string> => {
+  preventOAuthUser(user.googleID);
+
+  return await createActionToken({ user, type: 'forgotPassword' });
+};
+
+export const sendForgotPasswordTokenEmail = async ({
+  user,
+  token,
+}: UserAndToken): Promise<void> =>
+  await handleSendEmails({
+    user,
+    token,
+    sendMethod: 'sendForgotPassword',
+    field: 'forgotPasswordToken',
+  });

@@ -81,6 +81,15 @@ class Email {
       code,
     });
   }
+
+  async sendForgotPassword({ code }: { code: string }) {
+    await this.send({
+      template: 'forgotPasswordEmail',
+      subject: 'Yasuo API - Yasuo Shop! Forgot password code',
+      username: this.username,
+      code,
+    });
+  }
 }
 
 export default Email;

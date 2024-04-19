@@ -7,7 +7,7 @@ import {
   virtutalProperties,
 } from './schemaDefs';
 
-const schema = new mongoose.Schema(schemaDefs, schemaSups);
+const schema = new mongoose.Schema<ProductDocument>(schemaDefs, schemaSups);
 
 virtutalProperties(schema);
 

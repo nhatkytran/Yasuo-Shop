@@ -38,6 +38,10 @@
                                     <%- include('./activateEmail.ejs'); %>
                                       <% } %>
 
+                                        <% if (template==='forgotPasswordEmail' ) { %>
+                                          <%- include('./forgotPasswordEmail.ejs'); %>
+                                            <% } %>
+
                           </td>
                         </tr>
                       </tbody>
@@ -56,7 +60,7 @@
                 <tbody>
                   <tr>
                     <td class="content-block">
-                      <span class="apple-link">Yasuo The King | The King of All Kings</span><br>
+                      <span class="apple-link">Yasuo API - Yasuo Shop</span><br>
                       Don't like these emails? <a href="#">Unsubscribe</a>
                     </td>
                   </tr>

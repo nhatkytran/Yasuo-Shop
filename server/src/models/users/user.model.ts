@@ -5,7 +5,9 @@ import config from 'config';
 import { UserDocument, schemaDefs, schemaSups } from './schemaDefs';
 import { createTokens } from '../../utils/tokenAndHash';
 
-const schema = new mongoose.Schema(schemaDefs, schemaSups);
+const schema = new mongoose.Schema<UserDocument>(schemaDefs, schemaSups);
+
+// Middlewares //////////
 
 schema.pre('save', async function (next) {
   const user = this as UserDocument;
@@ -20,13 +22,31 @@ schema.pre('save', async function (next) {
   next();
 });
 
-schema.methods.createActivateToken = function () {
-  const { token, hash } = createTokens({ timeoutMinute: 2 });
+// Schema methods //////////
 
-  this.activateToken = hash;
+type createTokenOptions = { field: string; timeoutMinute: number };
 
-  return token;
-};
+// ts ignore for this keyword -> this points to user document
+// this function will be a schema method
+const createTokenFactory = ({ field, timeoutMinute }: createTokenOptions) =>
+  function () {
+    const { token, hash } = createTokens({ timeoutMinute });
+
+    // @ts-ignore
+    this[field] = hash;
+
+    return token;
+  };
+
+schema.methods.createActivateToken = createTokenFactory({
+  field: 'activateToken',
+  timeoutMinute: 2,
+});
+
+schema.methods.createForgotPasswordToken = createTokenFactory({
+  field: 'forgotPasswordToken',
+  timeoutMinute: 2,
+});
 
 const User = mongoose.model<UserDocument>('User', schema, 'users');
 

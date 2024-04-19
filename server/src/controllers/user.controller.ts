@@ -5,10 +5,12 @@ import catchAsync from '../utils/catchAsync';
 import {
   activateUser,
   createActivateToken,
+  createForgotPasswordToken,
   createUser,
   findUser,
   sendActivateTokenEmail,
   sendCreateUserEmail,
+  sendForgotPasswordTokenEmail,
 } from '../services/user.service';
 
 import {
@@ -17,6 +19,8 @@ import {
   SignupUserInput,
 } from '../schemas/user.schema';
 import sendSuccess from '../utils/sendSuccess';
+
+// Sign up //////////
 
 export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
@@ -31,6 +35,8 @@ export const signup = catchAsync(
     });
   }
 );
+
+// Activate user -> active: true //////////
 
 export const getActivateCode = catchAsync(
   async (req: Request<EmailInput['params']>, res: Response) => {
@@ -56,5 +62,21 @@ export const activate = catchAsync(
     await activateUser({ user, token: code });
 
     sendSuccess(res, { message: 'Activate account successfully.' });
+  }
+);
+
+// Passwords //////////
+
+export const forgotPassword = catchAsync(
+  async (req: Request<EmailInput['params']>, res: Response) => {
+    const user = await findUser({ query: { email: req.params.email } });
+    const token = await createForgotPasswordToken({ user });
+
+    await sendForgotPasswordTokenEmail({ user, token });
+
+    sendSuccess(res, {
+      message:
+        'Forgot password code has been sent to your email. Please check.',
+    });
   }
 );

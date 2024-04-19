@@ -10,6 +10,7 @@ import {
 
 import {
   activate,
+  forgotPassword,
   getActivateCode,
   signup,
 } from '../controllers/user.controller';
@@ -22,5 +23,9 @@ userRouter.post('/signup', validate(signupUserSchema), signup);
 
 userRouter.get('/activateCode/:email', validate(emailSchema), getActivateCode);
 userRouter.post('/activate', validate(activateSchema), activate);
+
+// Passwords: forgot, reset, update
+
+userRouter.get('/forgotPassword/:email', validate(emailSchema), forgotPassword);
 
 export default userRouter;
