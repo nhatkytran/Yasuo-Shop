@@ -34,6 +34,10 @@
                               <%- include('./welcomeEmail.ejs'); %>
                                 <% } %>
 
+                                  <% if (template==='activateEmail' ) { %>
+                                    <%- include('./activateEmail.ejs'); %>
+                                      <% } %>
+
                           </td>
                         </tr>
                       </tbody>

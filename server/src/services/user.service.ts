@@ -1,54 +1,52 @@
 import { FilterQuery } from 'mongoose';
 import { omit } from 'lodash';
 
+import AppError from '../utils/appError';
+import Email from '../utils/sendEmail';
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
 
-type CreateUser = ({ input }: { input: UserInput }) => Promise<UserDocument>;
+// Sign up - Create user //////////
+
+type CreateUser = ({ input }: { input: UserInput }) => Promise<{
+  user: UserDocument;
+  token: string;
+}>;
 
 export const createUser: CreateUser = async ({ input }) => {
   const { name, email, password } = input; // Prevent user input -> active: true
 
-  return await User.create({ name, email, password });
+  const user = await User.create({ name, email, password });
+  const token = await createActionToken({ user, type: 'activate' });
 
-  // return omit(user.toJSON(), 'password', 'ban') as UserDocument;
+  return {
+    user: omit(user.toJSON(), 'password', 'ban') as UserDocument,
+    token,
+  };
 };
 
-// type RemoveUserFields = ({
-//   user,
-//   fields,
-// }: {
-//   user: UserDocument;
-//   fields: Array<keyof UserDocument>;
-// }) => Promise<void>;
+// Find user using query: _id, email,... //////////
 
-// const removeUserFields: RemoveUserFields = async ({ user, fields }) => {
-//   fields.forEach(field => {
-//     if (user[field] !== undefined) {
-//       user[field as string] = undefined;
-//     }
-//   });
-
-//   await user.save({ validateModifiedOnly: true });
-// };
-
-type FindUser = ({
-  query,
-}: {
-  query: FilterQuery<UserDocument>;
-}) => Promise<UserDocument | null>;
+type FindUserOptions = { query: FilterQuery<UserDocument> };
+type FindUser = ({ query }: FindUserOptions) => Promise<UserDocument>;
 
 export const findUser: FindUser = async ({ query }) => {
-  return await User.findOne(query);
+  const user = await User.findOne(query);
+
+  if (!user)
+    throw new AppError({ message: `User not found!`, statusCode: 404 });
+
+  return user as UserDocument;
 };
+
+// Create token for validation next actions //////////
+
+type CreateActionTokenOptions = { user: UserDocument; type: 'activate' };
 
 type CreateActionToken = ({
   user,
   type,
-}: {
-  user: UserDocument;
-  type: 'activate';
-}) => Promise<string>;
+}: CreateActionTokenOptions) => Promise<string>;
 
 export const createActionToken: CreateActionToken = async ({ user, type }) => {
   let token: string;
@@ -58,4 +56,44 @@ export const createActionToken: CreateActionToken = async ({ user, type }) => {
   await user.save({ validateBeforeSave: false });
 
   return token!;
+};
+
+// Send emails to user //////////
+
+type HandleSendEmailsOptions = {
+  user: UserDocument;
+  token?: string;
+  sendMethod: keyof Email;
+  field?: string;
+  errorMessage: string;
+};
+
+type HandleSendEmails = ({ user }: HandleSendEmailsOptions) => Promise<void>;
+
+export const handleSendEmails: HandleSendEmails = async ({
+  user,
+  token,
+  sendMethod,
+  field,
+  errorMessage,
+}) => {
+  try {
+    const email = new Email(user);
+
+    if (sendMethod === 'sendWelcome')
+      await email.sendWelcome({ oAuth: false, code: token });
+
+    if (sendMethod === 'sendActivate' && token)
+      await email.sendActivate({ code: token });
+  } catch (error: any) {
+    if (field)
+      await User.updateOne({ _id: user._id }, { $unset: { [field]: 1 } });
+
+    throw new AppError({
+      message: `Something went wrong sending email!${errorMessage ? ' ' : ''}${
+        errorMessage || ''
+      }`,
+      statusCode: 500,
+    });
+  }
 };

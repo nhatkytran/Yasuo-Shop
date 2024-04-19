@@ -72,6 +72,15 @@ class Email {
       code,
     });
   }
+
+  async sendActivate({ code }: { code: string }) {
+    await this.send({
+      template: 'activateEmail',
+      subject: 'Yasuo API - Yasuo Shop! Activate code',
+      username: this.username,
+      code,
+    });
+  }
 }
 
 export default Email;

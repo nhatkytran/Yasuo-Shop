@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { omit } from 'lodash';
 
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
@@ -9,32 +8,26 @@ import {
   createActionToken,
   createUser,
   findUser,
+  handleSendEmails,
 } from '../services/user.service';
-import Email from '../utils/sendEmail';
 
 export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
-    const user = await createUser({ input: req.body });
+    const { user, token } = await createUser({ input: req.body });
 
-    const token = await createActionToken({ user, type: 'activate' });
-
-    try {
-      await new Email(user).sendWelcome({ oAuth: false, code: token });
-    } catch (error: any) {
-      user.activateToken = undefined;
-      await user.save({ validateModifiedOnly: true });
-
-      throw new AppError({
-        message:
-          'Something went wrong sending email! Please activate account manually.',
-        statusCode: 500,
-      });
-    }
+    await handleSendEmails({
+      user,
+      token,
+      sendMethod: 'sendWelcome',
+      field: 'activateToken',
+      errorMessage: 'Please activate account manually.',
+    });
 
     res.status(200).json({
       status: 'success',
-      message: 'Your activate code is sent to your email! Please check.',
-      user: omit(user.toJSON(), 'password', 'ban'),
+      message:
+        'Sign up successfully. Your activate code is sent to your email! Please check.',
+      user,
     });
   }
 );
@@ -44,12 +37,6 @@ export const getActivateCode = catchAsync(
     const { email } = req.params;
 
     const user = await findUser({ query: { email } });
-
-    if (!user)
-      throw new AppError({
-        message: `User not found with email: ${email}`,
-        statusCode: 404,
-      });
 
     if (user.googleID)
       throw new AppError({
@@ -66,22 +53,17 @@ export const getActivateCode = catchAsync(
 
     const token = await createActionToken({ user, type: 'activate' });
 
-    try {
-      await new Email(user).sendWelcome({ oAuth: false, code: token });
-    } catch (error: any) {
-      user.activateToken = undefined;
-      await user.save({ validateModifiedOnly: true });
-
-      throw new AppError({
-        message:
-          'Something went wrong sending email! Please activate account manually.',
-        statusCode: 500,
-      });
-    }
+    await handleSendEmails({
+      user,
+      token,
+      sendMethod: 'sendActivate',
+      field: 'activateToken',
+      errorMessage: 'Please activate account manually.',
+    });
 
     res.status(200).json({
       status: 'success',
-      message: 'Token has been sent to your email. Please check.',
+      message: 'Activate code has been sent to your email. Please check.',
     });
   }
 );
