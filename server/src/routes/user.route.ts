@@ -18,7 +18,7 @@ const userRouter = express.Router();
 
 // Create user and activate user (confirm that email of user exists)
 
-userRouter.get('/signup', validate(signupUserSchema), signup);
+userRouter.post('/signup', validate(signupUserSchema), signup);
 
 userRouter.get('/activateCode/:email', validate(emailSchema), getActivateCode);
 userRouter.post('/activate', validate(activateSchema), activate);

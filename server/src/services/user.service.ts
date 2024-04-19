@@ -8,51 +8,22 @@ import { hashToken } from '../utils/tokenAndHash';
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
 
-// Helpers
+type UserObject = { user: UserDocument };
 
-// Sign up - Create user //////////
-
-type CreateUser = ({ input }: { input: UserInput }) => Promise<{
-  user: UserDocument;
+interface UserAndToken extends UserObject {
   token: string;
-}>;
+}
 
-export const createUser: CreateUser = async ({ input }) => {
-  const { name, email, password } = input; // Prevent user input -> active: true
+// Helper - Create tokens
 
-  const user = await User.create({ name, email, password });
-  const token = await createActionToken({ user, type: 'activate' });
+interface CreateActionTokenOptions extends UserObject {
+  type: 'activate';
+}
 
-  return {
-    user: omit(user.toJSON(), 'password', 'ban') as UserDocument,
-    token,
-  };
-};
-
-// Find user using query: _id, email,... //////////
-
-type FindUserOptions = { query: FilterQuery<UserDocument> };
-type FindUser = ({ query }: FindUserOptions) => Promise<UserDocument>;
-
-export const findUser: FindUser = async ({ query }) => {
-  const user = await User.findOne(query).select('+activateToken');
-
-  if (!user)
-    throw new AppError({ message: `User not found!`, statusCode: 404 });
-
-  return user as UserDocument;
-};
-
-// Create token for validation next actions //////////
-
-type CreateActionTokenOptions = { user: UserDocument; type: 'activate' };
-
-type CreateActionToken = ({
+const createActionToken = async ({
   user,
   type,
-}: CreateActionTokenOptions) => Promise<string>;
-
-export const createActionToken: CreateActionToken = async ({ user, type }) => {
+}: CreateActionTokenOptions): Promise<string> => {
   let token: string;
 
   if (type === 'activate') token = user.createActivateToken();
@@ -62,25 +33,22 @@ export const createActionToken: CreateActionToken = async ({ user, type }) => {
   return token!;
 };
 
-// Send emails to user //////////
+// Helper - Send email
 
-type HandleSendEmailsOptions = {
-  user: UserDocument;
+interface HandleSendEmailsOptions extends UserObject {
   token?: string;
   sendMethod: keyof Email;
-  field?: string;
+  field?: keyof UserDocument;
   errorMessage: string;
-};
+}
 
-type HandleSendEmails = ({ user }: HandleSendEmailsOptions) => Promise<void>;
-
-export const handleSendEmails: HandleSendEmails = async ({
+export const handleSendEmails = async ({
   user,
   token,
   sendMethod,
   field,
   errorMessage,
-}) => {
+}: HandleSendEmailsOptions): Promise<void> => {
   try {
     const email = new Email(user);
 
@@ -102,10 +70,86 @@ export const handleSendEmails: HandleSendEmails = async ({
   }
 };
 
+// Sign up - Create user //////////
+
+type CreateUser = ({ input }: { input: UserInput }) => Promise<{
+  user: UserDocument;
+  token: string;
+}>;
+
+export const createUser: CreateUser = async ({ input }) => {
+  const { name, email, password } = input; // Prevent user input -> active: true
+
+  const user = await User.create({ name, email, password });
+  const token = await createActionToken({ user, type: 'activate' });
+
+  return {
+    user: omit(user.toJSON(), 'password', 'ban') as UserDocument,
+    token,
+  };
+};
+
+export const sendCreateUserEmail = async ({
+  user,
+  token,
+}: UserAndToken): Promise<void> =>
+  await handleSendEmails({
+    user,
+    token,
+    sendMethod: 'sendWelcome',
+    field: 'activateToken',
+    errorMessage: 'Please activate account manually.',
+  });
+
+// Find user using query: _id, email,... //////////
+
+type FindUserOptions = { query: FilterQuery<UserDocument> };
+type FindUser = ({ query }: FindUserOptions) => Promise<UserDocument>;
+
+export const findUser: FindUser = async ({ query }) => {
+  const user = await User.findOne(query).select('+activateToken');
+
+  if (!user)
+    throw new AppError({ message: `User not found!`, statusCode: 404 });
+
+  return user;
+};
+
+// Get activate code //////////
+
+type CreateActivateToken = ({ user }: UserObject) => Promise<string>;
+
+export const createActivateToken: CreateActivateToken = async ({ user }) => {
+  if (user.googleID)
+    throw new AppError({
+      message: 'Getting activate code only supports accounts created manually!',
+      statusCode: 403,
+    });
+
+  if (user.active)
+    throw new AppError({
+      message: 'User is already active!',
+      statusCode: 400,
+    });
+
+  return await createActionToken({ user, type: 'activate' });
+};
+
+export const sendActivateTokenEmail = async ({
+  user,
+  token,
+}: UserAndToken): Promise<void> =>
+  await handleSendEmails({
+    user,
+    token,
+    sendMethod: 'sendActivate',
+    field: 'activateToken',
+    errorMessage: 'Please activate account manually.',
+  });
+
 // Activate user -> active: true //////////
 
-type ActivateUserOptions = { user: UserDocument; token: string };
-type ActivateUser = ({ user, token }: ActivateUserOptions) => Promise<void>;
+type ActivateUser = ({ user, token }: UserAndToken) => Promise<void>;
 
 export const activateUser: ActivateUser = async ({ user, token }) => {
   if (user.active)

@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
 import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/appError';
 
 import {
   activateUser,
-  createActionToken,
+  createActivateToken,
   createUser,
   findUser,
-  handleSendEmails,
+  sendActivateTokenEmail,
+  sendCreateUserEmail,
 } from '../services/user.service';
 
 import {
@@ -16,21 +16,15 @@ import {
   EmailInput,
   SignupUserInput,
 } from '../schemas/user.schema';
+import sendSuccess from '../utils/sendSuccess';
 
 export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
     const { user, token } = await createUser({ input: req.body });
 
-    await handleSendEmails({
-      user,
-      token,
-      sendMethod: 'sendWelcome',
-      field: 'activateToken',
-      errorMessage: 'Please activate account manually.',
-    });
+    await sendCreateUserEmail({ user, token });
 
-    res.status(200).json({
-      status: 'success',
+    sendSuccess(res, {
       message:
         'Sign up successfully. Your activate code is sent to your email! Please check.',
       user,
@@ -43,32 +37,11 @@ export const getActivateCode = catchAsync(
     const { email } = req.params;
 
     const user = await findUser({ query: { email } });
+    const token = await createActivateToken({ user });
 
-    if (user.googleID)
-      throw new AppError({
-        message:
-          'Getting activate code only supports accounts created manually!',
-        statusCode: 403,
-      });
+    await sendActivateTokenEmail({ user, token });
 
-    if (user.active)
-      throw new AppError({
-        message: 'User is already active!',
-        statusCode: 400,
-      });
-
-    const token = await createActionToken({ user, type: 'activate' });
-
-    await handleSendEmails({
-      user,
-      token,
-      sendMethod: 'sendActivate',
-      field: 'activateToken',
-      errorMessage: 'Please activate account manually.',
-    });
-
-    res.status(200).json({
-      status: 'success',
+    sendSuccess(res, {
       message: 'Activate code has been sent to your email. Please check.',
     });
   }
@@ -82,9 +55,6 @@ export const activate = catchAsync(
 
     await activateUser({ user, token: code });
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Activate account successfully.',
-    });
+    sendSuccess(res, { message: 'Activate account successfully.' });
   }
 );
