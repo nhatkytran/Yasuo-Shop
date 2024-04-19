@@ -2,14 +2,20 @@ import { Request, Response } from 'express';
 
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import { EmailInput, SignupUserInput } from '../schemas/user.schema';
 
 import {
+  activateUser,
   createActionToken,
   createUser,
   findUser,
   handleSendEmails,
 } from '../services/user.service';
+
+import {
+  ActivateInput,
+  EmailInput,
+  SignupUserInput,
+} from '../schemas/user.schema';
 
 export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
@@ -68,4 +74,17 @@ export const getActivateCode = catchAsync(
   }
 );
 
-// export const activateUser = catchAsync(async (req: Request, res: Response) => {});
+export const activate = catchAsync(
+  async (req: Request<{}, {}, ActivateInput['body']>, res: Response) => {
+    const { email, code } = req.body;
+
+    const user = await findUser({ query: { email } });
+
+    await activateUser({ user, token: code });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Activate account successfully.',
+    });
+  }
+);

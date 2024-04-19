@@ -1,6 +1,7 @@
 import { TypeOf, object, string } from 'zod';
 
 const Email = { email: string().email() };
+const Code = { code: string() };
 
 export const signupUserSchema = object({
   body: object({
@@ -20,10 +21,11 @@ export const signupUserSchema = object({
 });
 
 export const emailSchema = object({ params: object({ ...Email }) });
+export const activateSchema = object({ body: object({ ...Email, ...Code }) });
 
 export type SignupUserInput = Omit<
   TypeOf<typeof signupUserSchema>,
   'body.passwordConfirm'
 >;
-
 export type EmailInput = TypeOf<typeof emailSchema>;
+export type ActivateInput = TypeOf<typeof activateSchema>;

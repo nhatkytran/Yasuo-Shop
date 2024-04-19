@@ -3,8 +3,12 @@ import { omit } from 'lodash';
 
 import AppError from '../utils/appError';
 import Email from '../utils/sendEmail';
+import { hashToken } from '../utils/tokenAndHash';
+
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
+
+// Helpers
 
 // Sign up - Create user //////////
 
@@ -31,7 +35,7 @@ type FindUserOptions = { query: FilterQuery<UserDocument> };
 type FindUser = ({ query }: FindUserOptions) => Promise<UserDocument>;
 
 export const findUser: FindUser = async ({ query }) => {
-  const user = await User.findOne(query);
+  const user = await User.findOne(query).select('+activateToken');
 
   if (!user)
     throw new AppError({ message: `User not found!`, statusCode: 404 });
@@ -96,4 +100,37 @@ export const handleSendEmails: HandleSendEmails = async ({
       statusCode: 500,
     });
   }
+};
+
+// Activate user -> active: true //////////
+
+type ActivateUserOptions = { user: UserDocument; token: string };
+type ActivateUser = ({ user, token }: ActivateUserOptions) => Promise<void>;
+
+export const activateUser: ActivateUser = async ({ user, token }) => {
+  if (user.active)
+    throw new AppError({
+      message: 'User is already active!',
+      statusCode: 400,
+    });
+
+  if (!user.activateToken)
+    throw new AppError({
+      message:
+        'Get your activate code first! (/api/v1/users/activateCode/:email)',
+      statusCode: 401,
+    });
+
+  const [hash, timeout] = user.activateToken.split('/');
+
+  if (hashToken(token) !== hash || Date.now() > Number(timeout))
+    throw new AppError({
+      message: 'Invalid token or token has expired!',
+      statusCode: 401,
+    });
+
+  user.active = true;
+  user.activateToken = undefined;
+
+  await user.save({ validateModifiedOnly: true });
 };
