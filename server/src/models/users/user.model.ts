@@ -19,6 +19,8 @@ schema.pre('save', async function (next) {
     config.get<number>('bcryptSaltFactor')
   );
 
+  if (!this.isNew) user.passwordChangedAt = new Date();
+
   next();
 });
 

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import catchAsync from '../utils/catchAsync';
+import sendSuccess from '../utils/sendSuccess';
 
 import {
   activateUser,
@@ -8,6 +9,7 @@ import {
   createForgotPasswordToken,
   createUser,
   findUser,
+  resetUserPassword,
   sendActivateTokenEmail,
   sendCreateUserEmail,
   sendForgotPasswordTokenEmail,
@@ -16,9 +18,9 @@ import {
 import {
   ActivateInput,
   EmailInput,
+  ResetPasswordInput,
   SignupUserInput,
 } from '../schemas/user.schema';
-import sendSuccess from '../utils/sendSuccess';
 
 // Sign up //////////
 
@@ -57,7 +59,10 @@ export const activate = catchAsync(
   async (req: Request<{}, {}, ActivateInput['body']>, res: Response) => {
     const { email, code } = req.body;
 
-    const user = await findUser({ query: { email } });
+    const user = await findUser({
+      query: { email },
+      selectFields: ['activateToken'],
+    });
 
     await activateUser({ user, token: code });
 
@@ -78,5 +83,20 @@ export const forgotPassword = catchAsync(
       message:
         'Forgot password code has been sent to your email. Please check.',
     });
+  }
+);
+
+export const resetPassword = catchAsync(
+  async (req: Request<{}, {}, ResetPasswordInput['body']>, res: Response) => {
+    const { email, code, newPassword } = req.body;
+
+    const user = await findUser({
+      query: { email },
+      selectFields: ['forgotPasswordToken'],
+    });
+
+    await resetUserPassword({ user, token: code, newPassword });
+
+    sendSuccess(res, { message: 'Reset password successfully.' });
   }
 );

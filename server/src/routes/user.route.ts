@@ -5,6 +5,7 @@ import validate from '../middleware/validateResource';
 import {
   activateSchema,
   emailSchema,
+  resetPasswordSchema,
   signupUserSchema,
 } from '../schemas/user.schema';
 
@@ -12,6 +13,7 @@ import {
   activate,
   forgotPassword,
   getActivateCode,
+  resetPassword,
   signup,
 } from '../controllers/user.controller';
 
@@ -27,5 +29,10 @@ userRouter.post('/activate', validate(activateSchema), activate);
 // Passwords: forgot, reset, update
 
 userRouter.get('/forgotPassword/:email', validate(emailSchema), forgotPassword);
+userRouter.patch(
+  '/resetPassword',
+  validate(resetPasswordSchema),
+  resetPassword
+);
 
 export default userRouter;

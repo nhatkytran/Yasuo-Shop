@@ -32,6 +32,38 @@ const preventActiveUser = (active?: any): void => {
     });
 };
 
+// Throw error when user have not issue token yet
+const preventNotIssuedToken = ({
+  tokenField,
+  codeUrl,
+}: {
+  tokenField?: string;
+  codeUrl: string;
+}): void => {
+  if (!tokenField)
+    throw new AppError({
+      message: `Get your verification code first at ${codeUrl}`,
+      statusCode: 401,
+    });
+};
+
+// Throw error when token is invaid
+const preventInvalidToken = ({
+  token,
+  rawToken,
+}: {
+  token: string;
+  rawToken: string;
+}): void => {
+  const [hash, timeout] = rawToken.split('/');
+
+  if (hashToken(token) !== hash || Date.now() > Number(timeout))
+    throw new AppError({
+      message: 'Invalid token or token has expired!',
+      statusCode: 401,
+    });
+};
+
 // Helper - Create tokens
 
 interface CreateActionTokenOptions extends UserObject {
@@ -125,11 +157,22 @@ export const sendCreateUserEmail = async ({
 
 // Find user using query: _id, email,... //////////
 
-type FindUserOptions = { query: FilterQuery<UserDocument> };
-type FindUser = ({ query }: FindUserOptions) => Promise<UserDocument>;
+type FindUserOptions = {
+  query: FilterQuery<UserDocument>;
+  selectFields?: Array<keyof UserDocument>;
+};
 
-export const findUser: FindUser = async ({ query }) => {
-  const user = await User.findOne(query).select('+activateToken');
+export const findUser = async ({
+  query,
+  selectFields,
+}: FindUserOptions): Promise<UserDocument> => {
+  let mongooseQuery = User.findOne(query);
+
+  selectFields?.forEach(
+    field => (mongooseQuery = mongooseQuery.select(`+${field}`))
+  );
+
+  const user = await mongooseQuery;
 
   if (!user)
     throw new AppError({ message: `User not found!`, statusCode: 404 });
@@ -167,20 +210,12 @@ export const activateUser: ActivateUser = async ({ user, token }) => {
   preventOAuthUser(user.googleID);
   preventActiveUser(user.active);
 
-  if (!user.activateToken)
-    throw new AppError({
-      message:
-        'Get your activate code first! (/api/v1/users/activateCode/:email)',
-      statusCode: 401,
-    });
+  preventNotIssuedToken({
+    tokenField: user.activateToken,
+    codeUrl: '/api/v1/users/activateCode/:email',
+  });
 
-  const [hash, timeout] = user.activateToken.split('/');
-
-  if (hashToken(token) !== hash || Date.now() > Number(timeout))
-    throw new AppError({
-      message: 'Invalid token or token has expired!',
-      statusCode: 401,
-    });
+  preventInvalidToken({ token, rawToken: user.activateToken! });
 
   user.active = true;
   user.activateToken = undefined;
@@ -208,3 +243,29 @@ export const sendForgotPasswordTokenEmail = async ({
     sendMethod: 'sendForgotPassword',
     field: 'forgotPasswordToken',
   });
+
+// Reset user's password for forgetting password //////////
+
+interface ResetUserPasswordOptions extends UserAndToken {
+  newPassword: string;
+}
+
+export const resetUserPassword = async ({
+  user,
+  token,
+  newPassword,
+}: ResetUserPasswordOptions): Promise<void> => {
+  preventOAuthUser(user.googleID);
+
+  preventNotIssuedToken({
+    tokenField: user.forgotPasswordToken,
+    codeUrl: '/api/v1/users/forgotPassword/:email',
+  });
+
+  preventInvalidToken({ token, rawToken: user.forgotPasswordToken! });
+
+  user.password = newPassword;
+  user.forgotPasswordToken = undefined;
+
+  await user.save({ validateModifiedOnly: true });
+};

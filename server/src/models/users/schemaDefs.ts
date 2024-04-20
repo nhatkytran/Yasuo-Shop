@@ -10,6 +10,7 @@ export type UserInput = {
   googleID?: string;
   activateToken?: string;
   forgotPasswordToken?: string;
+  passwordChangedAt?: Date;
 };
 
 export interface UserDocument extends UserInput, mongoose.Document {
@@ -29,6 +30,7 @@ export const schemaDefs = {
   googleID: { type: String, select: false },
   activateToken: { type: String, select: false },
   forgotPasswordToken: { type: String, select: false },
+  passwordChangedAt: { type: Date, select: false },
 };
 
 export const schemaSups = {
