@@ -100,3 +100,7 @@ export const resetPassword = catchAsync(
     sendSuccess(res, { message: 'Reset password successfully.' });
   }
 );
+
+export const updatePassword = catchAsync(
+  async (req: Request, res: Response) => {}
+);

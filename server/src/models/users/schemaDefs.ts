@@ -18,6 +18,7 @@ export interface UserDocument extends UserInput, mongoose.Document {
   updatedAt?: Date;
   createActivateToken(): string;
   createForgotPasswordToken(): string;
+  comparePassword(password: string): Promise<boolean>;
 }
 
 export const schemaDefs = {
@@ -31,11 +32,4 @@ export const schemaDefs = {
   activateToken: { type: String, select: false },
   forgotPasswordToken: { type: String, select: false },
   passwordChangedAt: { type: Date, select: false },
-};
-
-export const schemaSups = {
-  timestamps: true, // createdAt, updatedAt
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-  id: false,
 };

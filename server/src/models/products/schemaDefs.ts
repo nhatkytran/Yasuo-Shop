@@ -92,13 +92,6 @@ export const schemaDefs = {
   materials: [String],
 };
 
-export const schemaSups = {
-  timestamps: true, // createdAt, updatedAt
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-  id: false,
-};
-
 export const virtutalProperties = (schema: mongoose.Schema) => {
   schema.virtual('price.priceAfterSale').get(function () {
     const price = this.price as Price;

@@ -1,13 +1,13 @@
 import { TypeOf, object, string } from 'zod';
 
-const PasswordType = string()
+export const PasswordType = string()
   .min(8)
   .regex(
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]*$/,
     'Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character!'
   );
 
-const Email = { email: string().email() };
+export const Email = { email: string().email() };
 const Code = { code: string() };
 
 export const signupUserSchema = object({

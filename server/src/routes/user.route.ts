@@ -34,5 +34,6 @@ userRouter.patch(
   validate(resetPasswordSchema),
   resetPassword
 );
+// userRouter.patch('/updatePassword', updatePassword);
 
 export default userRouter;

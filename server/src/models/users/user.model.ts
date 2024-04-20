@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import config from 'config';
 
-import { UserDocument, schemaDefs, schemaSups } from './schemaDefs';
 import { createTokens } from '../../utils/tokenAndHash';
+import { UserDocument, schemaDefs } from './schemaDefs';
+import { schemaSups } from '../commonDefs';
 
 const schema = new mongoose.Schema<UserDocument>(schemaDefs, schemaSups);
 
@@ -49,6 +50,12 @@ schema.methods.createForgotPasswordToken = createTokenFactory({
   field: 'forgotPasswordToken',
   timeoutMinute: 2,
 });
+
+schema.methods.comparePassword = async function (
+  password: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 const User = mongoose.model<UserDocument>('User', schema, 'users');
 

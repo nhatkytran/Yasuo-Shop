@@ -14,6 +14,8 @@ const {
   BREVO_PORT,
   BREVO_KEY_NAME,
   BREVO_KEY_VALUE,
+  PUBLIC_KEY,
+  PRIVATE_KEY,
 } = process.env;
 
 // Database
@@ -52,4 +54,10 @@ export default {
   brevoPort: Number(BREVO_PORT),
   brevoKeyName: BREVO_KEY_NAME,
   brevoKeyValue: BREVO_KEY_VALUE,
+  publicKey: PUBLIC_KEY,
+  privateKey: PRIVATE_KEY,
+  accessTokenTtl: '30m',
+  refreshTokenTtl: '30d',
+  accessTokenCookieTtl: 30 * 60 * 1000,
+  refreshTokenCookieTtl: 30 * 24 * 60 * 60 * 1000,
 };

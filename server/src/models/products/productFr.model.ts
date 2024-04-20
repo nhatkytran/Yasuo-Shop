@@ -1,11 +1,7 @@
 import mongoose from 'mongoose';
 
-import {
-  ProductDocument,
-  schemaDefs,
-  schemaSups,
-  virtutalProperties,
-} from './schemaDefs';
+import { ProductDocument, schemaDefs, virtutalProperties } from './schemaDefs';
+import { schemaSups } from '../commonDefs';
 
 const schema = new mongoose.Schema<ProductDocument>(schemaDefs, schemaSups);
 

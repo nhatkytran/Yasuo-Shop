@@ -8,14 +8,14 @@ import { hashToken } from '../utils/tokenAndHash';
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
 
-type UserObject = { user: UserDocument };
+export type UserObject = { user: UserDocument };
 
 interface UserAndToken extends UserObject {
   token: string;
 }
 
 // Throw error when user created by OAuth: google,...
-const preventOAuthUser = (oAuth?: any): void => {
+export const preventOAuthUser = (oAuth?: any): void => {
   if (Boolean(oAuth))
     throw new AppError({
       message: 'This feature only supports accounts created manually!',

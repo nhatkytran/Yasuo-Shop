@@ -2,6 +2,7 @@ import { Express, Request, Response } from 'express';
 
 import userRouter from './user.route';
 import productsRouter from './product.route';
+import sessionRouter from './session.route';
 
 const routes = (app: Express) => {
   // Health check route
@@ -12,8 +13,11 @@ const routes = (app: Express) => {
     })
   );
 
-  // Users, Authentication, Authorization,...
+  // Users, Signup, Update password,...
   app.use('/api/v1/users', userRouter);
+
+  // Signin, Authorization,...
+  app.use('/api/v1/sessions', sessionRouter);
 
   // Products -> stats, crud,...
   app.use('/api/v1/products', productsRouter);
