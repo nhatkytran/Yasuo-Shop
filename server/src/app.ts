@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import hpp from 'hpp';
+import cookieParser from 'cookie-parser';
 import config from 'config';
 
 import routes from './routes/routes';
@@ -22,6 +23,9 @@ const init = () => {
   // Parse data for req.body and multipart form
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+  // Parse cookie
+  app.use(cookieParser());
 
   // Set EJS as the view engine and set views directory
   app.set('view engine', 'ejs');

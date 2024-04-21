@@ -57,6 +57,11 @@ schema.methods.comparePassword = async function (
   return await bcrypt.compare(password, this.password);
 };
 
+schema.methods.changedPassword = function (loginTimestamp: number): boolean {
+  if (!this.passwordChangedAt) return false;
+  return loginTimestamp < this.passwordChangedAt.getTime();
+};
+
 const User = mongoose.model<UserDocument>('User', schema, 'users');
 
 export default User;

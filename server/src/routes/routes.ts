@@ -5,6 +5,9 @@ import productsRouter from './product.route';
 import sessionRouter from './session.route';
 
 const routes = (app: Express) => {
+  // Hello World
+  app.get('/helloWorld', (_, res: Response) => res.send('Hello World!'));
+
   // Health check route
   app.get('/', (req: Request, res: Response) =>
     res.status(200).json({

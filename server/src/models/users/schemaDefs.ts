@@ -19,6 +19,7 @@ export interface UserDocument extends UserInput, mongoose.Document {
   createActivateToken(): string;
   createForgotPasswordToken(): string;
   comparePassword(password: string): Promise<boolean>;
+  changedPassword(loginTimestamp: number): boolean;
 }
 
 export const schemaDefs = {
