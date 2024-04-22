@@ -175,7 +175,7 @@ export const findUser = async ({
   const user = await mongooseQuery;
 
   if (!user)
-    throw new AppError({ message: `User not found!`, statusCode: 404 });
+    throw new AppError({ message: 'User not found!', statusCode: 404 });
 
   return user;
 };

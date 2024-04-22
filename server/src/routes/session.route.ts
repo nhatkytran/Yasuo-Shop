@@ -10,7 +10,4 @@ const sessionRouter = express.Router();
 
 sessionRouter.post('/signin', validate(signinUserSchema), signin);
 
-// test
-sessionRouter.get('/test', protect, (req, res) => res.send('Hello World!'));
-
 export default sessionRouter;
