@@ -215,3 +215,23 @@ export const checkRefreshJWT = async (
 
   throw unauthenticatedError('Invalid token! Please sign in again.');
 };
+
+// authorization //////////
+
+type CheckIsAuthorizedOptions = {
+  user: UserDocument;
+  roles: Array<UserDocument['role']>;
+};
+
+export const checkIsAuthorized = ({
+  user,
+  roles,
+}: CheckIsAuthorizedOptions): void => {
+  if (!user) throw unauthenticatedError('Please sign in to get access.');
+
+  if (!roles.includes(user.role))
+    throw new AppError({
+      message: "You don't have permission to perform this action!",
+      statusCode: 403,
+    });
+};

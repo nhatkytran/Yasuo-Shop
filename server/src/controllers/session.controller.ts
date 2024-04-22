@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 
-import AppError from '../utils/appError';
 import sendSuccess from '../utils/sendSuccess';
 import catchAsync from '../utils/catchAsync';
 
@@ -9,21 +8,20 @@ import {
   sendRefreshJWTCookie,
   signAccessJWT,
   signRefreshJWT,
-  verifyJWT,
 } from '../utils/jwt';
 
-import Session from '../models/sessions/session.model';
-import User from '../models/users/user.model';
 import { SigninUserInput } from '../schemas/session.schema';
 import { findUser } from '../services/user.service';
 
 import {
   checkAccessJWT,
+  checkIsAuthorized,
   checkRefreshJWT,
   createSession,
   getJWTs,
   validatePassword,
 } from '../services/session.service';
+import { UserInput } from '../models/users/schemaDefs';
 
 export const signin = catchAsync(
   async (req: Request<{}, {}, SigninUserInput['body']>, res: Response) => {
@@ -77,3 +75,11 @@ export const protect = catchAsync(
     next();
   }
 );
+
+export const restrictTo = (...roles: Array<UserInput['role']>) =>
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const user = res.locals.user;
+
+    checkIsAuthorized({ user, roles });
+    next();
+  });

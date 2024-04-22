@@ -8,6 +8,7 @@ export type UserInput = {
   active?: boolean;
   ban?: boolean;
   googleID?: string;
+  role?: 'user' | 'admin';
   activateToken?: string;
   forgotPasswordToken?: string;
   passwordChangedAt?: Date;
@@ -30,6 +31,7 @@ export const schemaDefs = {
   active: { type: Boolean, default: false },
   ban: { type: Boolean, default: false },
   googleID: { type: String, select: false },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   activateToken: { type: String, select: false },
   forgotPasswordToken: { type: String, select: false },
   passwordChangedAt: { type: Date, select: false },
