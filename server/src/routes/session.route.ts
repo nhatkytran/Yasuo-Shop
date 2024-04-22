@@ -2,7 +2,14 @@ import express from 'express';
 
 import validate from '../middleware/validateResource';
 import { signinUserSchema } from '../schemas/session.schema';
-import { protect, restrictTo, signin } from '../controllers/session.controller';
+
+import {
+  getAllSessions,
+  getSession,
+  protect,
+  restrictTo,
+  signin,
+} from '../controllers/session.controller';
 
 const sessionRouter = express.Router();
 
@@ -10,10 +17,11 @@ const sessionRouter = express.Router();
 
 sessionRouter.post('/signin', validate(signinUserSchema), signin);
 
-// Sessions: Get, Delete, Deactivate
+// Sessions: Get, Delete, Deactivate (Update), Create (signin creates session)
 
-sessionRouter.get('/test', protect, restrictTo('admin'), (req, res) =>
-  res.send('Hello')
-);
+sessionRouter.use(protect, restrictTo('admin'));
+
+sessionRouter.get('/', getAllSessions);
+sessionRouter.get('/:sessionID', getSession);
 
 export default sessionRouter;

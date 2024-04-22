@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import mongoose, { FilterQuery } from 'mongoose';
+import mongoose, { FilterQuery, QueryOptions, Types } from 'mongoose';
 import { get } from 'lodash';
 
 import AppError from '../utils/appError';
@@ -9,6 +9,7 @@ import { SessionDocument } from '../models/sessions/schemaDefs';
 import { findUser, preventOAuthUser } from './user.service';
 import { UserObject } from './user.service';
 import { UserDocument } from '../models/users/schemaDefs';
+import APIFeatures from '../utils/apiFeatures';
 
 // Throw error when banned user performs action
 const preventBannedUser = (isBanned?: any) => {
@@ -62,22 +63,53 @@ export const createSession = async ({
   return session as SessionDocument;
 };
 
+// Find All Sessions //////////
+
+type FindAllSessions = ({
+  reqQuery,
+  findOptions,
+}: {
+  reqQuery?: FilterQuery<SessionDocument>;
+  findOptions?: { [key: string]: Types.ObjectId };
+}) => Promise<SessionDocument[]>;
+
+export const findAllSessions: FindAllSessions = async ({
+  reqQuery = {},
+  findOptions = {},
+}) => {
+  const features = await APIFeatures({ model: Session, reqQuery, findOptions });
+
+  features.filter().sort().project().paginate();
+
+  return await features.result();
+};
+
 // Find Session //////////
+
+interface FindSessionQueryOptions extends QueryOptions {
+  fields?: string | string[];
+}
 
 type FindSessionOptions = {
   query: FilterQuery<SessionDocument>;
-  selectFields?: Array<keyof SessionDocument>;
+  queryOptions?: FindSessionQueryOptions;
 };
 
 export const findSession = async ({
   query,
-  selectFields,
+  queryOptions = {},
 }: FindSessionOptions): Promise<SessionDocument> => {
   let mongooseQuery = Session.findOne(query);
 
-  selectFields?.forEach(
-    field => (mongooseQuery = mongooseQuery.select(`+${field}`))
-  );
+  let { fields } = queryOptions;
+  let selectOptions: { [key: string]: true } = {};
+
+  if (fields) {
+    if (!Array.isArray(fields)) fields = fields.split(',');
+    fields.forEach(field => (selectOptions[field] = true));
+
+    mongooseQuery = mongooseQuery.select(fields);
+  }
 
   const session = await mongooseQuery;
 

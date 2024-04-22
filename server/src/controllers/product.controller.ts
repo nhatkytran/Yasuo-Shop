@@ -73,7 +73,7 @@ export const getProduct = catchAsync(
     res: Response
   ) => {
     const language: string = res.locals.language;
-    const productID = req.params.productID;
+    const { productID } = req.params;
     const options = { ...req.query };
 
     if (env.dev) console.log(productID, options);

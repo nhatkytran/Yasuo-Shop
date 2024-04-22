@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
+import { QueryOptions } from 'mongoose';
 
+import env from '../utils/env';
 import sendSuccess from '../utils/sendSuccess';
 import catchAsync from '../utils/catchAsync';
 
@@ -10,7 +12,8 @@ import {
   signRefreshJWT,
 } from '../utils/jwt';
 
-import { SigninUserInput } from '../schemas/session.schema';
+import { UserInput } from '../models/users/schemaDefs';
+import { GetSessionInput, SigninUserInput } from '../schemas/session.schema';
 import { findUser } from '../services/user.service';
 
 import {
@@ -18,10 +21,13 @@ import {
   checkIsAuthorized,
   checkRefreshJWT,
   createSession,
+  findAllSessions,
+  findSession,
   getJWTs,
   validatePassword,
 } from '../services/session.service';
-import { UserInput } from '../models/users/schemaDefs';
+
+// Authentication //////////
 
 export const signin = catchAsync(
   async (req: Request<{}, {}, SigninUserInput['body']>, res: Response) => {
@@ -49,6 +55,8 @@ export const signin = catchAsync(
     sendSuccess(res, { accessToken, refreshToken });
   }
 );
+
+// Authorization //////////
 
 export const protect = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -83,3 +91,36 @@ export const restrictTo = (...roles: Array<UserInput['role']>) =>
     checkIsAuthorized({ user, roles });
     next();
   });
+
+// CRUD Sessions - only for admin //////////
+
+export const getAllSessions = catchAsync(
+  async (req: Request, res: Response) => {
+    const sessions = await findAllSessions({ reqQuery: req.query });
+
+    sendSuccess(res, { numResults: sessions.length, sessions });
+  }
+);
+
+interface GetSessionOptions extends QueryOptions {
+  fields?: string | string[];
+}
+
+export const getSession = catchAsync(
+  async (
+    req: Request<GetSessionInput['params'], {}, {}, GetSessionOptions>,
+    res: Response
+  ) => {
+    const { sessionID } = req.params;
+    const queryOptions = { ...req.query };
+
+    if (env.dev) console.log(sessionID, queryOptions);
+
+    const session = await findSession({
+      query: { _id: sessionID },
+      queryOptions,
+    });
+
+    sendSuccess(res, { numResults: 1, session });
+  }
+);

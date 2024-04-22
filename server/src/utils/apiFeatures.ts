@@ -1,9 +1,8 @@
 import { FilterQuery, Model, Query, Types } from 'mongoose';
-import { ProductDocument } from '../models/products/schemaDefs';
 
 type APIFeaturesFunc = (params: {
-  model: Model<ProductDocument>;
-  reqQuery: {} | FilterQuery<ProductDocument>;
+  model: Model<any>;
+  reqQuery: {} | FilterQuery<any>;
   findOptions: {
     [key: string]: Types.ObjectId; // key can be user id -> exp: find all products bought by user
   };
@@ -31,8 +30,8 @@ const APIFeatures: APIFeaturesFunc = async ({
   return new ClsAPIFeatures(model.find(), filterQuery, totalDocuments);
 };
 
-type ProductQuery = Query<ProductDocument[], ProductDocument>;
-type ReqQuery = FilterQuery<ProductDocument>;
+type ProductQuery = Query<any[], any>;
+type ReqQuery = FilterQuery<any>;
 
 class ClsAPIFeatures {
   constructor(
