@@ -146,11 +146,19 @@ export const getSession = catchAsync(
 );
 
 export const deactivateAllSessions = catchAsync(
-  async (req: Request, res: Response) => {
-    const { user } = res.locals;
+  async (req: Request<GetAllSessionsInput['params']>, res: Response) => {
+    const { user } = res.locals; // admin user
+    const { userID } = req.params;
+
+    let filter: object = { user: { $ne: user._id } };
+
+    if (userID) {
+      const user = await findUser({ query: { _id: userID } }); // target user
+      filter = { user: user._id };
+    }
 
     const { modifiedCount, matchedCount } = await updateAllSessions({
-      filter: { user: { $ne: user._id } },
+      filter,
       update: { valid: false },
     });
 
