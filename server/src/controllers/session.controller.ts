@@ -23,6 +23,8 @@ import {
   createSession,
   findAllSessions,
   findAndDeleteAllSessions,
+  findAndDeleteSession,
+  findAndUpdateSession,
   findSession,
   getJWTs,
   updateAllSessions,
@@ -132,7 +134,7 @@ export const deactivateAllSessions = catchAsync(
     const { user } = res.locals;
 
     const { modifiedCount, matchedCount } = await updateAllSessions({
-      filter: { user: { $ne: user._id.toString() } },
+      filter: { user: { $ne: user._id } },
       update: { valid: false },
     });
 
@@ -144,9 +146,31 @@ export const deleteAllSessions = catchAsync(
   async (req: Request, res: Response) => {
     const { user } = res.locals;
 
-    await findAndDeleteAllSessions({
-      filter: { user: { $ne: user._id.toString() } },
+    await findAndDeleteAllSessions({ filter: { user: { $ne: user._id } } });
+
+    sendSuccess(res, { statusCode: 204 });
+  }
+);
+
+export const deactivateSession = catchAsync(
+  async (req: Request<GetSessionInput['params']>, res: Response) => {
+    const { sessionID } = req.params;
+
+    const session = await findAndUpdateSession({
+      sessionID,
+      update: { valid: false },
+      options: { new: true, runValidators: true },
     });
+
+    sendSuccess(res, { numResults: session ? 1 : 0, session });
+  }
+);
+
+export const deleteSession = catchAsync(
+  async (req: Request<GetSessionInput['params']>, res: Response) => {
+    const { sessionID } = req.params;
+
+    await findAndDeleteSession({ sessionID });
 
     sendSuccess(res, { statusCode: 204 });
   }

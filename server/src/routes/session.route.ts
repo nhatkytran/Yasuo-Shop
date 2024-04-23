@@ -1,11 +1,13 @@
 import express from 'express';
 
 import validate from '../middleware/validateResource';
-import { signinUserSchema } from '../schemas/session.schema';
+import { getSessionSchema, signinUserSchema } from '../schemas/session.schema';
 
 import {
   deactivateAllSessions,
+  deactivateSession,
   deleteAllSessions,
+  deleteSession,
   getAllSessions,
   getSession,
   protect,
@@ -29,9 +31,13 @@ sessionRouter
   .patch(deactivateAllSessions) // Deactivate all sessions except for admin
   .delete(deleteAllSessions); // Delete all sessions except for admin
 
-sessionRouter.route('/:sessionID').get(getSession);
+sessionRouter
+  .route('/:sessionID')
+  .get(validate(getSessionSchema), getSession)
+  .patch(validate(getSessionSchema), deactivateSession)
+  .delete(validate(getSessionSchema), deleteSession);
 
-// Deactivate one session, all sessions of oneuser
-// Delelte one session, all sessions, all sessions of one user
+// Deactivate all sessions of one user
+// Delelte all sessions of one user
 
 export default sessionRouter;

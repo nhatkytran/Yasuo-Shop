@@ -300,3 +300,30 @@ export const findAndDeleteAllSessions = async ({
 }: {
   filter: FilterQuery<SessionDocument>;
 }) => await Session.deleteMany(filter);
+
+// Deactivate session by id //////////
+
+type FindAndUpdateSessionOptions = {
+  sessionID: string;
+  update: UpdateQuery<SessionDocument>;
+  options: QueryOptions;
+};
+
+export const findAndUpdateSession = async ({
+  sessionID,
+  update,
+  options,
+}: FindAndUpdateSessionOptions): Promise<SessionDocument | null> => {
+  const session = await Session.findByIdAndUpdate(sessionID, update, options);
+
+  if (!session) return null;
+  return session;
+};
+
+// Delete session by id //////////
+
+export const findAndDeleteSession = async ({
+  sessionID,
+}: {
+  sessionID: string;
+}) => await Session.findByIdAndDelete(sessionID);
