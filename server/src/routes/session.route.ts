@@ -31,12 +31,14 @@ sessionRouter.use(protect, restrictTo('admin'));
 
 sessionRouter
   .route('/')
-  // Get all sessions (also for one user -> api/v1/users/:userID/sessions)
+  // api/v1/users/:userID/sessions
+  // Get all sessions (also for one user)
   .get(validate(getAllSessionsSchema), getAllSessions)
   // Deactivate all sessions except for admin
-  // deactivate all sessions for one user (also for admin)
+  // Deactivate all sessions for one user (also for admin)
   .patch(validate(getAllSessionsSchema), deactivateAllSessions)
   // Delete all sessions except for admin
+  // Delete all sessions for one user (also for admin)
   .delete(deleteAllSessions);
 
 sessionRouter

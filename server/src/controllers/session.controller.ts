@@ -12,13 +12,14 @@ import {
   signRefreshJWT,
 } from '../utils/jwt';
 
-import { UserInput } from '../models/users/schemaDefs';
+import { UserDocument, UserInput } from '../models/users/schemaDefs';
+import { findUser } from '../services/user.service';
+
 import {
   GetAllSessionsInput,
   GetSessionInput,
   SigninUserInput,
 } from '../schemas/session.schema';
-import { findUser } from '../services/user.service';
 
 import {
   checkAccessJWT,
@@ -102,6 +103,7 @@ export const restrictTo = (...roles: Array<UserInput['role']>) =>
 
 // CRUD Sessions - only for admin //////////
 
+// Get all sessions (also for one user)
 export const getAllSessions = catchAsync(
   async (req: Request<GetAllSessionsInput['params']>, res: Response) => {
     const { userID } = req.params;
@@ -126,6 +128,7 @@ interface GetSessionOptions extends QueryOptions {
   fields?: string | string[];
 }
 
+// Get a specific session
 export const getSession = catchAsync(
   async (
     req: Request<GetSessionInput['params'], {}, {}, GetSessionOptions>,
@@ -145,20 +148,36 @@ export const getSession = catchAsync(
   }
 );
 
+// Create filter for deactivating and deleting all sessions
+const ddAllSessionsFilter = async ({
+  adminUser,
+  targetUserID,
+}: {
+  adminUser: UserDocument;
+  targetUserID?: string;
+}) => {
+  let filter: object = { user: { $ne: adminUser._id } };
+
+  if (targetUserID) {
+    const targetUser = await findUser({ query: { _id: targetUserID } });
+    filter = { user: targetUser._id };
+  }
+
+  return filter;
+};
+
+// Deactivate all sessions except for admin
+// Deactivate all sessions for one user (also for admin)
 export const deactivateAllSessions = catchAsync(
   async (req: Request<GetAllSessionsInput['params']>, res: Response) => {
     const { user } = res.locals; // admin user
     const { userID } = req.params;
 
-    let filter: object = { user: { $ne: user._id } };
-
-    if (userID) {
-      const user = await findUser({ query: { _id: userID } }); // target user
-      filter = { user: user._id };
-    }
-
     const { modifiedCount, matchedCount } = await updateAllSessions({
-      filter,
+      filter: await ddAllSessionsFilter({
+        adminUser: user,
+        targetUserID: userID,
+      }),
       update: { valid: false },
     });
 
@@ -166,11 +185,19 @@ export const deactivateAllSessions = catchAsync(
   }
 );
 
+// Delete all sessions except for admin
+// Delete all sessions for one user (also for admin)
 export const deleteAllSessions = catchAsync(
-  async (req: Request, res: Response) => {
-    const { user } = res.locals;
+  async (req: Request<GetAllSessionsInput['params']>, res: Response) => {
+    const { user } = res.locals; // admin user
+    const { userID } = req.params;
 
-    await findAndDeleteAllSessions({ filter: { user: { $ne: user._id } } });
+    await findAndDeleteAllSessions({
+      filter: await ddAllSessionsFilter({
+        adminUser: user,
+        targetUserID: userID,
+      }),
+    });
 
     sendSuccess(res, { statusCode: 204 });
   }
