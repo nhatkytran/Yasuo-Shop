@@ -1,6 +1,8 @@
 import { TypeOf, object, string, array, number, union, literal } from 'zod';
 
 const payloadOptional = {
+  ratingsAverage: number().min(1).max(5).optional(),
+  ratingsQuantity: number().int().min(0).optional(),
   editions: object({
     en: array(
       union([

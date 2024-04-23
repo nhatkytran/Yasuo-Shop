@@ -3,7 +3,7 @@ import { QueryOptions } from 'mongoose';
 
 import env from '../utils/env';
 import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/appError';
+import sendSuccess from '../utils/sendSuccess';
 
 import {
   calcProductStats,
@@ -28,9 +28,9 @@ export const getProductStats = catchAsync(
   async (req: Request, res: Response) => {
     const language: string = res.locals.language;
 
-    const stats = await calcProductStats({ language });
+    const stats = await calcProductStats(language);
 
-    res.status(200).json({ status: 'success', language, stats });
+    sendSuccess(res, { language, stats });
   }
 );
 
@@ -38,9 +38,9 @@ export const getProductEditions = catchAsync(
   async (req: Request, res: Response) => {
     const language: string = res.locals.language;
 
-    const products = await findProductEditions({ language });
+    const products = await findProductEditions(language);
 
-    res.status(200).json({ status: 'success', language, products });
+    sendSuccess(res, { language, products });
   }
 );
 
@@ -54,12 +54,7 @@ export const getAllProducts = catchAsync(
 
     const products = await findAllProducts({ language, reqQuery: req.query });
 
-    res.status(200).json({
-      status: 'success',
-      language,
-      numResults: products.length,
-      products,
-    });
+    sendSuccess(res, { language, numResults: products.length, products });
   }
 );
 
@@ -80,18 +75,7 @@ export const getProduct = catchAsync(
 
     const product = await findProductByID({ language, productID, options });
 
-    if (!product)
-      throw new AppError({
-        message: `Product with ID '${productID}' not found!`,
-        statusCode: 404,
-      });
-
-    res.status(200).json({
-      status: 'success',
-      language,
-      numResults: 1,
-      product,
-    });
+    sendSuccess(res, { language, numResults: 1, product });
   }
 );
 
@@ -102,12 +86,7 @@ export const createNewProduct = catchAsync(
 
     const product = await createProduct({ language, input });
 
-    res.status(201).json({
-      status: 'success',
-      language,
-      numResults: 1,
-      product,
-    });
+    sendSuccess(res, { statusCode: 201, language, numResults: 1, product });
   }
 );
 
@@ -127,12 +106,7 @@ export const updateProduct = catchAsync(
       options: { new: true, runValidators: true },
     });
 
-    res.status(200).json({
-      status: 'success',
-      language,
-      numResults: product ? 1 : 0,
-      product,
-    });
+    sendSuccess(res, { language, numResults: product ? 1 : 0, product });
   }
 );
 
@@ -143,8 +117,8 @@ export const deleteProduct = catchAsync(
 
     await findAndDeleteProduct({ language, productID });
 
-    res.status(204).json({
-      status: 'success',
+    sendSuccess(res, {
+      statusCode: 204,
       language,
       numResults: 0,
       product: null,

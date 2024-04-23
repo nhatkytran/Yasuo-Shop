@@ -1,10 +1,11 @@
 import { FilterQuery, Model, QueryOptions, Types, UpdateQuery } from 'mongoose';
 
+import APIFeatures from '../utils/apiFeatures';
+import removeEmptyArray from '../utils/removeEmptyArray';
+import AppError from '../utils/appError';
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
-import APIFeatures from '../utils/apiFeatures';
-import removeEmptyArray from '../utils/removeEmptyArray';
 
 // Helper functions //////////
 
@@ -21,6 +22,8 @@ interface Stats {
   _id: string;
   currency: string;
   numProducts: number;
+  productID: string[];
+  ratingsAverage: number;
   avgShippingDays: number;
   avgPrice: number;
   minPrice: number;
@@ -33,70 +36,56 @@ interface Stats {
   maxPriceAfterSale: number;
 }
 
-type CalcProductStats = ({
-  language,
-}: {
-  language: string;
-}) => Promise<Stats[]>;
+const priceDefault = '$price.default';
+const saleAmount = '$price.saleAmount';
+const priceAlterSale = { $subtract: ['$price.default', '$price.saleAmount'] };
 
-export const calcProductStats: CalcProductStats = async ({ language }) => {
+const statsGroupItems = {
+  numProducts: { $sum: 1 },
+  productID: { $push: '$_id' },
+  ratingsAverage: { $sum: '$ratingsAverage' },
+  avgShippingDays: { $avg: '$shippingDays' },
+  avgPrice: { $avg: priceDefault },
+  minPrice: { $min: priceDefault },
+  maxPrice: { $max: priceDefault },
+  avgSaleAmount: { $avg: saleAmount },
+  minSaleAmount: { $min: saleAmount },
+  maxSaleAmount: { $max: saleAmount },
+  avgPriceAfterSale: { $avg: priceAlterSale },
+  minPriceAfterSale: { $min: priceAlterSale },
+  maxPriceAfterSale: { $max: priceAlterSale },
+};
+
+export const calcProductStats = async (language: string): Promise<Stats[]> => {
   const ProductModel = getProductModel(language);
 
-  const priceDefault = '$price.default';
-  const saleAmount = '$price.saleAmount';
-  const priceAlterSale = { $subtract: ['$price.default', '$price.saleAmount'] };
+  let currency: string = 'USD';
+  if (language === 'fr') currency = 'EUR';
 
   return await ProductModel.aggregate<Stats>([
     { $match: {} }, // Match all documents
-    {
-      $group: {
-        _id: { $toUpper: '$category' },
-        numProducts: { $sum: 1 },
-        avgShippingDays: { $avg: '$shippingDays' },
-        avgPrice: { $avg: priceDefault },
-        minPrice: { $min: priceDefault },
-        maxPrice: { $max: priceDefault },
-        avgSaleAmount: { $avg: saleAmount },
-        minSaleAmount: { $min: saleAmount },
-        maxSaleAmount: { $max: saleAmount },
-        avgPriceAfterSale: { $avg: priceAlterSale },
-        minPriceAfterSale: { $min: priceAlterSale },
-        maxPriceAfterSale: { $max: priceAlterSale },
-      },
-    },
-    { $addFields: { currency: 'USD' } },
+    { $group: { _id: { $toUpper: '$category' }, ...statsGroupItems } },
+    { $addFields: { currency } },
     { $sort: { numProducts: 1, avgPrice: 1 } },
   ]);
 };
 
-interface Editions {
-  _id: string;
-  numProducts: number;
-  productID: string[];
-}
-
-type FindProductEditions = ({
-  language,
-}: {
-  language: string;
-}) => Promise<Editions[]>;
-
-export const findProductEditions: FindProductEditions = async ({
-  language,
-}) => {
+export const findProductEditions = async (
+  language: string
+): Promise<Stats[]> => {
   const ProductModel = getProductModel(language);
+
+  let currency: string = 'USD';
+  if (language === 'fr') currency = 'EUR';
 
   let groupID: string = `$editions.${language === 'en-us' ? 'en' : 'other'}`;
 
-  return await ProductModel.aggregate<Editions>([
+  return await ProductModel.aggregate<Stats>([
+    // preserveNullAndEmptyArrays: true
+    // There are products that don't have any edition
     { $unwind: { path: groupID, preserveNullAndEmptyArrays: true } },
-    {
-      $group: {
-        _id: { $toUpper: groupID },
-        numProducts: { $sum: 1 },
-        productID: { $push: '$_id' },
-      },
-    },
+    { $group: { _id: { $toUpper: groupID }, ...statsGroupItems } },
+    { $addFields: { currency } },
     { $sort: { numProducts: -1 } },
   ]);
 };
@@ -171,7 +160,9 @@ export const findProductByID: FindProductByID = async ({
 
   const product = await ProductModel.findById(productID, selectOptions);
 
-  if (!product) return null;
+  if (!product)
+    throw new AppError({ message: 'Product not found!', statusCode: 404 });
+
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
 

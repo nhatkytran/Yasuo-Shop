@@ -9,6 +9,8 @@ type Price = {
 export type ProductInput = {
   name: string;
   price: Price;
+  ratingsAverage?: number;
+  ratingsQuantity?: number;
   editions?: {
     en: ('limited edition' | 'preorder' | 'special edition')[];
     other?: string[];
@@ -51,6 +53,12 @@ export const schemaDefs = {
     saleAmount: { type: Number, default: 0 },
     currency: { type: String, default: 'USD' },
   },
+  ratingsAverage: {
+    type: Number,
+    default: 0,
+    set: (value: number) => Math.round(value * 10) / 10,
+  },
+  ratingsQuantity: { type: Number, default: 0 },
   editions: {
     en: {
       type: [String],

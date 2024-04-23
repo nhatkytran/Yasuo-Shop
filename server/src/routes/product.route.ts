@@ -23,8 +23,8 @@ const productsRouter = express.Router();
 
 // ADVANCED //////////
 
-productsRouter.route('/stats').get(getProductStats);
-productsRouter.route('/editions').get(getProductEditions);
+productsRouter.route('/statsCategory').get(getProductStats);
+productsRouter.route('/statsEditions').get(getProductEditions);
 
 // CRUD //////////
 
