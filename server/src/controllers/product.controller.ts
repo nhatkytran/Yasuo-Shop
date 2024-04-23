@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { QueryOptions } from 'mongoose';
 
 import env from '../utils/env';
@@ -43,6 +43,17 @@ export const getProductEditions = catchAsync(
     sendSuccess(res, { language, products });
   }
 );
+
+export const aliasTopProducts = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+
+  next();
+};
 
 // CRUD //////////
 

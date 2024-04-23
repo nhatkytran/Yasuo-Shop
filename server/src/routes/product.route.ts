@@ -3,6 +3,7 @@ import express from 'express';
 import validate from '../middleware/validateResource';
 
 import {
+  aliasTopProducts,
   createNewProduct,
   deleteProduct,
   getAllProducts,
@@ -18,25 +19,42 @@ import {
   getProductSchema,
   updateProductSchema,
 } from '../schemas/product.schema';
+import { protect, restrictTo } from '../controllers/session.controller';
 
 const productsRouter = express.Router();
 
 // ADVANCED //////////
 
-productsRouter.route('/statsCategory').get(getProductStats);
-productsRouter.route('/statsEditions').get(getProductEditions);
+productsRouter.get('/top-5-cheap', aliasTopProducts, getAllProducts);
+productsRouter.get('/statsCategory', getProductStats);
+productsRouter.get('/statsEditions', getProductEditions);
 
 // CRUD //////////
 
 productsRouter
   .route('/')
   .get(getAllProducts)
-  .post(validate(createProductSchema), createNewProduct);
+  .post(
+    protect,
+    restrictTo('admin'),
+    validate(createProductSchema),
+    createNewProduct
+  );
 
 productsRouter
   .route('/:productID')
   .get(validate(getProductSchema), getProduct)
-  .patch(validate(updateProductSchema), updateProduct)
-  .delete(validate(deleteProductSchema), deleteProduct);
+  .patch(
+    protect,
+    restrictTo('admin'),
+    validate(updateProductSchema),
+    updateProduct
+  )
+  .delete(
+    protect,
+    restrictTo('admin'),
+    validate(deleteProductSchema),
+    deleteProduct
+  );
 
 export default productsRouter;
