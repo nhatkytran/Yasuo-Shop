@@ -128,21 +128,26 @@ interface GetSessionOptions extends QueryOptions {
   fields?: string | string[];
 }
 
-// Get a specific session
+// Get a specific session by sessionID or sessionID with userID
 export const getSession = catchAsync(
   async (
     req: Request<GetSessionInput['params'], {}, {}, GetSessionOptions>,
     res: Response
   ) => {
-    const { sessionID } = req.params;
+    const { sessionID, userID } = req.params;
     const queryOptions = { ...req.query };
 
-    if (env.dev) console.log(sessionID, queryOptions);
+    if (env.dev) console.log(sessionID, userID, queryOptions);
 
-    const session = await findSession({
-      query: { _id: sessionID },
-      queryOptions,
-    });
+    let query: object = { _id: sessionID };
+
+    if (userID) {
+      const user = await findUser({ query: { _id: userID } });
+
+      query = { ...query, user: user._id };
+    }
+
+    const session = await findSession({ query, queryOptions });
 
     sendSuccess(res, { numResults: 1, session });
   }
@@ -203,6 +208,7 @@ export const deleteAllSessions = catchAsync(
   }
 );
 
+// Only uses sessionID
 export const deactivateSession = catchAsync(
   async (req: Request<GetSessionInput['params']>, res: Response) => {
     const { sessionID } = req.params;
@@ -217,6 +223,7 @@ export const deactivateSession = catchAsync(
   }
 );
 
+// Only uses sessionID
 export const deleteSession = catchAsync(
   async (req: Request<GetSessionInput['params']>, res: Response) => {
     const { sessionID } = req.params;

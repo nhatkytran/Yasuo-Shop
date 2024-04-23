@@ -43,6 +43,9 @@ sessionRouter
 
 sessionRouter
   .route('/:sessionID')
+  // api/v1/users/:userID/sessions/:sessionID
+  // Get a specific session by sessionID or sessionID with userID
+  // Deactivate and Delete only uses sessionID
   .get(validate(getSessionSchema), getSession)
   .patch(validate(getSessionSchema), deactivateSession)
   .delete(validate(getSessionSchema), deleteSession);
