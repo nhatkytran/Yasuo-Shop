@@ -8,6 +8,10 @@ const params = {
   }),
 };
 
+export const getAllSessionsSchema = object({
+  params: object({ userID: string().optional() }),
+});
+
 export const signinUserSchema = object({
   body: object({ ...Email, password: PasswordType }),
 });
@@ -15,4 +19,5 @@ export const signinUserSchema = object({
 export const getSessionSchema = object({ ...params });
 
 export type SigninUserInput = TypeOf<typeof signinUserSchema>;
+export type GetAllSessionsInput = TypeOf<typeof getAllSessionsSchema>;
 export type GetSessionInput = TypeOf<typeof getSessionSchema>;

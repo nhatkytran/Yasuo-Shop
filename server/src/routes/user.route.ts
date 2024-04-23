@@ -1,6 +1,7 @@
 import express from 'express';
 
 import validate from '../middleware/validateResource';
+import sessionRouter from './session.route';
 
 import {
   activateSchema,
@@ -18,6 +19,10 @@ import {
 } from '../controllers/user.controller';
 
 const userRouter = express.Router();
+
+// Handle sessions of one user
+
+userRouter.use('/:userID/sessions', sessionRouter);
 
 // Create user and activate user (confirm that email of user exists)
 

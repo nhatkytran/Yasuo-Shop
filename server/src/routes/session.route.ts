@@ -15,7 +15,7 @@ import {
   signin,
 } from '../controllers/session.controller';
 
-const sessionRouter = express.Router();
+const sessionRouter = express.Router({ mergeParams: true });
 
 // Signin: Local, Goole. Sign jasonwebtoken, session,...
 
@@ -36,8 +36,5 @@ sessionRouter
   .get(validate(getSessionSchema), getSession)
   .patch(validate(getSessionSchema), deactivateSession)
   .delete(validate(getSessionSchema), deleteSession);
-
-// Deactivate all sessions of one user
-// Delelte all sessions of one user
 
 export default sessionRouter;

@@ -13,7 +13,11 @@ import {
 } from '../utils/jwt';
 
 import { UserInput } from '../models/users/schemaDefs';
-import { GetSessionInput, SigninUserInput } from '../schemas/session.schema';
+import {
+  GetAllSessionsInput,
+  GetSessionInput,
+  SigninUserInput,
+} from '../schemas/session.schema';
 import { findUser } from '../services/user.service';
 
 import {
@@ -99,8 +103,20 @@ export const restrictTo = (...roles: Array<UserInput['role']>) =>
 // CRUD Sessions - only for admin //////////
 
 export const getAllSessions = catchAsync(
-  async (req: Request, res: Response) => {
-    const sessions = await findAllSessions({ reqQuery: req.query });
+  async (req: Request<GetAllSessionsInput['params']>, res: Response) => {
+    const { userID } = req.params;
+    let findOptions = {};
+
+    if (userID) {
+      const user = await findUser({ query: { _id: userID } });
+
+      findOptions = { user: user._id };
+    }
+
+    const sessions = await findAllSessions({
+      reqQuery: req.query,
+      findOptions,
+    });
 
     sendSuccess(res, { numResults: sessions.length, sessions });
   }
