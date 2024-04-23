@@ -4,6 +4,8 @@ import validate from '../middleware/validateResource';
 import { signinUserSchema } from '../schemas/session.schema';
 
 import {
+  deactivateAllSessions,
+  deleteAllSessions,
   getAllSessions,
   getSession,
   protect,
@@ -21,7 +23,15 @@ sessionRouter.post('/signin', validate(signinUserSchema), signin);
 
 sessionRouter.use(protect, restrictTo('admin'));
 
-sessionRouter.get('/', getAllSessions);
-sessionRouter.get('/:sessionID', getSession);
+sessionRouter
+  .route('/')
+  .get(getAllSessions)
+  .patch(deactivateAllSessions) // Deactivate all sessions except for admin
+  .delete(deleteAllSessions); // Delete all sessions except for admin
+
+sessionRouter.route('/:sessionID').get(getSession);
+
+// Deactivate one session, all sessions of oneuser
+// Delelte one session, all sessions, all sessions of one user
 
 export default sessionRouter;

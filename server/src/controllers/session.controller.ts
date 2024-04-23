@@ -22,8 +22,10 @@ import {
   checkRefreshJWT,
   createSession,
   findAllSessions,
+  findAndDeleteAllSessions,
   findSession,
   getJWTs,
+  updateAllSessions,
   validatePassword,
 } from '../services/session.service';
 
@@ -122,5 +124,30 @@ export const getSession = catchAsync(
     });
 
     sendSuccess(res, { numResults: 1, session });
+  }
+);
+
+export const deactivateAllSessions = catchAsync(
+  async (req: Request, res: Response) => {
+    const { user } = res.locals;
+
+    const { modifiedCount, matchedCount } = await updateAllSessions({
+      filter: { user: { $ne: user._id.toString() } },
+      update: { valid: false },
+    });
+
+    sendSuccess(res, { modifiedCount, matchedCount });
+  }
+);
+
+export const deleteAllSessions = catchAsync(
+  async (req: Request, res: Response) => {
+    const { user } = res.locals;
+
+    await findAndDeleteAllSessions({
+      filter: { user: { $ne: user._id.toString() } },
+    });
+
+    sendSuccess(res, { statusCode: 204 });
   }
 );

@@ -1,6 +1,12 @@
 import { Request } from 'express';
-import mongoose, { FilterQuery, QueryOptions, Types } from 'mongoose';
 import { get } from 'lodash';
+
+import mongoose, {
+  FilterQuery,
+  QueryOptions,
+  Types,
+  UpdateQuery,
+} from 'mongoose';
 
 import AppError from '../utils/appError';
 import { signAccessJWT, verifyJWT } from '../utils/jwt';
@@ -267,3 +273,30 @@ export const checkIsAuthorized = ({
       statusCode: 403,
     });
 };
+
+// Deactivate all sesions //////////
+
+type UpdateAllSessionsOptions = {
+  filter: FilterQuery<SessionDocument>;
+  update: UpdateQuery<SessionDocument>;
+};
+
+export const updateAllSessions = async ({
+  filter,
+  update,
+}: UpdateAllSessionsOptions) => {
+  const { modifiedCount, matchedCount } = await Session.updateMany(
+    filter,
+    update
+  );
+
+  return { modifiedCount, matchedCount };
+};
+
+// Delete all sesions //////////
+
+export const findAndDeleteAllSessions = async ({
+  filter,
+}: {
+  filter: FilterQuery<SessionDocument>;
+}) => await Session.deleteMany(filter);
