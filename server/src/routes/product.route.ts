@@ -26,8 +26,20 @@ const productsRouter = express.Router();
 // ADVANCED //////////
 
 productsRouter.get('/top-5-cheap', aliasTopProducts, getAllProducts);
-productsRouter.get('/statsCategory', getProductStats);
-productsRouter.get('/statsEditions', getProductEditions);
+
+productsRouter.get(
+  '/statsCategory',
+  protect,
+  restrictTo('admin'),
+  getProductStats
+);
+
+productsRouter.get(
+  '/statsEditions',
+  protect,
+  restrictTo('admin'),
+  getProductEditions
+);
 
 // CRUD //////////
 

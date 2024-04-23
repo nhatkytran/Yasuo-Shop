@@ -17,8 +17,14 @@ import { UserObject } from './user.service';
 import { UserDocument } from '../models/users/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
 
+export const unauthenticatedError = (message: string) =>
+  new AppError({
+    message,
+    statusCode: 401,
+  });
+
 // Throw error when banned user performs action
-const preventBannedUser = (isBanned?: any) => {
+export const preventBannedUser = (isBanned?: any) => {
   if (Boolean(isBanned))
     throw new AppError({
       message: 'Your account has been banned!',
@@ -27,13 +33,11 @@ const preventBannedUser = (isBanned?: any) => {
 };
 
 // Throw error when inactive user
-const preventInactiveUser = (active?: any): void => {
+export const preventInactiveUser = (active?: any): void => {
   if (!Boolean(active))
-    throw new AppError({
-      message:
-        'First you need to activate you account at /api/v1/users/activateCode/:email',
-      statusCode: 401,
-    });
+    throw unauthenticatedError(
+      'First you need to activate you account at /api/v1/users/activateCode/:email'
+    );
 };
 
 // Validate password //////////
@@ -46,12 +50,12 @@ export const validatePassword = async ({
   user,
   password,
 }: ValidatePasswordOptions): Promise<void> => {
-  preventOAuthUser(user.googleID);
   preventBannedUser(user.ban);
+  preventOAuthUser(user.googleID);
   preventInactiveUser(user.active);
 
   if (!(await user.comparePassword(password)))
-    throw new AppError({ message: 'Incorrect password!', statusCode: 401 });
+    throw unauthenticatedError('Incorrect password!');
 };
 
 // Create session //////////
@@ -142,12 +146,6 @@ export const getJWTs = (req: Request) => {
 };
 
 // protect helpers //////////
-
-const unauthenticatedError = (message: string) =>
-  new AppError({
-    message,
-    statusCode: 401,
-  });
 
 const checkSession = async (
   sessionID: mongoose.Schema.Types.ObjectId

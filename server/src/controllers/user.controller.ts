@@ -5,6 +5,7 @@ import sendSuccess from '../utils/sendSuccess';
 
 import {
   activateUser,
+  changePassword,
   createActivateToken,
   createForgotPasswordToken,
   createUser,
@@ -20,6 +21,7 @@ import {
   EmailInput,
   ResetPasswordInput,
   SignupUserInput,
+  UpdatePasswordInput,
 } from '../schemas/user.schema';
 
 // Sign up //////////
@@ -102,5 +104,16 @@ export const resetPassword = catchAsync(
 );
 
 export const updatePassword = catchAsync(
-  async (req: Request, res: Response) => {}
+  async (req: Request<{}, {}, UpdatePasswordInput['body']>, res: Response) => {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await findUser({
+      query: { _id: res.locals.user._id },
+      selectFields: ['password'],
+    });
+
+    await changePassword({ user, currentPassword, newPassword });
+
+    sendSuccess(res, { message: 'Update password successfully!' });
+  }
 );

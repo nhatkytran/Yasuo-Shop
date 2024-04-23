@@ -8,6 +8,12 @@ import { hashToken } from '../utils/tokenAndHash';
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
 
+import {
+  preventBannedUser,
+  preventInactiveUser,
+  unauthenticatedError,
+} from './session.service';
+
 export type UserObject = { user: UserDocument };
 
 interface UserAndToken extends UserObject {
@@ -185,6 +191,7 @@ export const findUser = async ({
 export const createActivateToken = async ({
   user,
 }: UserObject): Promise<string> => {
+  preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
   preventActiveUser(user.active);
 
@@ -207,6 +214,7 @@ export const sendActivateTokenEmail = async ({
 type ActivateUser = ({ user, token }: UserAndToken) => Promise<void>;
 
 export const activateUser: ActivateUser = async ({ user, token }) => {
+  preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
   preventActiveUser(user.active);
 
@@ -228,6 +236,7 @@ export const activateUser: ActivateUser = async ({ user, token }) => {
 export const createForgotPasswordToken = async ({
   user,
 }: UserObject): Promise<string> => {
+  preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
 
   return await createActionToken({ user, type: 'forgotPassword' });
@@ -255,6 +264,7 @@ export const resetUserPassword = async ({
   token,
   newPassword,
 }: ResetUserPasswordOptions): Promise<void> => {
+  preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
 
   preventNotIssuedToken({
@@ -266,6 +276,37 @@ export const resetUserPassword = async ({
 
   user.password = newPassword;
   user.forgotPasswordToken = undefined;
+
+  await user.save({ validateModifiedOnly: true });
+};
+
+// Change password //////////
+
+type ChangePasswordOptions = {
+  user: UserDocument;
+  currentPassword: string;
+  newPassword: string;
+};
+
+export const changePassword = async ({
+  user,
+  currentPassword,
+  newPassword,
+}: ChangePasswordOptions): Promise<void> => {
+  preventBannedUser(user.ban);
+  preventOAuthUser(user.googleID);
+  preventInactiveUser(user.active);
+
+  if (!(await user.comparePassword(currentPassword)))
+    throw unauthenticatedError('Incorrect currentPassword!');
+
+  if (currentPassword === newPassword)
+    throw new AppError({
+      message: 'The new password is the same as the old one!',
+      statusCode: 400,
+    });
+
+  user.password = newPassword;
 
   await user.save({ validateModifiedOnly: true });
 };
