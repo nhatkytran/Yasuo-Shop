@@ -27,7 +27,8 @@ export const unauthenticatedError = (message: string) =>
 export const preventBannedUser = (isBanned?: any) => {
   if (Boolean(isBanned))
     throw new AppError({
-      message: 'Your account has been banned!',
+      message:
+        'Your account has been banned! Please contact admin via nhockkutean2@gmail.com for more information.',
       statusCode: 403,
     });
 };

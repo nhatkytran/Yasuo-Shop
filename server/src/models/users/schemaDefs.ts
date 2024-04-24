@@ -10,11 +10,13 @@ export type UserInput = {
   photo?: string;
   active?: boolean;
   ban?: boolean;
+  delete?: { byAdmin: boolean; deleteAt: Date };
   googleID?: string;
   role?: 'user' | 'admin';
   activateToken?: string;
   forgotPasswordToken?: string;
   passwordChangedAt?: Date;
+  restoreToken?: string;
   cart?: Array<Cart>;
 };
 
@@ -34,11 +36,13 @@ export const schemaDefs = {
   photo: { type: String, default: '/img/users/default.png' },
   active: { type: Boolean, default: false },
   ban: { type: Boolean, default: false },
+  delete: { byAdmin: { type: Boolean }, deleteAt: { type: Date } },
   googleID: { type: String, select: false },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   activateToken: { type: String, select: false },
   forgotPasswordToken: { type: String, select: false },
   passwordChangedAt: { type: Date, select: false },
+  restoreToken: { type: String, select: false },
   cart: [
     {
       language: { type: String, enum: ['en-us', 'fr'] },

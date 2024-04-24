@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery, Types, UpdateQuery } from 'mongoose';
 import { omit } from 'lodash';
 
 import AppError from '../utils/appError';
@@ -338,4 +338,34 @@ export const changePassword = async ({
   user.password = newPassword;
 
   await user.save({ validateModifiedOnly: true });
+};
+
+// Update user: name, delete,... //////////
+
+type UpdateUserOptions = {
+  filter: FilterQuery<UserDocument>;
+  update: UpdateQuery<UserDocument>;
+};
+
+export const updateUser = async ({ filter, update }: UpdateUserOptions) =>
+  await User.updateOne(filter, update);
+
+// Who delete user? //////////
+
+type IdentifyWhoDeleteUserOptions = {
+  whoUser: UserDocument;
+  deletedUserEmail: string;
+};
+
+export const identifyWhoDeleteUser = ({
+  whoUser,
+  deletedUserEmail,
+}: IdentifyWhoDeleteUserOptions): void => {
+  if (whoUser.role === 'admin') return;
+
+  if (whoUser.role === 'user' && whoUser.email !== deletedUserEmail)
+    throw new AppError({
+      message: 'You can only delete your own account!',
+      statusCode: 400,
+    });
 };

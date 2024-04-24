@@ -54,10 +54,9 @@ export const getUserByEmailSchema = object({ params: object({ ...Email }) });
 
 export const createNewUserSchema = object({
   body: object({
+    ...Email,
     name: string(),
     password: PasswordType,
-    active: boolean(),
-    ...Email,
   }),
 });
 

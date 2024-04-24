@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import catchAsync from '../utils/catchAsync';
 import sendSuccess from '../utils/sendSuccess';
@@ -12,10 +12,12 @@ import {
   createUser,
   findAllUsers,
   findUser,
+  identifyWhoDeleteUser,
   resetUserPassword,
   sendActivateTokenEmail,
   sendCreateUserEmail,
   sendForgotPasswordTokenEmail,
+  updateUser,
 } from '../services/user.service';
 
 import {
@@ -151,6 +153,7 @@ export const getUser = catchAsync(
         'activateToken',
         'forgotPasswordToken',
         'passwordChangedAt',
+        'restoreToken',
       ],
     });
 
@@ -170,4 +173,37 @@ export const createNewUser = catchAsync(
   }
 );
 
-export const deleteUser = catchAsync(async (req: Request, res: Response) => {});
+export const checkWhoDeleteUser = catchAsync(
+  async (
+    req: Request<GetUserByEmailInput['params']>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { user } = res.locals;
+    const { email } = req.params;
+
+    identifyWhoDeleteUser({ whoUser: user, deletedUserEmail: email });
+
+    next();
+  }
+);
+
+export const deleteUser = catchAsync(
+  async (req: Request<GetUserByEmailInput['params']>, res: Response) => {
+    const { user } = res.locals;
+    const { email } = req.params;
+
+    await updateUser({
+      filter: { email },
+      update: {
+        delete: { byAdmin: user.role === 'admin', deleteAt: new Date() },
+      },
+    });
+
+    sendSuccess(res, { statusCode: 204 });
+  }
+);
+
+export const restoreUser = catchAsync(
+  async (req: Request, res: Response) => {}
+);

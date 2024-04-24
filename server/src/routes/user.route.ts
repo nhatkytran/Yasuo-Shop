@@ -6,7 +6,9 @@ import { protect, restrictTo } from '../controllers/session.controller';
 
 import {
   activateSchema,
+  createNewUserSchema,
   emailSchema,
+  getUserByEmailSchema,
   resetPasswordSchema,
   signupUserSchema,
   updatePasswordSchema,
@@ -14,7 +16,9 @@ import {
 
 import {
   activate,
+  checkWhoDeleteUser,
   createNewUser,
+  deleteUser,
   forgotPassword,
   getActivateCode,
   getAllUsers,
@@ -66,8 +70,29 @@ userRouter.get('/me', protect, getMe);
 userRouter
   .route('/')
   .get(protect, restrictTo('admin'), getAllUsers)
-  .post(protect, restrictTo('admin'), createNewUser);
+  .post(
+    protect,
+    restrictTo('admin'),
+    validate(createNewUserSchema),
+    createNewUser
+  );
 
-userRouter.route('/:email').get(protect, restrictTo('admin'), getUser);
+userRouter
+  .route('/:email')
+  .get(protect, restrictTo('admin'), validate(getUserByEmailSchema), getUser)
+  // admin can delete any user
+  // user can only delete their own account
+  // delete does not delete user, actually it just mark user as a deleted one
+  .delete(
+    protect,
+    checkWhoDeleteUser,
+    validate(getUserByEmailSchema),
+    deleteUser
+  );
+
+// upload photo -> using AWS -> User image uploader in Jonas React course
+// update user's name
+// prevent deleted user (delete first or ban first)
+// restore user (only deleted by browser can be restored)
 
 export default userRouter;
