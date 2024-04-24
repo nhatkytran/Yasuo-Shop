@@ -75,18 +75,15 @@ export const createSession = async ({
 
 // Find All Sessions //////////
 
-type FindAllSessions = ({
-  reqQuery,
-  findOptions,
-}: {
+type FindAllSessionsOptions = {
   reqQuery?: FilterQuery<SessionDocument>;
   findOptions?: { [key: string]: Types.ObjectId };
-}) => Promise<SessionDocument[]>;
+};
 
-export const findAllSessions: FindAllSessions = async ({
+export const findAllSessions = async ({
   reqQuery = {},
   findOptions = {},
-}) => {
+}: FindAllSessionsOptions): Promise<SessionDocument[]> => {
   const features = await APIFeatures({ model: Session, reqQuery, findOptions });
 
   features.filter().sort().project().paginate();

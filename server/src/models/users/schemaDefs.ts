@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 
+type Item = { productId: mongoose.Schema.Types.ObjectId; quantity: Number };
+type Cart = { language: 'en-us' | 'fr'; items: Array<Item> };
+
 export type UserInput = {
   name: string;
   email: string;
@@ -12,6 +15,7 @@ export type UserInput = {
   activateToken?: string;
   forgotPasswordToken?: string;
   passwordChangedAt?: Date;
+  cart?: Array<Cart>;
 };
 
 export interface UserDocument extends UserInput, mongoose.Document {
@@ -35,4 +39,15 @@ export const schemaDefs = {
   activateToken: { type: String, select: false },
   forgotPasswordToken: { type: String, select: false },
   passwordChangedAt: { type: Date, select: false },
+  cart: [
+    {
+      language: { type: String, enum: ['en-us', 'fr'] },
+      items: [
+        {
+          productId: { type: mongoose.Schema.ObjectId, required: true },
+          quantity: { type: Number, required: true },
+        },
+      ],
+    },
+  ],
 };

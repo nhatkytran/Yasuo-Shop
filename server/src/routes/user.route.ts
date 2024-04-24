@@ -2,7 +2,7 @@ import express from 'express';
 
 import validate from '../middleware/validateResource';
 import sessionRouter from './session.route';
-import { protect } from '../controllers/session.controller';
+import { protect, restrictTo } from '../controllers/session.controller';
 
 import {
   activateSchema,
@@ -16,6 +16,9 @@ import {
   activate,
   forgotPassword,
   getActivateCode,
+  getAllUsers,
+  getMe,
+  getUser,
   resetPassword,
   signup,
   updatePassword,
@@ -26,14 +29,14 @@ const userRouter = express.Router();
 // Handle sessions of one user: get, deactivate, delete,...
 userRouter.use('/:userID/sessions', sessionRouter);
 
-// Create user and activate user (confirm that email of user exists)
+// Create user and activate user (confirm that email of user exists) //////////
 
 userRouter.post('/signup', validate(signupUserSchema), signup);
 
 userRouter.get('/activateCode/:email', validate(emailSchema), getActivateCode);
 userRouter.post('/activate', validate(activateSchema), activate);
 
-// Passwords: forgot, reset, update
+// Passwords: forgot, reset, update //////////
 
 userRouter.get('/forgotPassword/:email', validate(emailSchema), forgotPassword);
 
@@ -49,5 +52,18 @@ userRouter.patch(
   validate(updatePasswordSchema),
   updatePassword
 );
+
+// Ban user //////////
+
+// ?userID=<id> || ?email=<email>
+// userRouter.post('/banAccount', protect, restrictTo('admin'), banAccount);
+
+// CRUD //////////
+
+userRouter.get('/me', protect, getMe);
+
+userRouter.route('/').get(protect, restrictTo('admin'), getAllUsers);
+
+userRouter.route('/:email').get(protect, restrictTo('admin'), getUser);
 
 export default userRouter;

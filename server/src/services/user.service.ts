@@ -1,9 +1,10 @@
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { omit } from 'lodash';
 
 import AppError from '../utils/appError';
 import Email from '../utils/sendEmail';
 import { hashToken } from '../utils/tokenAndHash';
+import APIFeatures from '../utils/apiFeatures';
 
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
@@ -161,6 +162,24 @@ export const sendCreateUserEmail = async ({
     errorMessage: 'Please activate account manually.',
   });
 
+// Find all users (only ad) //////////
+
+type FindAllUsersOptions = {
+  reqQuery?: FilterQuery<UserDocument>;
+  findOptions?: { [key: string]: Types.ObjectId };
+};
+
+export const findAllUsers = async ({
+  reqQuery = {},
+  findOptions = {},
+}: FindAllUsersOptions): Promise<UserDocument[]> => {
+  const features = await APIFeatures({ model: User, reqQuery, findOptions });
+
+  features.filter().sort().project().paginate();
+
+  return await features.result();
+};
+
 // Find user using query: _id, email,... //////////
 
 type FindUserOptions = {
@@ -174,9 +193,10 @@ export const findUser = async ({
 }: FindUserOptions): Promise<UserDocument> => {
   let mongooseQuery = User.findOne(query);
 
-  selectFields?.forEach(
-    field => (mongooseQuery = mongooseQuery.select(`+${field}`))
-  );
+  if (selectFields)
+    mongooseQuery = mongooseQuery.select(
+      selectFields.map(field => `+${field}`).join(' ')
+    );
 
   const user = await mongooseQuery;
 

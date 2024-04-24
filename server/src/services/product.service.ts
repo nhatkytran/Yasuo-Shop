@@ -92,23 +92,19 @@ export const findProductEditions = async (
 
 // CRUD //////////
 
-type FindAllProducts = ({
-  language,
-  reqQuery,
-  findOptions,
-}: {
+type FindAllProductsOptions = {
   language: string;
   reqQuery?: FilterQuery<ProductDocument>;
   findOptions?: {
     [key: string]: Types.ObjectId; // key can be user id -> exp: find all products bought by user
   };
-}) => Promise<ProductDocument[]>;
+};
 
-export const findAllProducts: FindAllProducts = async ({
+export const findAllProducts = async ({
   language,
   reqQuery = {},
   findOptions = {},
-}) => {
+}: FindAllProductsOptions): Promise<ProductDocument[]> => {
   const ProductModel = getProductModel(language);
 
   const features = await APIFeatures({

@@ -9,6 +9,7 @@ import {
   createActivateToken,
   createForgotPasswordToken,
   createUser,
+  findAllUsers,
   findUser,
   resetUserPassword,
   sendActivateTokenEmail,
@@ -19,6 +20,7 @@ import {
 import {
   ActivateInput,
   EmailInput,
+  GetUserByEmailInput,
   ResetPasswordInput,
   SignupUserInput,
   UpdatePasswordInput,
@@ -115,5 +117,40 @@ export const updatePassword = catchAsync(
     await changePassword({ user, currentPassword, newPassword });
 
     sendSuccess(res, { message: 'Update password successfully!' });
+  }
+);
+
+// Ban user -> ?userID=<id> || ?email=<email> //////////
+
+export const banAccount = catchAsync(async (req: Request, res: Response) => {
+  const { userID, email } = req.query;
+});
+
+// CRUD //////////
+
+export const getMe = catchAsync(async (req: Request, res: Response) =>
+  sendSuccess(res, { user: res.locals.user })
+);
+
+export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const users = await findAllUsers({ reqQuery: req.query });
+
+  sendSuccess(res, { numResults: users.length, users });
+});
+
+export const getUser = catchAsync(
+  async (req: Request<GetUserByEmailInput['params']>, res: Response) => {
+    const user = await findUser({
+      query: { email: req.params.email },
+      selectFields: [
+        'password',
+        'googleID',
+        'activateToken',
+        'forgotPasswordToken',
+        'passwordChangedAt',
+      ],
+    });
+
+    sendSuccess(res, { numResults: 1, user });
   }
 );
