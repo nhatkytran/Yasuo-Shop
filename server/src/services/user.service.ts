@@ -133,16 +133,25 @@ export const handleSendEmails = async ({
 
 // Sign up - Create user //////////
 
-type CreateUser = ({ input }: { input: UserInput }) => Promise<{
-  user: UserDocument;
-  token: string;
-}>;
+type CreateUserOptions = { input: UserInput; isAdmin?: boolean };
 
-export const createUser: CreateUser = async ({ input }) => {
-  const { name, email, password } = input; // Prevent user input -> active: true
+export const createUser = async ({
+  input,
+  isAdmin = false,
+}: CreateUserOptions): Promise<{ user: UserDocument; token: string | '' }> => {
+  let createInput: object = input;
 
-  const user = await User.create({ name, email, password });
-  const token = await createActionToken({ user, type: 'activate' });
+  if (!isAdmin) {
+    const { name, email, password } = input; // Prevent user input -> active: true
+
+    createInput = { name, email, password };
+  }
+
+  const user = await User.create(createInput);
+
+  let token = '';
+
+  if (!isAdmin) token = await createActionToken({ user, type: 'activate' });
 
   return {
     user: omit(user.toJSON(), 'password', 'ban') as UserDocument,

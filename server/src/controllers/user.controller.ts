@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import catchAsync from '../utils/catchAsync';
 import sendSuccess from '../utils/sendSuccess';
+import env from '../utils/env';
 
 import {
   activateUser,
@@ -19,6 +20,7 @@ import {
 
 import {
   ActivateInput,
+  CreateNewUserInput,
   EmailInput,
   GetUserByEmailInput,
   ResetPasswordInput,
@@ -32,9 +34,10 @@ export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
     const { user, token } = await createUser({ input: req.body });
 
-    await sendCreateUserEmail({ user, token });
+    if (env.prod) await sendCreateUserEmail({ user, token });
 
     sendSuccess(res, {
+      statusCode: 201,
       message:
         'Sign up successfully. Your activate code is sent to your email! Please check.',
       user,
@@ -154,3 +157,17 @@ export const getUser = catchAsync(
     sendSuccess(res, { numResults: 1, user });
   }
 );
+
+export const createNewUser = catchAsync(
+  async (req: Request<{}, {}, CreateNewUserInput['body']>, res: Response) => {
+    const { user } = await createUser({ input: req.body, isAdmin: true });
+
+    sendSuccess(res, {
+      statusCode: 201,
+      message: 'Create user successfully.',
+      user,
+    });
+  }
+);
+
+export const deleteUser = catchAsync(async (req: Request, res: Response) => {});

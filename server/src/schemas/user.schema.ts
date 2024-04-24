@@ -1,4 +1,4 @@
-import { TypeOf, object, string } from 'zod';
+import { TypeOf, boolean, object, string } from 'zod';
 
 export const PasswordType = string()
   .min(8)
@@ -50,8 +50,16 @@ export const updatePasswordSchema = object({
   ),
 });
 
-// export const getUserSchema = object({ params: object({ ...UserID }) });
 export const getUserByEmailSchema = object({ params: object({ ...Email }) });
+
+export const createNewUserSchema = object({
+  body: object({
+    name: string(),
+    password: PasswordType,
+    active: boolean(),
+    ...Email,
+  }),
+});
 
 export type SignupUserInput = Omit<
   TypeOf<typeof signupUserSchema>,
@@ -67,5 +75,5 @@ export type UpdatePasswordInput = Omit<
   'body.passwordConfirm'
 >;
 
-// export type GetUserInput = TypeOf<typeof getUserSchema>;
 export type GetUserByEmailInput = TypeOf<typeof getUserByEmailSchema>;
+export type CreateNewUserInput = TypeOf<typeof createNewUserSchema>;

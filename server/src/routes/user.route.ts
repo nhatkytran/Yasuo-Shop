@@ -14,6 +14,7 @@ import {
 
 import {
   activate,
+  createNewUser,
   forgotPassword,
   getActivateCode,
   getAllUsers,
@@ -62,7 +63,10 @@ userRouter.patch(
 
 userRouter.get('/me', protect, getMe);
 
-userRouter.route('/').get(protect, restrictTo('admin'), getAllUsers);
+userRouter
+  .route('/')
+  .get(protect, restrictTo('admin'), getAllUsers)
+  .post(protect, restrictTo('admin'), createNewUser);
 
 userRouter.route('/:email').get(protect, restrictTo('admin'), getUser);
 
