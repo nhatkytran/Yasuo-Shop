@@ -24,7 +24,6 @@ import {
   ActivateInput,
   CreateNewUserInput,
   EmailInput,
-  GetUserByEmailInput,
   ResetPasswordInput,
   SignupUserInput,
   UpdatePasswordInput,
@@ -144,7 +143,7 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getUser = catchAsync(
-  async (req: Request<GetUserByEmailInput['params']>, res: Response) => {
+  async (req: Request<EmailInput['params']>, res: Response) => {
     const user = await findUser({
       query: { email: req.params.email },
       selectFields: [
@@ -175,7 +174,7 @@ export const createNewUser = catchAsync(
 
 export const checkWhoDeleteUser = catchAsync(
   async (
-    req: Request<GetUserByEmailInput['params']>,
+    req: Request<EmailInput['params']>,
     res: Response,
     next: NextFunction
   ) => {
@@ -189,7 +188,7 @@ export const checkWhoDeleteUser = catchAsync(
 );
 
 export const deleteUser = catchAsync(
-  async (req: Request<GetUserByEmailInput['params']>, res: Response) => {
+  async (req: Request<EmailInput['params']>, res: Response) => {
     const { user } = res.locals;
     const { email } = req.params;
 
@@ -204,6 +203,39 @@ export const deleteUser = catchAsync(
   }
 );
 
-export const restoreUser = catchAsync(
-  async (req: Request, res: Response) => {}
+// admin can restore any user
+export const adminRestoreUser = catchAsync(
+  async (req: Request<EmailInput['params']>, res: Response) => {
+    await updateUser({
+      filter: { email: req.params.email },
+      update: { $unset: { delete: 1 } },
+    });
+
+    sendSuccess(res, { message: 'Restore user successfully.' });
+  }
+);
+
+// user can only restore their own account and that account was not be deleted by admin
+export const getRestoreCode = catchAsync(
+  async (req: Request<EmailInput['params']>, res: Response) => {
+    const { email } = req.params;
+
+    const user = await findUser({ query: { email } });
+
+    console.log(user);
+
+    // const token = await createAcToken({ user });
+
+    // await sendActivateTokenEmail({ user, token });
+
+    sendSuccess(res, {
+      message: 'Restore code has been sent to your email. Please check.',
+    });
+  }
+);
+
+export const userRestoreUser = catchAsync(
+  async (req: Request, res: Response) => {
+    res.send('Hello World!');
+  }
 );

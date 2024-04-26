@@ -32,6 +32,7 @@ import {
   findAndUpdateSession,
   findSession,
   getJWTs,
+  protectCheckUserState,
   updateAllSessions,
   validatePassword,
 } from '../services/session.service';
@@ -78,17 +79,21 @@ export const protect = catchAsync(
       });
 
       if (user) {
+        protectCheckUserState(user);
         res.locals.user = user;
+
         return next();
       }
     }
 
     const { user, newAccessToken } = await checkRefreshJWT(refreshToken);
 
+    protectCheckUserState(user);
+    res.locals.user = user;
+
     res.setHeader('x-access-token', newAccessToken);
     sendAccessJWTCookie(req, res, newAccessToken);
 
-    res.locals.user = user;
     next();
   }
 );

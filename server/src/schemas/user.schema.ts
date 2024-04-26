@@ -50,8 +50,6 @@ export const updatePasswordSchema = object({
   ),
 });
 
-export const getUserByEmailSchema = object({ params: object({ ...Email }) });
-
 export const createNewUserSchema = object({
   body: object({
     ...Email,
@@ -68,11 +66,9 @@ export type SignupUserInput = Omit<
 export type EmailInput = TypeOf<typeof emailSchema>;
 export type ActivateInput = TypeOf<typeof activateSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
+export type CreateNewUserInput = TypeOf<typeof createNewUserSchema>;
 
 export type UpdatePasswordInput = Omit<
   TypeOf<typeof updatePasswordSchema>,
   'body.passwordConfirm'
 >;
-
-export type GetUserByEmailInput = TypeOf<typeof getUserByEmailSchema>;
-export type CreateNewUserInput = TypeOf<typeof createNewUserSchema>;

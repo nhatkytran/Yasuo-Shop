@@ -12,34 +12,23 @@ import AppError from '../utils/appError';
 import { signAccessJWT, verifyJWT } from '../utils/jwt';
 import Session from '../models/sessions/session.model';
 import { SessionDocument } from '../models/sessions/schemaDefs';
-import { findUser, preventOAuthUser } from './user.service';
+import { findUser } from './user.service';
 import { UserObject } from './user.service';
 import { UserDocument } from '../models/users/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
+
+import {
+  preventBannedUser,
+  preventDeletedUser,
+  preventInactiveUser,
+  preventOAuthUser,
+} from './common.service';
 
 export const unauthenticatedError = (message: string) =>
   new AppError({
     message,
     statusCode: 401,
   });
-
-// Throw error when banned user performs action
-export const preventBannedUser = (isBanned?: any) => {
-  if (Boolean(isBanned))
-    throw new AppError({
-      message:
-        'Your account has been banned! Please contact admin via nhockkutean2@gmail.com for more information.',
-      statusCode: 403,
-    });
-};
-
-// Throw error when inactive user
-export const preventInactiveUser = (active?: any): void => {
-  if (!Boolean(active))
-    throw unauthenticatedError(
-      'First you need to activate you account at /api/v1/users/activateCode/:email'
-    );
-};
 
 // Validate password //////////
 
@@ -51,6 +40,7 @@ export const validatePassword = async ({
   user,
   password,
 }: ValidatePasswordOptions): Promise<void> => {
+  preventDeletedUser(user.delete);
   preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
   preventInactiveUser(user.active);
@@ -128,6 +118,12 @@ export const findSession = async ({
 };
 
 // Get jwts from headers and cookies //////////
+
+// active check by signin -> only active is true can sign jwts
+export const protectCheckUserState = (user: UserDocument) => {
+  preventBannedUser(user.ban);
+  preventDeletedUser(user.delete);
+};
 
 export const getJWTs = (req: Request) => {
   const accessToken: string | undefined =

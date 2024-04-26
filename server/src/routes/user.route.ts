@@ -8,7 +8,6 @@ import {
   activateSchema,
   createNewUserSchema,
   emailSchema,
-  getUserByEmailSchema,
   resetPasswordSchema,
   signupUserSchema,
   updatePasswordSchema,
@@ -16,6 +15,7 @@ import {
 
 import {
   activate,
+  adminRestoreUser,
   checkWhoDeleteUser,
   createNewUser,
   deleteUser,
@@ -23,10 +23,12 @@ import {
   getActivateCode,
   getAllUsers,
   getMe,
+  getRestoreCode,
   getUser,
   resetPassword,
   signup,
   updatePassword,
+  userRestoreUser,
 } from '../controllers/user.controller';
 
 const userRouter = express.Router();
@@ -39,7 +41,7 @@ userRouter.use('/:userID/sessions', sessionRouter);
 userRouter.post('/signup', validate(signupUserSchema), signup);
 
 userRouter.get('/activateCode/:email', validate(emailSchema), getActivateCode);
-userRouter.post('/activate', validate(activateSchema), activate);
+userRouter.patch('/activate', validate(activateSchema), activate);
 
 // Passwords: forgot, reset, update //////////
 
@@ -57,6 +59,25 @@ userRouter.patch(
   validate(updatePasswordSchema),
   updatePassword
 );
+
+// Restore deleted user, ban user //////////
+
+// admin can restore any user
+userRouter.patch(
+  '/adminRestore/:email',
+  protect,
+  restrictTo('admin'),
+  validate(emailSchema),
+  adminRestoreUser
+);
+
+// user can only restore their own account and that account was not be deleted by admin
+userRouter.get(
+  '/userRestoreCode/:email',
+  validate(emailSchema),
+  getRestoreCode
+);
+// userRouter.patch('/restore/:email', userRestoreUser);
 
 // Ban user //////////
 
@@ -79,20 +100,13 @@ userRouter
 
 userRouter
   .route('/:email')
-  .get(protect, restrictTo('admin'), validate(getUserByEmailSchema), getUser)
+  .get(protect, restrictTo('admin'), validate(emailSchema), getUser)
   // admin can delete any user
   // user can only delete their own account
   // delete does not delete user, actually it just mark user as a deleted one
-  .delete(
-    protect,
-    checkWhoDeleteUser,
-    validate(getUserByEmailSchema),
-    deleteUser
-  );
+  .delete(protect, checkWhoDeleteUser, validate(emailSchema), deleteUser);
 
 // upload photo -> using AWS -> User image uploader in Jonas React course
 // update user's name
-// prevent deleted user (delete first or ban first)
-// restore user (only deleted by browser can be restored)
 
 export default userRouter;

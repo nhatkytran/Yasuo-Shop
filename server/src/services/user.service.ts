@@ -3,73 +3,29 @@ import { omit } from 'lodash';
 
 import AppError from '../utils/appError';
 import Email from '../utils/sendEmail';
-import { hashToken } from '../utils/tokenAndHash';
 import APIFeatures from '../utils/apiFeatures';
 
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
+import { unauthenticatedError } from './session.service';
 
 import {
+  preventActiveUser,
   preventBannedUser,
+  preventDeletedUser,
   preventInactiveUser,
-  unauthenticatedError,
-} from './session.service';
+  preventInvalidToken,
+  preventNotIssuedToken,
+  preventOAuthUser,
+} from './common.service';
+
+// Common types //////////
 
 export type UserObject = { user: UserDocument };
 
 interface UserAndToken extends UserObject {
   token: string;
 }
-
-// Throw error when user created by OAuth: google,...
-export const preventOAuthUser = (oAuth?: any): void => {
-  if (Boolean(oAuth))
-    throw new AppError({
-      message: 'This feature only supports accounts created manually!',
-      statusCode: 403,
-    });
-};
-
-// Throw error when user is already active
-const preventActiveUser = (active?: any): void => {
-  if (Boolean(active))
-    throw new AppError({
-      message: 'User is already active!',
-      statusCode: 400,
-    });
-};
-
-// Throw error when user have not issue token yet
-const preventNotIssuedToken = ({
-  tokenField,
-  codeUrl,
-}: {
-  tokenField?: string;
-  codeUrl: string;
-}): void => {
-  if (!tokenField)
-    throw new AppError({
-      message: `Get your verification code first at ${codeUrl}`,
-      statusCode: 401,
-    });
-};
-
-// Throw error when token is invaid
-const preventInvalidToken = ({
-  token,
-  rawToken,
-}: {
-  token: string;
-  rawToken: string;
-}): void => {
-  const [hash, timeout] = rawToken.split('/');
-
-  if (hashToken(token) !== hash || Date.now() > Number(timeout))
-    throw new AppError({
-      message: 'Invalid token or token has expired!',
-      statusCode: 401,
-    });
-};
 
 // Helper - Create tokens
 
@@ -220,6 +176,7 @@ export const findUser = async ({
 export const createActivateToken = async ({
   user,
 }: UserObject): Promise<string> => {
+  preventDeletedUser(user.delete);
   preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
   preventActiveUser(user.active);
@@ -243,6 +200,7 @@ export const sendActivateTokenEmail = async ({
 type ActivateUser = ({ user, token }: UserAndToken) => Promise<void>;
 
 export const activateUser: ActivateUser = async ({ user, token }) => {
+  preventDeletedUser(user.delete);
   preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
   preventActiveUser(user.active);
@@ -265,6 +223,7 @@ export const activateUser: ActivateUser = async ({ user, token }) => {
 export const createForgotPasswordToken = async ({
   user,
 }: UserObject): Promise<string> => {
+  preventDeletedUser(user.delete);
   preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
 
@@ -293,6 +252,7 @@ export const resetUserPassword = async ({
   token,
   newPassword,
 }: ResetUserPasswordOptions): Promise<void> => {
+  preventDeletedUser(user.delete);
   preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
 
@@ -322,6 +282,7 @@ export const changePassword = async ({
   currentPassword,
   newPassword,
 }: ChangePasswordOptions): Promise<void> => {
+  preventDeletedUser(user.delete);
   preventBannedUser(user.ban);
   preventOAuthUser(user.googleID);
   preventInactiveUser(user.active);
