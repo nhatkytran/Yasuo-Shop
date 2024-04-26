@@ -10,16 +10,18 @@ import { Express } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 
+// Config .env file -> process.env
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 import config from 'config';
 import init from './app';
 import connectDatabase from './connections/database';
 
+// Run Express app
 const app: Express = init();
 
+// Run server at port 1337
 const port = config.get<number>('port') || 1337;
-
 const server = app.listen(port, () => {
   logger.info(`App is running at port ${port}...`);
 
