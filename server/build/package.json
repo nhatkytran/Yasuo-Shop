@@ -5,7 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "prod": "NODE_ENV=production node src/server.js"
+    "prod": "NODE_ENV=production nodemon --inspect src/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -26,5 +26,7 @@
     "pino-pretty": "^11.0.0",
     "zod": "^3.22.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
