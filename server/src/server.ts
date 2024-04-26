@@ -16,6 +16,7 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 import config from 'config';
 import init from './app';
 import connectDatabase from './connections/database';
+import env from './utils/env';
 
 // Run Express app
 const app: Express = init();
@@ -37,8 +38,11 @@ process.on('unhandledRejection', error => {
   server.close(() => process.exit(1));
 });
 
-// The NodeJS process is killed
-process.on('SIGTERM', () => {
-  logger.info('--- SIGTERM RECEIVED! Shutting down... ---');
-  if (server) server.close(() => logger.info('SIGTERM - Process terminated!'));
-});
+// In dev mode, SIGTERM is triggered maybe because of ts-node-dev
+if (env.prod)
+  // The NodeJS process is killed
+  process.on('SIGTERM', () => {
+    logger.info('--- SIGTERM RECEIVED! Shutting down... ---');
+    if (server)
+      server.close(() => logger.info('SIGTERM - Process terminated!'));
+  });
