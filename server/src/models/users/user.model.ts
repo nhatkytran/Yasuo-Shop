@@ -51,6 +51,11 @@ schema.methods.createForgotPasswordToken = createTokenFactory({
   timeoutMinute: 2,
 });
 
+schema.methods.createRestoreToken = createTokenFactory({
+  field: 'restoreToken',
+  timeoutMinute: 2,
+});
+
 schema.methods.comparePassword = async function (
   password: string
 ): Promise<boolean> {

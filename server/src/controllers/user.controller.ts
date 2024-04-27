@@ -9,14 +9,17 @@ import {
   changePassword,
   createActivateToken,
   createForgotPasswordToken,
+  createRestoreToken,
   createUser,
   findAllUsers,
   findUser,
   identifyWhoDeleteUser,
   resetUserPassword,
+  restoreUser,
   sendActivateTokenEmail,
   sendCreateUserEmail,
   sendForgotPasswordTokenEmail,
+  sendRestoreEmail,
   updateUser,
 } from '../services/user.service';
 
@@ -221,12 +224,11 @@ export const getRestoreCode = catchAsync(
     const { email } = req.params;
 
     const user = await findUser({ query: { email } });
+    const token = await createRestoreToken({ user });
 
-    console.log(user);
+    if (env.dev || env.test) console.log(token);
 
-    // const token = await createAcToken({ user });
-
-    // await sendActivateTokenEmail({ user, token });
+    if (env.prod) await sendRestoreEmail({ user, token });
 
     sendSuccess(res, {
       message: 'Restore code has been sent to your email. Please check.',
@@ -235,7 +237,16 @@ export const getRestoreCode = catchAsync(
 );
 
 export const userRestoreUser = catchAsync(
-  async (req: Request, res: Response) => {
-    res.send('Hello World!');
+  async (req: Request<{}, {}, ActivateInput['body']>, res: Response) => {
+    const { email, code } = req.body;
+
+    const user = await findUser({
+      query: { email },
+      selectFields: ['restoreToken'],
+    });
+
+    await restoreUser({ user, token: code });
+
+    sendSuccess(res, { message: 'Restore user successfully.' });
   }
 );

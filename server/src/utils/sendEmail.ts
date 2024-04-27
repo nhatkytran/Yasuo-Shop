@@ -90,6 +90,15 @@ class Email {
       code,
     });
   }
+
+  async sendRestore({ code }: { code: string }) {
+    await this.send({
+      template: 'restoreEmail',
+      subject: 'Yasuo API - Yasuo Shop! Restore code',
+      username: this.username,
+      code,
+    });
+  }
 }
 
 export default Email;

@@ -42,6 +42,9 @@
                                           <%- include('./forgotPasswordEmail.ejs'); %>
                                             <% } %>
 
+                                              <% if (template==='restoreEmail' ) { %>
+                                                <%- include('./restoreEmail.ejs'); %>
+                                                  <% } %>
                           </td>
                         </tr>
                       </tbody>

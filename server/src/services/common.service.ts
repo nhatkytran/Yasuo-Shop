@@ -44,9 +44,13 @@ export const preventOAuthUser = (oAuth?: any): void => {
     });
 };
 
-// Throw error when deleted user performs action
-export const preventDeletedUser = (deleteObj: UserDocument['delete']) => {
+// Throw error when deleted user performs action (by admin | user themself)
+export const preventDeletedUser = (
+  deleteObj: UserDocument['delete'],
+  state?: 'onlyByAdmin'
+) => {
   if (!deleteObj || !deleteObj?.deleteAt) return;
+  if (state === 'onlyByAdmin' && !deleteObj.byAdmin) return;
 
   const date = deleteObj.deleteAt
     .toLocaleDateString('en-US', {
@@ -58,9 +62,18 @@ export const preventDeletedUser = (deleteObj: UserDocument['delete']) => {
 
   const message = deleteObj.byAdmin
     ? `Your account has been deleted by admin on ${date}! Please contact admin via nhockkutean2@gmail.com for more information`
-    : `Your account has been deleted on ${date}! Restore your account at /api/v1/users/restore/:email'`;
+    : `Your account has been deleted on ${date}! Restore your account at /api/v1/users/userRestoreCode/:email'`;
 
   throw new AppError({ message, statusCode: 403 });
+};
+
+// Throw error when deleted user performs action
+export const preventUndeletedUser = (deleteObj: UserDocument['delete']) => {
+  if (!deleteObj || !deleteObj?.deleteAt)
+    throw new AppError({
+      message: 'Your account is undeleted!',
+      statusCode: 400,
+    });
 };
 
 // Throw error when banned user performs action
@@ -86,6 +99,6 @@ export const preventActiveUser = (active?: any): void => {
 export const preventInactiveUser = (active?: any): void => {
   if (!Boolean(active))
     throw unauthenticatedError(
-      'First you need to activate you account at /api/v1/users/activateCode/:email'
+      'First you need to activate your account at /api/v1/users/activateCode/:email'
     );
 };

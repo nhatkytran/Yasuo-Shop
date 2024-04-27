@@ -17,6 +17,7 @@ import {
   preventInvalidToken,
   preventNotIssuedToken,
   preventOAuthUser,
+  preventUndeletedUser,
 } from './common.service';
 
 // Common types //////////
@@ -30,7 +31,7 @@ interface UserAndToken extends UserObject {
 // Helper - Create tokens
 
 interface CreateActionTokenOptions extends UserObject {
-  type: 'activate' | 'forgotPassword';
+  type: 'activate' | 'forgotPassword' | 'restore';
 }
 
 const createActionToken = async ({
@@ -41,6 +42,7 @@ const createActionToken = async ({
 
   if (type === 'activate') token = user.createActivateToken();
   if (type === 'forgotPassword') token = user.createForgotPasswordToken();
+  if (type === 'restore') token = user.createRestoreToken();
 
   await user.save({ validateBeforeSave: false });
 
@@ -74,6 +76,9 @@ export const handleSendEmails = async ({
 
     if (sendMethod === 'sendForgotPassword' && token)
       await email.sendForgotPassword({ code: token });
+
+    if (sendMethod === 'sendRestore' && token)
+      await email.sendRestore({ code: token });
   } catch (error: any) {
     if (field)
       await User.updateOne({ _id: user._id }, { $unset: { [field]: 1 } });
@@ -329,4 +334,50 @@ export const identifyWhoDeleteUser = ({
       message: 'You can only delete your own account!',
       statusCode: 400,
     });
+};
+
+// Get restore code //////////
+
+export const createRestoreToken = async ({
+  user,
+}: UserObject): Promise<string> => {
+  preventBannedUser(user.ban);
+  preventDeletedUser(user.delete, 'onlyByAdmin');
+  preventUndeletedUser(user.delete);
+
+  return await createActionToken({ user, type: 'restore' });
+};
+
+export const sendRestoreEmail = async ({
+  user,
+  token,
+}: UserAndToken): Promise<void> =>
+  await handleSendEmails({
+    user,
+    token,
+    sendMethod: 'sendRestore',
+    field: 'restoreToken',
+  });
+
+// User restore user //////////
+
+export const restoreUser = async ({
+  user,
+  token,
+}: UserAndToken): Promise<void> => {
+  preventBannedUser(user.ban);
+  preventDeletedUser(user.delete, 'onlyByAdmin');
+  preventUndeletedUser(user.delete);
+
+  preventNotIssuedToken({
+    tokenField: user.restoreToken,
+    codeUrl: '/api/v1/users/userRestoreCode/:email',
+  });
+
+  preventInvalidToken({ token, rawToken: user.restoreToken! });
+
+  user.delete = undefined;
+  user.restoreToken = undefined;
+
+  await user.save({ validateModifiedOnly: true });
 };

@@ -71,13 +71,14 @@ userRouter.patch(
   adminRestoreUser
 );
 
-// user can only restore their own account and that account was not be deleted by admin
+// user restore their own account and that account was not be deleted by admin
 userRouter.get(
   '/userRestoreCode/:email',
   validate(emailSchema),
   getRestoreCode
 );
-// userRouter.patch('/restore/:email', userRestoreUser);
+
+userRouter.patch('/userRestore', validate(activateSchema), userRestoreUser);
 
 // Ban user //////////
 
