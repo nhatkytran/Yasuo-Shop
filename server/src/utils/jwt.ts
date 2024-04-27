@@ -40,7 +40,7 @@ const sendJWTCookieFactory =
     res.cookie(tokenName, token, {
       maxAge,
       httpOnly: true, // prevent accessing cookie from client side (Cross-site scripting - XSS)
-      sameSite: 'strict',
+      sameSite: 'strict', // Prevent CSRF attacks
       // headers['x-forwarded-proto'] set by proxy to indicate http(s) of the original node
       secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
       ...options,

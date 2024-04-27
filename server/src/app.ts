@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
+import mongoSanitize from 'express-mongo-sanitize';
 import config from 'config';
 
 import routes from './routes/routes';
@@ -14,6 +15,7 @@ import trackLanguage from './middleware/trackLanguage';
 import AppError from './utils/appError';
 import globalErrorHandler from './controllers/error.controller';
 import env from './utils/env';
+import xssSanitize from './middleware/xssSanitize';
 
 const init = () => {
   const app = express();
@@ -24,12 +26,21 @@ const init = () => {
   // Set security HTTP Headers
   app.use(helmet());
 
+  // Reduce fingerprinting
+  app.disable('x-powered-by');
+
   // Config static files
   app.use(express.static(path.join(__dirname, 'public')));
 
   // Parse data for req.body and multipart form
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+  // Data sanitization against NoSQL query injection --> Dot or Dollar sign in MongoDB
+  app.use(mongoSanitize());
+
+  // Data sanitization against XSS --> Malicious code HTML,...
+  app.use(xssSanitize);
 
   // Parse cookie
   app.use(cookieParser());
