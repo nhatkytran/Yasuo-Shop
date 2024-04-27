@@ -6,6 +6,7 @@ import { protect, restrictTo } from '../controllers/session.controller';
 
 import {
   activateSchema,
+  bannedSchema,
   createNewUserSchema,
   emailSchema,
   resetPasswordSchema,
@@ -16,6 +17,7 @@ import {
 import {
   activate,
   adminRestoreUser,
+  banAccount,
   checkWhoDeleteUser,
   createNewUser,
   deleteUser,
@@ -80,10 +82,15 @@ userRouter.get(
 
 userRouter.patch('/userRestore', validate(activateSchema), userRestoreUser);
 
-// Ban user //////////
+// Admin ban user using email //////////
 
-// ?userID=<id> || ?email=<email>
-// userRouter.post('/banAccount', protect, restrictTo('admin'), banAccount);
+userRouter.post(
+  '/banAccount',
+  protect,
+  restrictTo('admin'),
+  validate(bannedSchema),
+  banAccount
+);
 
 // CRUD //////////
 

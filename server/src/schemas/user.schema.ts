@@ -58,8 +58,14 @@ export const createNewUserSchema = object({
   }),
 });
 
+export const bannedSchema = object({ body: object({ ...Email }) });
+
 export type SignupUserInput = Omit<
   TypeOf<typeof signupUserSchema>,
+  'body.passwordConfirm'
+>;
+export type UpdatePasswordInput = Omit<
+  TypeOf<typeof updatePasswordSchema>,
   'body.passwordConfirm'
 >;
 
@@ -67,8 +73,4 @@ export type EmailInput = TypeOf<typeof emailSchema>;
 export type ActivateInput = TypeOf<typeof activateSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type CreateNewUserInput = TypeOf<typeof createNewUserSchema>;
-
-export type UpdatePasswordInput = Omit<
-  TypeOf<typeof updatePasswordSchema>,
-  'body.passwordConfirm'
->;
+export type BannedInput = TypeOf<typeof bannedSchema>;

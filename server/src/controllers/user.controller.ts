@@ -25,6 +25,7 @@ import {
 
 import {
   ActivateInput,
+  BannedInput,
   CreateNewUserInput,
   EmailInput,
   ResetPasswordInput,
@@ -127,11 +128,19 @@ export const updatePassword = catchAsync(
   }
 );
 
-// Ban user -> ?userID=<id> || ?email=<email> //////////
+// Admin ban user using email //////////
 
-export const banAccount = catchAsync(async (req: Request, res: Response) => {
-  const { userID, email } = req.query;
-});
+export const banAccount = catchAsync(
+  async (req: Request<{}, {}, BannedInput['body']>, res: Response) => {
+    const { email } = req.body;
+
+    const user = await findUser({ query: { email } });
+
+    await updateUser({ filter: { email: user.email }, update: { ban: true } });
+
+    sendSuccess(res, { message: 'User has been banned!' });
+  }
+);
 
 // CRUD //////////
 
@@ -195,8 +204,10 @@ export const deleteUser = catchAsync(
     const { user } = res.locals;
     const { email } = req.params;
 
+    const deletedUser = await findUser({ query: { email } });
+
     await updateUser({
-      filter: { email },
+      filter: { email: deletedUser.email },
       update: {
         delete: { byAdmin: user.role === 'admin', deleteAt: new Date() },
       },
@@ -209,8 +220,12 @@ export const deleteUser = catchAsync(
 // admin can restore any user
 export const adminRestoreUser = catchAsync(
   async (req: Request<EmailInput['params']>, res: Response) => {
+    const { email } = req.params;
+
+    const user = await findUser({ query: { email } });
+
     await updateUser({
-      filter: { email: req.params.email },
+      filter: { email: user.email },
       update: { $unset: { delete: 1 } },
     });
 
