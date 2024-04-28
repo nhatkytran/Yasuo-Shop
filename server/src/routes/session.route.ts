@@ -18,6 +18,7 @@ import {
   restrictTo,
   signin,
   signout,
+  signoutEverywhere,
 } from '../controllers/session.controller';
 
 const sessionRouter = express.Router({ mergeParams: true });
@@ -26,7 +27,7 @@ const sessionRouter = express.Router({ mergeParams: true });
 
 sessionRouter.post('/signin', validate(signinUserSchema), signin);
 sessionRouter.get('/signout', protect, signout);
-// sessionRouter.get('/signoutEverywhere/:userID');
+sessionRouter.get('/signoutEverywhere', protect, signoutEverywhere);
 
 // Sessions: Get, Delete, Deactivate (Update), Create (signin creates session)
 

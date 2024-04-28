@@ -78,6 +78,23 @@ export const signout = catchAsync(async (req: Request, res: Response) => {
   sendSuccess(res, { message: 'Sign out successfully.' });
 });
 
+export const signoutEverywhere = catchAsync(
+  async (req: Request, res: Response) => {
+    const { user } = res.locals;
+
+    const { modifiedCount, matchedCount } = await updateAllSessions({
+      filter: { user: user._id },
+      update: { valid: false },
+    });
+
+    sendSuccess(res, {
+      message: 'Sign out everywhere successfully.',
+      modifiedCount,
+      matchedCount,
+    });
+  }
+);
+
 // Authorization //////////
 
 export const protect = catchAsync(
