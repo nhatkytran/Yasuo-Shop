@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
+import s3getSingedUrl from '../connections/awsS3';
 import catchAsync from '../utils/catchAsync';
 import sendSuccess from '../utils/sendSuccess';
 import env from '../utils/env';
@@ -172,6 +173,10 @@ export const getUser = catchAsync(
   }
 );
 
+export const updateMe = catchAsync(async (req: Request, res: Response) => {
+  res.send('Hello World!');
+});
+
 export const createNewUser = catchAsync(
   async (req: Request<{}, {}, CreateNewUserInput['body']>, res: Response) => {
     const { user } = await createUser({ input: req.body, isAdmin: true });
@@ -263,5 +268,25 @@ export const userRestoreUser = catchAsync(
     await restoreUser({ user, token: code });
 
     sendSuccess(res, { message: 'Restore user successfully.' });
+  }
+);
+
+// Get S3 Signed URL //////////
+
+export const getS3SignedUrl = catchAsync(
+  async (req: Request, res: Response) => {
+    return sendSuccess(res, {
+      message: "Sorry, we don't support this action now",
+    });
+
+    const { user } = res.locals;
+
+    const url = await s3getSingedUrl(user._id.toString());
+
+    sendSuccess(res, {
+      message:
+        'Generate pre-signed URL successfully. (only valid for 1 minute and only be used to upload one image)',
+      url,
+    });
   }
 );

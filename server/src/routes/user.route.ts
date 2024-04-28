@@ -26,9 +26,11 @@ import {
   getAllUsers,
   getMe,
   getRestoreCode,
+  getS3SignedUrl,
   getUser,
   resetPassword,
   signup,
+  updateMe,
   updatePassword,
   userRestoreUser,
 } from '../controllers/user.controller';
@@ -92,9 +94,15 @@ userRouter.post(
   banAccount
 );
 
-// CRUD //////////
+// Upload photo AWS S3 and U - Update user's name and photo //////////
 
-userRouter.get('/me', protect, getMe);
+// new only admin can access this route because I use AWS S3 for uploading photo
+// and it can charge me money
+userRouter.get('/uploadPhotoUrl', protect, restrictTo('admin'), getS3SignedUrl);
+
+// CRD //////////
+
+userRouter.route('/me').get(protect, getMe).patch(protect, updateMe);
 
 userRouter
   .route('/')
@@ -113,8 +121,5 @@ userRouter
   // user can only delete their own account
   // delete does not delete user, actually it just mark user as a deleted one
   .delete(protect, checkWhoDeleteUser, validate(emailSchema), deleteUser);
-
-// upload photo -> using AWS -> User image uploader in Jonas React course
-// update user's name
 
 export default userRouter;
