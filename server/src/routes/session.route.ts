@@ -17,6 +17,7 @@ import {
   protect,
   restrictTo,
   signin,
+  signout,
 } from '../controllers/session.controller';
 
 const sessionRouter = express.Router({ mergeParams: true });
@@ -24,6 +25,8 @@ const sessionRouter = express.Router({ mergeParams: true });
 // Signin: Local, Goole. Sign jasonwebtoken, session,...
 
 sessionRouter.post('/signin', validate(signinUserSchema), signin);
+sessionRouter.get('/signout', protect, signout);
+// sessionRouter.get('/signoutEverywhere/:userID');
 
 // Sessions: Get, Delete, Deactivate (Update), Create (signin creates session)
 

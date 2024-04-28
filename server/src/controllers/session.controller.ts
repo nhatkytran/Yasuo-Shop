@@ -66,6 +66,18 @@ export const signin = catchAsync(
   }
 );
 
+export const signout = catchAsync(async (req: Request, res: Response) => {
+  const { sessionID } = res.locals;
+
+  await findAndUpdateSession({
+    sessionID,
+    update: { valid: false },
+    options: { new: true, runValidators: true },
+  });
+
+  sendSuccess(res, { message: 'Sign out successfully.' });
+});
+
 // Authorization //////////
 
 export const protect = catchAsync(
@@ -73,23 +85,29 @@ export const protect = catchAsync(
     const { accessToken, refreshToken } = getJWTs(req);
 
     if (accessToken) {
-      const user = await checkAccessJWT({
-        accessToken,
-        hasRefreshToken: Boolean(refreshToken),
-      });
+      const options = { accessToken, hasRefreshToken: Boolean(refreshToken) };
+      const data = await checkAccessJWT(options);
 
-      if (user) {
+      if (data) {
+        const { user, sessionID } = data;
+
         protectCheckUserState(user);
+
         res.locals.user = user;
+        res.locals.sessionID = sessionID;
 
         return next();
       }
     }
 
-    const { user, newAccessToken } = await checkRefreshJWT(refreshToken);
+    const { user, sessionID, newAccessToken } = await checkRefreshJWT(
+      refreshToken
+    );
 
     protectCheckUserState(user);
+
     res.locals.user = user;
+    res.locals.sessionID = sessionID;
 
     res.setHeader('x-access-token', newAccessToken);
     sendAccessJWTCookie(req, res, newAccessToken);

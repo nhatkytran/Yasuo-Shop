@@ -142,7 +142,7 @@ export const getJWTs = (req: Request) => {
 // protect helpers //////////
 
 const checkSession = async (
-  sessionID: mongoose.Schema.Types.ObjectId
+  sessionID: string
 ): Promise<SessionDocument | never> => {
   try {
     const session = await findSession({ query: { _id: sessionID } });
@@ -157,9 +157,7 @@ const checkSession = async (
   }
 };
 
-const checkUser = async (
-  userID: mongoose.Schema.Types.ObjectId
-): Promise<UserDocument | never> => {
+const checkUser = async (userID: string): Promise<UserDocument | never> => {
   try {
     const user = await findUser({
       query: { _id: userID },
@@ -183,15 +181,13 @@ const preventOldJWTs = (user: UserDocument, session: SessionDocument): void => {
 
 // Verify and handle errors for accessToken //////////
 
-type CheckAccessJWTOptions = {
-  accessToken: string;
-  hasRefreshToken: boolean;
-};
+type CheckAccessJWTOptions = { accessToken: string; hasRefreshToken: boolean };
+type CheckAccessJWTData = { user: UserDocument; sessionID: string };
 
 export const checkAccessJWT = async ({
   accessToken,
   hasRefreshToken,
-}: CheckAccessJWTOptions): Promise<UserDocument | null | never> => {
+}: CheckAccessJWTOptions): Promise<CheckAccessJWTData | null | never> => {
   const { expired, decoded } = verifyJWT(accessToken);
 
   if (decoded) {
@@ -202,7 +198,7 @@ export const checkAccessJWT = async ({
 
     preventOldJWTs(user, session);
 
-    return user;
+    return { user, sessionID };
   }
 
   if (!expired)
@@ -216,9 +212,13 @@ export const checkAccessJWT = async ({
 
 // Verify and handle errors for refreshToken //////////
 
+interface CheckRefreshJWTData extends CheckAccessJWTData {
+  newAccessToken: string;
+}
+
 export const checkRefreshJWT = async (
   refreshToken: string | undefined
-): Promise<{ user: UserDocument; newAccessToken: string } | never> => {
+): Promise<CheckRefreshJWTData | never> => {
   if (!refreshToken)
     throw unauthenticatedError('Please sign in to get access.');
 
@@ -237,7 +237,7 @@ export const checkRefreshJWT = async (
       sessionID: session._id,
     });
 
-    return { user, newAccessToken };
+    return { user, sessionID, newAccessToken };
   }
 
   if (expired)

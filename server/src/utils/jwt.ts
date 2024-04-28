@@ -57,14 +57,11 @@ export const sendRefreshJWTCookie = sendJWTCookieFactory({
 });
 
 interface Decoded extends JwtPayload {
-  userID: mongoose.Schema.Types.ObjectId;
-  sessionID: mongoose.Schema.Types.ObjectId;
+  userID: string;
+  sessionID: string;
 }
 
-type VerifyJWTResult = {
-  expired: boolean;
-  decoded: Decoded | null;
-};
+type VerifyJWTResult = { expired: boolean; decoded: Decoded | null };
 
 export const verifyJWT = (token: string) => {
   try {
