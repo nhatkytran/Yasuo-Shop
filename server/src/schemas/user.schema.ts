@@ -9,7 +9,6 @@ export const PasswordType = string()
 
 export const Email = { email: string().email() };
 const Code = { code: string() };
-// const UserID = { userID: string() };
 
 const passwordNotMatchErrorOptions = {
   message: 'Passwords do not match!',
@@ -60,6 +59,10 @@ export const createNewUserSchema = object({
 
 export const bannedSchema = object({ body: object({ ...Email }) });
 
+export const updateMeSchema = object({
+  body: object({ name: string().optional(), photo: string().optional() }),
+});
+
 export type SignupUserInput = Omit<
   TypeOf<typeof signupUserSchema>,
   'body.passwordConfirm'
@@ -74,3 +77,4 @@ export type ActivateInput = TypeOf<typeof activateSchema>;
 export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 export type CreateNewUserInput = TypeOf<typeof createNewUserSchema>;
 export type BannedInput = TypeOf<typeof bannedSchema>;
+export type UpdateMeInput = TypeOf<typeof updateMeSchema>;

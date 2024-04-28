@@ -31,6 +31,7 @@ import {
   EmailInput,
   ResetPasswordInput,
   SignupUserInput,
+  UpdateMeInput,
   UpdatePasswordInput,
 } from '../schemas/user.schema';
 
@@ -149,6 +150,22 @@ export const getMe = catchAsync(async (req: Request, res: Response) =>
   sendSuccess(res, { user: res.locals.user })
 );
 
+export const updateMe = catchAsync(
+  async (req: Request<{}, {}, UpdateMeInput['body']>, res: Response) => {
+    const { user } = res.locals;
+    const { name, photo } = req.body;
+
+    const update: { name?: string; photo?: string } = {};
+
+    if (name) update.name = name;
+    if (photo) update.photo = photo;
+
+    if (name || photo) await updateUser({ filter: { _id: user._id }, update });
+
+    sendSuccess(res, { message: 'Update user successfully.' });
+  }
+);
+
 export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const users = await findAllUsers({ reqQuery: req.query });
 
@@ -172,10 +189,6 @@ export const getUser = catchAsync(
     sendSuccess(res, { numResults: 1, user });
   }
 );
-
-export const updateMe = catchAsync(async (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
 
 export const createNewUser = catchAsync(
   async (req: Request<{}, {}, CreateNewUserInput['body']>, res: Response) => {
