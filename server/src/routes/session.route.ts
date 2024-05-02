@@ -4,6 +4,7 @@ import validate from '../middleware/validateResource';
 import {
   getAllSessionsSchema,
   getSessionSchema,
+  signinGoogleSchema,
   signinUserSchema,
 } from '../schemas/session.schema';
 
@@ -17,6 +18,9 @@ import {
   protect,
   restrictTo,
   signin,
+  signinGoogleCallback,
+  signinGoogleConsent,
+  signinGoogleTokens,
   signout,
   signoutEverywhere,
 } from '../controllers/session.controller';
@@ -26,6 +30,16 @@ const sessionRouter = express.Router({ mergeParams: true });
 // Signin: Local, Goole. Sign jasonwebtoken, session,...
 
 sessionRouter.post('/signin', validate(signinUserSchema), signin);
+
+sessionRouter.get('/oauth/google/consent', signinGoogleConsent);
+sessionRouter.get('/oauth/google/callback', signinGoogleCallback);
+
+sessionRouter.post(
+  '/oauth/google/signin',
+  validate(signinGoogleSchema),
+  signinGoogleTokens
+);
+
 sessionRouter.get('/signout', protect, signout);
 sessionRouter.get('/signoutEverywhere', protect, signoutEverywhere);
 

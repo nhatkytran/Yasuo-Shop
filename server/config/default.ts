@@ -1,3 +1,4 @@
+import env from '../src/utils/env';
 import createDB from '../src/utils/createDB';
 
 const {
@@ -18,6 +19,8 @@ const {
   AWS_BUCKET_NAME,
   AWS_ACCESS_KEY,
   AWS_PRIVATE_KEY,
+  GOOGLE_ID,
+  GOOGLE_SECRET,
   PUBLIC_KEY,
   PRIVATE_KEY,
 } = process.env;
@@ -29,7 +32,7 @@ const databaseURL = createDB(DATABASE as string, {
   '<DATABASE_COLLECTION_NAME>': DATABASE_COLLECTION_NAME,
 });
 
-// Parameter
+// Parameters
 const parameterWhiteList = [
   'name',
   'price.default',
@@ -42,7 +45,26 @@ const parameterWhiteList = [
   'fields', // Advanced API
 ];
 
+// Google Authentication
+const GOOGLE_ROOT_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+
+// const GOOGLE_REDIRECT =
+//   env.dev || env.test
+//     ? 'http://127.0.0.1:1337/api/v1/sessions/oauth/google/callback'
+//     : 'https://yasuo-api.onrender.com/api/v1/sessions/oauth/google/callback';
+
+const GOOGLE_REDIRECT =
+  'http://127.0.0.1:1337/api/v1/sessions/oauth/google/callback';
+
+// Client URLsc
+const clientOriginUrl =
+  env.dev || env.test
+    ? 'http://127.0.0.1:3000/'
+    : 'https://yasuo-shop.netlify.app/';
+
+// Config
 export default {
+  clientOriginUrl,
   port: 1337,
   bcryptSaltFactor: 12,
   databaseURL,
@@ -62,6 +84,10 @@ export default {
   awsBucketName: AWS_BUCKET_NAME,
   awsAccessKey: AWS_ACCESS_KEY,
   awsPrivateKey: AWS_PRIVATE_KEY,
+  googleID: GOOGLE_ID,
+  googleSecret: GOOGLE_SECRET,
+  googleRootUrl: GOOGLE_ROOT_URL,
+  googleRedirect: GOOGLE_REDIRECT,
   publicKey: PUBLIC_KEY,
   privateKey: PRIVATE_KEY,
   accessTokenTtl: '30m',

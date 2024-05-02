@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { get } from 'lodash';
+import qs from 'qs';
 
 import mongoose, {
   FilterQuery,
@@ -8,27 +8,176 @@ import mongoose, {
   UpdateQuery,
 } from 'mongoose';
 
+import { get } from 'lodash';
+import axios from 'axios';
+import config from 'config';
+
+import logger from '../utils/logger';
 import AppError from '../utils/appError';
 import { signAccessJWT, verifyJWT } from '../utils/jwt';
 import Session from '../models/sessions/session.model';
+import User from '../models/users/user.model';
 import { SessionDocument } from '../models/sessions/schemaDefs';
 import { findUser } from './user.service';
-import { UserObject } from './user.service';
 import { UserDocument } from '../models/users/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
 
 import {
+  UserAndToken,
+  UserObject,
+  createActionToken,
+  handleSendEmails,
   preventBannedUser,
   preventDeletedUser,
   preventInactiveUser,
+  preventInvalidToken,
+  preventNotIssuedToken,
   preventOAuthUser,
 } from './common.service';
+
+// Helpers //////////
 
 export const unauthenticatedError = (message: string) =>
   new AppError({
     message,
     statusCode: 401,
   });
+
+// Google OAuth //////////
+
+const googleID = config.get<string>('googleID');
+const googleSecret = config.get<string>('googleSecret');
+const googleRedirect = config.get<string>('googleRedirect');
+
+export const signinGoogleConsentUrl = (): string => {
+  const scopes = [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email',
+  ];
+
+  const qs = new URLSearchParams({
+    redirect_uri: googleRedirect,
+    client_id: googleID,
+    access_type: 'offline',
+    response_type: 'code',
+    prompt: 'consent',
+    scope: scopes.join(' '),
+  });
+
+  return `${config.get<string>('googleRootUrl')}?${qs.toString()}`;
+};
+
+interface GoogleTokensResult {
+  access_token: string;
+  expires_in: Number;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
+  id_token: string;
+}
+
+export const getGoogleOAuthTokens = async (
+  code: string
+): Promise<GoogleTokensResult> => {
+  try {
+    const qsOptions = {
+      code,
+      client_id: googleID,
+      client_secret: googleSecret,
+      redirect_uri: googleRedirect,
+      grant_type: 'authorization_code',
+    };
+
+    const { data } = await axios.post<GoogleTokensResult>(
+      'https://oauth2.googleapis.com/token',
+      qs.stringify(qsOptions),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+
+    return data;
+  } catch (error: any) {
+    logger.error(error, 'Failed to fetch Google OAuth Tokens!');
+    throw error;
+  }
+};
+
+interface GoogleUserResult {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  locale: string;
+}
+
+type GoogleUserOptions = { id_token: string; access_token: string };
+
+export async function getGoogleUser({
+  id_token,
+  access_token,
+}: GoogleUserOptions): Promise<GoogleUserResult> {
+  try {
+    const { data: googleUser } = await axios.get<GoogleUserResult>(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
+      { headers: { Authorization: `Bearer ${id_token}` } }
+    );
+
+    if (!googleUser.verified_email)
+      throw new AppError({
+        message: 'Google account is not verified!',
+        statusCode: 403,
+      });
+
+    return googleUser;
+  } catch (error: any) {
+    logger.error(error, 'Failed to fetch Google OAuth user!');
+    throw error;
+  }
+}
+
+export const upsertGoogleUser = async (
+  googleUser: GoogleUserResult
+): Promise<{ user: UserDocument; isNew: Boolean }> => {
+  const { name, email, id, picture } = googleUser;
+
+  const { value, lastErrorObject } = await User.findOneAndUpdate(
+    { email },
+    { name, email, googleID: id, active: true, photo: picture },
+    { upsert: true, new: true, includeResultMetadata: true }
+  );
+
+  return {
+    user: value as UserDocument,
+    isNew: !lastErrorObject?.updatedExisting,
+  };
+};
+
+export const createGoogleToken = async ({ user }: UserObject) =>
+  await createActionToken({ user, type: 'google' });
+
+export const sendGoogleEmail = async ({ user }: UserObject): Promise<void> =>
+  await handleSendEmails({ user, sendMethod: 'sendWelcome' });
+
+export const checkGoogleToken = async ({
+  user,
+  token,
+}: UserAndToken): Promise<void> => {
+  preventDeletedUser(user.delete);
+  preventBannedUser(user.ban);
+
+  preventNotIssuedToken({
+    tokenField: user.googleToken,
+    codeUrl: '/api/v1/sessions/oauth/google/consent',
+  });
+
+  preventInvalidToken({ token, rawToken: user.googleToken! });
+
+  user.googleToken = undefined;
+
+  await user.save({ validateModifiedOnly: true });
+};
 
 // Validate password //////////
 

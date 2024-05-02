@@ -1,5 +1,7 @@
 import { UserDocument } from '../models/users/schemaDefs';
+import User from '../models/users/user.model';
 import AppError from '../utils/appError';
+import Email from '../utils/sendEmail';
 import { hashToken } from '../utils/tokenAndHash';
 import { unauthenticatedError } from './session.service';
 
@@ -101,4 +103,73 @@ export const preventInactiveUser = (active?: any): void => {
     throw unauthenticatedError(
       'First you need to activate your account at /api/v1/users/activateCode/:email'
     );
+};
+
+// Helpers //////////
+
+export interface UserAndToken extends UserObject {
+  token: string;
+}
+
+export type UserObject = { user: UserDocument };
+
+interface CreateActionTokenOptions extends UserObject {
+  type: 'activate' | 'forgotPassword' | 'restore' | 'google';
+}
+
+export const createActionToken = async ({
+  user,
+  type,
+}: CreateActionTokenOptions): Promise<string> => {
+  let token: string;
+
+  if (type === 'activate') token = user.createActivateToken();
+  if (type === 'forgotPassword') token = user.createForgotPasswordToken();
+  if (type === 'restore') token = user.createRestoreToken();
+  if (type === 'google') token = user.createGoogleToken();
+
+  await user.save({ validateBeforeSave: false });
+
+  return token!;
+};
+
+interface HandleSendEmailsOptions extends UserObject {
+  token?: string;
+  sendMethod: keyof Email;
+  field?: keyof UserDocument;
+  errorMessage?: string;
+}
+
+export const handleSendEmails = async ({
+  user,
+  token,
+  sendMethod,
+  field,
+  errorMessage,
+}: HandleSendEmailsOptions): Promise<void> => {
+  try {
+    const email = new Email(user);
+
+    if (sendMethod === 'sendWelcome')
+      await email.sendWelcome({ oAuth: !token, code: token });
+
+    if (sendMethod === 'sendActivate' && token)
+      await email.sendActivate({ code: token });
+
+    if (sendMethod === 'sendForgotPassword' && token)
+      await email.sendForgotPassword({ code: token });
+
+    if (sendMethod === 'sendRestore' && token)
+      await email.sendRestore({ code: token });
+  } catch (error: any) {
+    if (field)
+      await User.updateOne({ _id: user._id }, { $unset: { [field]: 1 } });
+
+    throw new AppError({
+      message: `Something went wrong sending email!${errorMessage ? ' ' : ''}${
+        errorMessage || ''
+      }`,
+      statusCode: 500,
+    });
+  }
 };

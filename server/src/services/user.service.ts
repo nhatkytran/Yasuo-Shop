@@ -2,14 +2,16 @@ import { FilterQuery, Types, UpdateQuery } from 'mongoose';
 import { omit } from 'lodash';
 
 import AppError from '../utils/appError';
-import Email from '../utils/sendEmail';
 import APIFeatures from '../utils/apiFeatures';
-
 import User from '../models/users/user.model';
 import { UserDocument, UserInput } from '../models/users/schemaDefs';
 import { unauthenticatedError } from './session.service';
 
 import {
+  UserAndToken,
+  UserObject,
+  createActionToken,
+  handleSendEmails,
   preventActiveUser,
   preventBannedUser,
   preventDeletedUser,
@@ -19,78 +21,6 @@ import {
   preventOAuthUser,
   preventUndeletedUser,
 } from './common.service';
-
-// Common types //////////
-
-export type UserObject = { user: UserDocument };
-
-interface UserAndToken extends UserObject {
-  token: string;
-}
-
-// Helper - Create tokens
-
-interface CreateActionTokenOptions extends UserObject {
-  type: 'activate' | 'forgotPassword' | 'restore';
-}
-
-const createActionToken = async ({
-  user,
-  type,
-}: CreateActionTokenOptions): Promise<string> => {
-  let token: string;
-
-  if (type === 'activate') token = user.createActivateToken();
-  if (type === 'forgotPassword') token = user.createForgotPasswordToken();
-  if (type === 'restore') token = user.createRestoreToken();
-
-  await user.save({ validateBeforeSave: false });
-
-  return token!;
-};
-
-// Helper - Send email
-
-interface HandleSendEmailsOptions extends UserObject {
-  token?: string;
-  sendMethod: keyof Email;
-  field?: keyof UserDocument;
-  errorMessage?: string;
-}
-
-export const handleSendEmails = async ({
-  user,
-  token,
-  sendMethod,
-  field,
-  errorMessage,
-}: HandleSendEmailsOptions): Promise<void> => {
-  try {
-    const email = new Email(user);
-
-    if (sendMethod === 'sendWelcome')
-      await email.sendWelcome({ oAuth: false, code: token });
-
-    if (sendMethod === 'sendActivate' && token)
-      await email.sendActivate({ code: token });
-
-    if (sendMethod === 'sendForgotPassword' && token)
-      await email.sendForgotPassword({ code: token });
-
-    if (sendMethod === 'sendRestore' && token)
-      await email.sendRestore({ code: token });
-  } catch (error: any) {
-    if (field)
-      await User.updateOne({ _id: user._id }, { $unset: { [field]: 1 } });
-
-    throw new AppError({
-      message: `Something went wrong sending email!${errorMessage ? ' ' : ''}${
-        errorMessage || ''
-      }`,
-      statusCode: 500,
-    });
-  }
-};
 
 // Sign up - Create user //////////
 

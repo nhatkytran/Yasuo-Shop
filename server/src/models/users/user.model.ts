@@ -56,6 +56,11 @@ schema.methods.createRestoreToken = createTokenFactory({
   timeoutMinute: 2,
 });
 
+schema.methods.createGoogleToken = createTokenFactory({
+  field: 'googleToken',
+  timeoutMinute: 2,
+});
+
 schema.methods.comparePassword = async function (
   password: string
 ): Promise<boolean> {

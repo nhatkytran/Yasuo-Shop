@@ -13,6 +13,10 @@ export const signinUserSchema = object({
   body: object({ ...Email, password: PasswordType }),
 });
 
+export const signinGoogleSchema = object({
+  body: object({ ...Email, googleToken: string() }),
+});
+
 export const getAllSessionsSchema = object({
   ...paramsOptionalUserID,
 });
@@ -22,5 +26,6 @@ export const getSessionSchema = object({
 });
 
 export type SigninUserInput = TypeOf<typeof signinUserSchema>;
+export type SigninGoogleInput = TypeOf<typeof signinGoogleSchema>;
 export type GetAllSessionsInput = TypeOf<typeof getAllSessionsSchema>;
 export type GetSessionInput = TypeOf<typeof getSessionSchema>;

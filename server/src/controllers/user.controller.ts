@@ -183,6 +183,7 @@ export const getUser = catchAsync(
         'forgotPasswordToken',
         'passwordChangedAt',
         'restoreToken',
+        'googleToken',
       ],
     });
 

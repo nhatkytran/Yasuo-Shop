@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { QueryOptions } from 'mongoose';
+import config from 'config';
 
 import env from '../utils/env';
 import sendSuccess from '../utils/sendSuccess';
@@ -18,26 +19,54 @@ import { findUser } from '../services/user.service';
 import {
   GetAllSessionsInput,
   GetSessionInput,
+  SigninGoogleInput,
   SigninUserInput,
 } from '../schemas/session.schema';
 
 import {
   checkAccessJWT,
+  checkGoogleToken,
   checkIsAuthorized,
   checkRefreshJWT,
+  createGoogleToken,
   createSession,
   findAllSessions,
   findAndDeleteAllSessions,
   findAndDeleteSession,
   findAndUpdateSession,
   findSession,
+  getGoogleOAuthTokens,
+  getGoogleUser,
   getJWTs,
   protectCheckUserState,
+  sendGoogleEmail,
+  signinGoogleConsentUrl,
   updateAllSessions,
+  upsertGoogleUser,
   validatePassword,
 } from '../services/session.service';
 
 // Authentication //////////
+
+const sendSigninTokens = async (
+  req: Request,
+  res: Response,
+  user: UserDocument
+) => {
+  const session = await createSession({
+    userID: user._id,
+    userAgent: req.get('user-agent') || '',
+  });
+
+  const tokenOptions = { userID: user._id, sessionID: session._id };
+  const accessToken = signAccessJWT(tokenOptions);
+  const refreshToken = signRefreshJWT(tokenOptions);
+
+  sendAccessJWTCookie(req, res, accessToken);
+  sendRefreshJWTCookie(req, res, refreshToken);
+
+  sendSuccess(res, { accessToken, refreshToken });
+};
 
 export const signin = catchAsync(
   async (req: Request<{}, {}, SigninUserInput['body']>, res: Response) => {
@@ -49,20 +78,47 @@ export const signin = catchAsync(
     });
 
     await validatePassword({ user, password });
+    await sendSigninTokens(req, res, user);
+  }
+);
 
-    const session = await createSession({
-      userID: user._id,
-      userAgent: req.get('user-agent') || '',
+export const signinGoogleConsent = (req: Request, res: Response) =>
+  res.redirect(signinGoogleConsentUrl());
+
+export const signinGoogleCallback = catchAsync(
+  async (req: Request, res: Response) => {
+    const code = req.query.code as string;
+    const error = req.query.error as string;
+    const clientOriginUrl = config.get<string>('clientOriginUrl');
+
+    if (error === 'access_denied')
+      return res.redirect(`${clientOriginUrl}?googleError=${error}`);
+
+    const { id_token, access_token } = await getGoogleOAuthTokens(code);
+    const googleUser = await getGoogleUser({ id_token, access_token }); // jwt.decode(id_token);
+
+    const { user, isNew } = await upsertGoogleUser(googleUser);
+
+    const token = await createGoogleToken({ user });
+    if (env.dev || env.test) console.log(token);
+
+    if (env.prod && isNew) sendGoogleEmail({ user });
+
+    res.redirect(`${clientOriginUrl}?googleToken=${token}`);
+  }
+);
+
+export const signinGoogleTokens = catchAsync(
+  async (req: Request<{}, {}, SigninGoogleInput['body']>, res: Response) => {
+    const { email, googleToken } = req.body;
+
+    const user = await findUser({
+      query: { email },
+      selectFields: ['googleToken'],
     });
 
-    const tokenOptions = { userID: user._id, sessionID: session._id };
-    const accessToken = signAccessJWT(tokenOptions);
-    const refreshToken = signRefreshJWT(tokenOptions);
-
-    sendAccessJWTCookie(req, res, accessToken);
-    sendRefreshJWTCookie(req, res, refreshToken);
-
-    sendSuccess(res, { accessToken, refreshToken });
+    await checkGoogleToken({ user, token: googleToken });
+    await sendSigninTokens(req, res, user);
   }
 );
 
