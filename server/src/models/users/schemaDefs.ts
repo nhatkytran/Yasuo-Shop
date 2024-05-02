@@ -4,6 +4,8 @@ export type UserInput = {
   name: string;
   email: string;
   password: string;
+  signinAttempts?: number;
+  signinTimestamp?: Date;
   photo?: string;
   active?: boolean;
   ban?: boolean;
@@ -32,6 +34,8 @@ export const schemaDefs = {
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
+  signinAttempts: { type: Number, default: 0 },
+  signinTimestamp: { type: Date },
   photo: { type: String, default: '/img/users/default.png' },
   active: { type: Boolean, default: false },
   ban: { type: Boolean, default: false },

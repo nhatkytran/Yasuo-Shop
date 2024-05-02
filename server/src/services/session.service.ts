@@ -194,6 +194,29 @@ export const validatePassword = async ({
   preventOAuthUser(user.googleID);
   preventInactiveUser(user.active);
 
+  // 5 is max sign in attempts and wait for an hour to sign in again
+
+  if (user.signinAttempts === 5) {
+    if (Date.now() < user.signinTimestamp!.getTime())
+      throw new AppError({
+        message: '',
+        statusCode: 403,
+      });
+
+    // Compare password
+    // If correct -> signin, attempts -> 0, time -> undefined
+    // If wrong -> error, attempts = 1, timestamp -> 1 hour (for checking)
+  }
+
+  // Compare password
+  // If correct -> sign in, attempts -> 0, time -> undefined
+  // If wrong -> error, attempts -> 1 || += 1 (based on timestamp), timestamp -> 1 hour
+
+  // Error message -> tell user attempts number
+
+  console.log(user.signinAttempts);
+  console.log(user.signinTimestamp);
+
   if (!(await user.comparePassword(password)))
     throw unauthenticatedError('Incorrect password!');
 };
