@@ -1,4 +1,4 @@
-import { FilterQuery, Types, UpdateQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery } from 'mongoose';
 import { omit } from 'lodash';
 
 import AppError from '../utils/appError';
@@ -8,6 +8,7 @@ import { UserDocument, UserInput } from '../models/users/schemaDefs';
 import { unauthenticatedError } from './session.service';
 
 import {
+  FindAllOptions,
   UserAndToken,
   UserObject,
   createActionToken,
@@ -64,10 +65,7 @@ export const sendCreateUserEmail = async ({
 
 // Find all users (only ad) //////////
 
-type FindAllUsersOptions = {
-  reqQuery?: FilterQuery<UserDocument>;
-  findOptions?: { [key: string]: Types.ObjectId };
-};
+type FindAllUsersOptions = FindAllOptions<UserDocument>;
 
 export const findAllUsers = async ({
   reqQuery = {},

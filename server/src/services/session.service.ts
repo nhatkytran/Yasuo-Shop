@@ -1,13 +1,6 @@
 import { Request } from 'express';
 import qs from 'qs';
-
-import mongoose, {
-  FilterQuery,
-  QueryOptions,
-  Types,
-  UpdateQuery,
-} from 'mongoose';
-
+import mongoose, { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 import { get } from 'lodash';
 import axios from 'axios';
 import config from 'config';
@@ -24,6 +17,7 @@ import APIFeatures from '../utils/apiFeatures';
 import dateFormat from '../utils/dateFormat';
 
 import {
+  FindAllOptions,
   UserAndToken,
   UserObject,
   createActionToken,
@@ -254,10 +248,7 @@ export const createSession = async ({
 
 // Find All Sessions //////////
 
-type FindAllSessionsOptions = {
-  reqQuery?: FilterQuery<SessionDocument>;
-  findOptions?: { [key: string]: Types.ObjectId };
-};
+type FindAllSessionsOptions = FindAllOptions<SessionDocument>;
 
 export const findAllSessions = async ({
   reqQuery = {},

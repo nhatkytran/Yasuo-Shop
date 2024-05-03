@@ -1,3 +1,5 @@
+import { FilterQuery, Types } from 'mongoose';
+
 import { UserDocument } from '../models/users/schemaDefs';
 import User from '../models/users/user.model';
 import AppError from '../utils/appError';
@@ -5,6 +7,26 @@ import dateFormat from '../utils/dateFormat';
 import Email from '../utils/sendEmail';
 import { hashToken } from '../utils/tokenAndHash';
 import { unauthenticatedError } from './session.service';
+
+// Common Types //////////
+
+export type FindAllOptions<T> = {
+  language: string;
+  reqQuery?: FilterQuery<T>;
+  findOptions?: { [key: string]: Types.ObjectId };
+};
+
+export type CreateEntity<T, U> = ({
+  language,
+  input,
+}: {
+  language: string;
+  input: T;
+}) => Promise<U>;
+
+export interface UserAndToken extends UserObject {
+  token: string;
+}
 
 // Throw error when user have not issue token yet
 export const preventNotIssuedToken = ({
@@ -101,10 +123,6 @@ export const preventInactiveUser = (active?: any): void => {
 };
 
 // Helpers //////////
-
-export interface UserAndToken extends UserObject {
-  token: string;
-}
 
 export type UserObject = { user: UserDocument };
 

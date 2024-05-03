@@ -3,6 +3,7 @@ import { Express, Request, Response } from 'express';
 import userRouter from './user.route';
 import productsRouter from './product.route';
 import sessionRouter from './session.route';
+import purchaseRouter from './purchase.route';
 
 const routes = (app: Express) => {
   // Hello World
@@ -24,6 +25,9 @@ const routes = (app: Express) => {
 
   // Products -> stats, crud,...
   app.use('/api/v1/products', productsRouter);
+
+  // Purchase -> crud, stripe payment,...
+  app.use('/api/v1/purchases', purchaseRouter);
 };
 
 export default routes;

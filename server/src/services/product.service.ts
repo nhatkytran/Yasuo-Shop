@@ -1,4 +1,4 @@
-import { FilterQuery, Model, QueryOptions, Types, UpdateQuery } from 'mongoose';
+import { Model, QueryOptions, UpdateQuery } from 'mongoose';
 
 import APIFeatures from '../utils/apiFeatures';
 import removeEmptyArray from '../utils/removeEmptyArray';
@@ -6,6 +6,7 @@ import AppError from '../utils/appError';
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
+import { CreateEntity, FindAllOptions } from './common.service';
 
 // Helper functions //////////
 
@@ -92,13 +93,7 @@ export const findProductEditions = async (
 
 // CRUD //////////
 
-type FindAllProductsOptions = {
-  language: string;
-  reqQuery?: FilterQuery<ProductDocument>;
-  findOptions?: {
-    [key: string]: Types.ObjectId; // key can be user id -> exp: find all products bought by user
-  };
-};
+type FindAllProductsOptions = FindAllOptions<ProductDocument>;
 
 export const findAllProducts = async ({
   language,
@@ -121,9 +116,6 @@ export const findAllProducts = async ({
     removeEmptyArray(product.toJSON())
   ) as ProductDocument[];
 };
-
-// query: FilterQuery<ProductDocument>,
-//   options: QueryOptions = { lean: true }
 
 interface FindProductByIDOptions extends QueryOptions {
   fields?: string | string[];
@@ -162,12 +154,7 @@ export const findProductByID: FindProductByID = async ({
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
 
-type CreateProduct = ({
-  input,
-}: {
-  language: string;
-  input: ProductInput;
-}) => Promise<ProductDocument>;
+type CreateProduct = CreateEntity<ProductInput, ProductDocument>;
 
 export const createProduct: CreateProduct = async ({ language, input }) => {
   const ProductModel = getProductModel(language);
