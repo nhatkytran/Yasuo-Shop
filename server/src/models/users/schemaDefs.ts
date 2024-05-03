@@ -35,7 +35,7 @@ export const schemaDefs = {
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, select: false },
   signinAttempts: { type: Number, default: 0 },
-  signinTimestamp: { type: Date },
+  signinTimestamp: { type: Date, default: Date },
   photo: { type: String, default: '/img/users/default.png' },
   active: { type: Boolean, default: false },
   ban: { type: Boolean, default: false },

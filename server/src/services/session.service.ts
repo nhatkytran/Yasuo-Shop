@@ -21,6 +21,7 @@ import { SessionDocument } from '../models/sessions/schemaDefs';
 import { findUser } from './user.service';
 import { UserDocument } from '../models/users/schemaDefs';
 import APIFeatures from '../utils/apiFeatures';
+import dateFormat from '../utils/dateFormat';
 
 import {
   UserAndToken,
@@ -194,31 +195,46 @@ export const validatePassword = async ({
   preventOAuthUser(user.googleID);
   preventInactiveUser(user.active);
 
-  // 5 is max sign in attempts and wait for an hour to sign in again
+  const maxAttempts = 5;
+  const nextOneHour = () => new Date(Date.now() + 60 * 60 * 1000);
+  const isInvalidTime = () => Date.now() < user.signinTimestamp!.getTime();
 
-  if (user.signinAttempts === 5) {
-    if (Date.now() < user.signinTimestamp!.getTime())
-      throw new AppError({
-        message: '',
-        statusCode: 403,
-      });
+  // There is no sign-in attempts remaining -> throw error
+  if (user.signinAttempts === maxAttempts && isInvalidTime()) {
+    const date = dateFormat({ date: user.signinTimestamp!, hasHour: true });
 
-    // Compare password
-    // If correct -> signin, attempts -> 0, time -> undefined
-    // If wrong -> error, attempts = 1, timestamp -> 1 hour (for checking)
+    throw new AppError({
+      message: `There is no sign-in attempts remaining. Please try again after ${date}.`,
+      statusCode: 403,
+    });
   }
 
-  // Compare password
-  // If correct -> sign in, attempts -> 0, time -> undefined
-  // If wrong -> error, attempts -> 1 || += 1 (based on timestamp), timestamp -> 1 hour
+  // Password is correct -> sign in and reset attempts
+  if (await user.comparePassword(password)) {
+    user.signinAttempts = 0;
+    user.signinTimestamp = new Date();
 
-  // Error message -> tell user attempts number
+    await user.save({ validateModifiedOnly: true });
+    return;
+  }
 
-  console.log(user.signinAttempts);
-  console.log(user.signinTimestamp);
+  // Password is not correct -> update attempts
+  user.signinAttempts = isInvalidTime() ? user.signinAttempts! + 1 : 1;
+  user.signinTimestamp = nextOneHour();
 
-  if (!(await user.comparePassword(password)))
-    throw unauthenticatedError('Incorrect password!');
+  await user.save({ validateModifiedOnly: true });
+
+  let messageMore: string = '';
+  const attemptsRemaining = maxAttempts - user.signinAttempts!;
+
+  if (!attemptsRemaining) {
+    const date = dateFormat({ date: user.signinTimestamp, hasHour: true });
+    messageMore = ` Please try again after ${date}.`;
+  }
+
+  throw unauthenticatedError(
+    `Incorrect password! Attempts remaining: ${attemptsRemaining}.${messageMore}`
+  );
 };
 
 // Create session //////////

@@ -1,6 +1,7 @@
 import { UserDocument } from '../models/users/schemaDefs';
 import User from '../models/users/user.model';
 import AppError from '../utils/appError';
+import dateFormat from '../utils/dateFormat';
 import Email from '../utils/sendEmail';
 import { hashToken } from '../utils/tokenAndHash';
 import { unauthenticatedError } from './session.service';
@@ -54,16 +55,10 @@ export const preventDeletedUser = (
   if (!deleteObj || !deleteObj?.deleteAt) return;
   if (state === 'onlyByAdmin' && !deleteObj.byAdmin) return;
 
-  const date = deleteObj.deleteAt
-    .toLocaleDateString('en-US', {
-      month: 'short',
-      day: '2-digit',
-      year: 'numeric',
-    })
-    .replace(',', '');
+  const date = dateFormat({ date: deleteObj.deleteAt, hasHour: true });
 
   const message = deleteObj.byAdmin
-    ? `Your account has been deleted by admin on ${date}! Please contact admin via nhockkutean2@gmail.com for more information`
+    ? `Your account has been deleted by admin on ${date}! Please contact admin via nhockkutean2@gmail.com for more information.`
     : `Your account has been deleted on ${date}! Restore your account at /api/v1/users/userRestoreCode/:email'`;
 
   throw new AppError({ message, statusCode: 403 });
