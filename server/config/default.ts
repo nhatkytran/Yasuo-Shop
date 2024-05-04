@@ -21,6 +21,8 @@ const {
   AWS_PRIVATE_KEY,
   GOOGLE_ID,
   GOOGLE_SECRET,
+  STRIPE_PUBLIC_KEY,
+  STRIPE_SECRET_KEY,
   PUBLIC_KEY,
   PRIVATE_KEY,
 } = process.env;
@@ -48,13 +50,10 @@ const parameterWhiteList = [
 // Google Authentication
 const GOOGLE_ROOT_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 
-// const GOOGLE_REDIRECT =
-//   env.dev || env.test
-//     ? 'http://127.0.0.1:1337/api/v1/sessions/oauth/google/callback'
-//     : 'https://yasuo-api.onrender.com/api/v1/sessions/oauth/google/callback';
-
 const GOOGLE_REDIRECT =
-  'http://127.0.0.1:1337/api/v1/sessions/oauth/google/callback';
+  env.dev || env.test
+    ? 'http://127.0.0.1:1337/api/v1/sessions/oauth/google/callback'
+    : 'https://yasuo-api.onrender.com/api/v1/sessions/oauth/google/callback';
 
 // Client URLsc
 const clientOriginUrl =
@@ -88,6 +87,8 @@ export default {
   googleSecret: GOOGLE_SECRET,
   googleRootUrl: GOOGLE_ROOT_URL,
   googleRedirect: GOOGLE_REDIRECT,
+  stripePublickKey: STRIPE_PUBLIC_KEY,
+  stripeSecretKey: STRIPE_SECRET_KEY,
   publicKey: PUBLIC_KEY,
   privateKey: PRIVATE_KEY,
   accessTokenTtl: '30m',

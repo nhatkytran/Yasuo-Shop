@@ -1,4 +1,12 @@
-import { TypeOf, boolean, number, object, string } from 'zod';
+import { TypeOf, array, boolean, number, object, string } from 'zod';
+
+export const checkoutSessionSchema = object({
+  body: object({
+    products: array(
+      object({ productID: string(), quantity: number().int().gte(1) })
+    ),
+  }),
+});
 
 export const getAllPurchasesSchema = object({
   params: object({
@@ -31,6 +39,7 @@ export const updatePurchaseSchema = object({
   }),
 });
 
+export type CheckoutSessionInput = TypeOf<typeof checkoutSessionSchema>;
 export type GetAllPurchasesInput = TypeOf<typeof getAllPurchasesSchema>;
 export type GetPurchaseInput = TypeOf<typeof getPurchaseSchema>;
 export type CreatePurchaseInput = TypeOf<typeof createPurchaseSchema>;

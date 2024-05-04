@@ -8,6 +8,7 @@ import { findUser } from '../services/user.service';
 import { findProductByID } from '../services/product.service';
 
 import {
+  CheckoutSessionInput,
   CreatePurchaseInput,
   GetAllPurchasesInput,
   GetPurchaseInput,
@@ -15,12 +16,29 @@ import {
 } from '../schemas/purchase.schema';
 
 import {
+  createCheckoutSession,
   createPurchase,
   findAllPurchases,
   findAndDeletePurchase,
   findAndUpdatePurchase,
   findPurchaseByID,
 } from '../services/purchase.service';
+
+// Checkouts //////////
+
+export const checkoutSession = catchAsync(
+  async (req: Request<{}, {}, CheckoutSessionInput['body']>, res: Response) => {
+    const language = res.locals.language as string;
+
+    const session = await createCheckoutSession({
+      language,
+      customerEmail: res.locals.user.email,
+      products: req.body.products,
+    });
+
+    sendSuccess(res, { language, session });
+  }
+);
 
 // CRUD - Read //////////
 

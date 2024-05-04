@@ -6,6 +6,7 @@ import { protect, restrictTo } from '../controllers/session.controller';
 import {
   checkGetAllPurchases,
   checkNewPurchase,
+  checkoutSession,
   createNewPurchase,
   deletePurchase,
   getAllPurchases,
@@ -14,6 +15,7 @@ import {
 } from '../controllers/purchase.controller';
 
 import {
+  checkoutSessionSchema,
   createPurchaseSchema,
   getAllPurchasesSchema,
   getPurchaseSchema,
@@ -24,7 +26,11 @@ const purchaseRouter = express.Router({ mergeParams: true });
 
 purchaseRouter.use(protect);
 
-// Checkout
+purchaseRouter.post(
+  '/checkout-session',
+  validate(checkoutSessionSchema),
+  checkoutSession
+);
 
 purchaseRouter.use(restrictTo('admin'));
 
