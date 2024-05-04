@@ -17,7 +17,7 @@ import APIFeatures from '../utils/apiFeatures';
 import dateFormat from '../utils/dateFormat';
 
 import {
-  FindAllOptions,
+  FindAllEntities,
   UserAndToken,
   UserObject,
   createActionToken,
@@ -248,12 +248,10 @@ export const createSession = async ({
 
 // Find All Sessions //////////
 
-type FindAllSessionsOptions = FindAllOptions<SessionDocument>;
-
-export const findAllSessions = async ({
+export const findAllSessions: FindAllEntities<SessionDocument> = async ({
   reqQuery = {},
   findOptions = {},
-}: FindAllSessionsOptions): Promise<SessionDocument[]> => {
+}) => {
   const features = await APIFeatures({ model: Session, reqQuery, findOptions });
 
   features.filter().sort().project().paginate();

@@ -1,7 +1,8 @@
 import express from 'express';
 
-import validate from '../middleware/validateResource';
 import sessionRouter from './session.route';
+import purchaseRouter from './purchase.route';
+import validate from '../middleware/validateResource';
 import { protect, restrictTo } from '../controllers/session.controller';
 
 import {
@@ -39,6 +40,9 @@ const userRouter = express.Router();
 
 // Handle sessions of one user: get, deactivate, delete,...
 userRouter.use('/:userID/sessions', sessionRouter);
+
+// Get, Delete,... all purchases of user
+userRouter.use('/:userID/purchases', purchaseRouter);
 
 // Create user and activate user (confirm that email of user exists) //////////
 

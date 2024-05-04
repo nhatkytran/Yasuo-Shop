@@ -10,11 +10,15 @@ import { unauthenticatedError } from './session.service';
 
 // Common Types //////////
 
-export type FindAllOptions<T> = {
+export type FindAllEntities<T> = ({
+  language,
+  reqQuery,
+  findOptions,
+}: {
   language: string;
   reqQuery?: FilterQuery<T>;
   findOptions?: { [key: string]: Types.ObjectId };
-};
+}) => Promise<T[]>;
 
 export type CreateEntity<T, U> = ({
   language,

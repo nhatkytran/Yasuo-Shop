@@ -4,12 +4,17 @@ import validate from '../middleware/validateResource';
 import { protect, restrictTo } from '../controllers/session.controller';
 
 import {
+  checkGetAllPurchases,
   checkNewPurchase,
   createNewPurchase,
+  getAllPurchases,
 } from '../controllers/purchase.controller';
-import { createPurchaseSchema } from '../schemas/purchase.schema';
+import {
+  createPurchaseSchema,
+  getAllPurchasesSchema,
+} from '../schemas/purchase.schema';
 
-const purchaseRouter = express.Router();
+const purchaseRouter = express.Router({ mergeParams: true });
 
 purchaseRouter.use(protect);
 
@@ -19,6 +24,8 @@ purchaseRouter.use(restrictTo('admin'));
 
 purchaseRouter
   .route('/')
+  // get all purchases supports nested routes user and product
+  .get(validate(getAllPurchasesSchema), checkGetAllPurchases, getAllPurchases)
   .post(validate(createPurchaseSchema), checkNewPurchase, createNewPurchase);
 
 export default purchaseRouter;

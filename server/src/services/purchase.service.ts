@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import PurchaseEnUS from '../models/purchases/purchaseEnUS.model';
 import PurchaseFR from '../models/purchases/purchaseFr.model';
 import APIFeatures from '../utils/apiFeatures';
-import { CreateEntity, FindAllOptions } from './common.service';
+import { CreateEntity, FindAllEntities } from './common.service';
 
 import {
   PurchaseDocument,
@@ -19,11 +19,11 @@ const getPurchaseModel = (language: string): Model<PurchaseDocument> => {
 
 // CRUD - Read //////////
 
-export const findAllPurchases = async ({
+export const findAllPurchases: FindAllEntities<PurchaseDocument> = async ({
   language,
   reqQuery = {},
   findOptions = {},
-}: FindAllOptions<PurchaseDocument>): Promise<PurchaseDocument[]> => {
+}) => {
   const ProductModel = getPurchaseModel(language);
 
   const features = await APIFeatures({

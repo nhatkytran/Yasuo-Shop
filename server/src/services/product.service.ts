@@ -6,7 +6,7 @@ import AppError from '../utils/appError';
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
-import { CreateEntity, FindAllOptions } from './common.service';
+import { CreateEntity, FindAllEntities } from './common.service';
 
 // Helper functions //////////
 
@@ -93,13 +93,11 @@ export const findProductEditions = async (
 
 // CRUD //////////
 
-type FindAllProductsOptions = FindAllOptions<ProductDocument>;
-
-export const findAllProducts = async ({
+export const findAllProducts: FindAllEntities<ProductDocument> = async ({
   language,
   reqQuery = {},
   findOptions = {},
-}: FindAllProductsOptions): Promise<ProductDocument[]> => {
+}) => {
   const ProductModel = getProductModel(language);
 
   const features = await APIFeatures({
@@ -128,7 +126,7 @@ type FindProductByID = ({
   language: string;
   productID: string;
   options?: FindProductByIDOptions;
-}) => Promise<ProductDocument | null>;
+}) => Promise<ProductDocument>;
 
 export const findProductByID: FindProductByID = async ({
   language,

@@ -8,7 +8,7 @@ import { UserDocument, UserInput } from '../models/users/schemaDefs';
 import { unauthenticatedError } from './session.service';
 
 import {
-  FindAllOptions,
+  FindAllEntities,
   UserAndToken,
   UserObject,
   createActionToken,
@@ -65,12 +65,10 @@ export const sendCreateUserEmail = async ({
 
 // Find all users (only ad) //////////
 
-type FindAllUsersOptions = FindAllOptions<UserDocument>;
-
-export const findAllUsers = async ({
+export const findAllUsers: FindAllEntities<UserDocument> = async ({
   reqQuery = {},
   findOptions = {},
-}: FindAllUsersOptions): Promise<UserDocument[]> => {
+}) => {
   const features = await APIFeatures({ model: User, reqQuery, findOptions });
 
   features.filter().sort().project().paginate();

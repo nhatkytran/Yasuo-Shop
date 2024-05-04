@@ -1,5 +1,6 @@
 import express from 'express';
 
+import purchaseRouter from './purchase.route';
 import validate from '../middleware/validateResource';
 
 import {
@@ -22,6 +23,9 @@ import {
 import { protect, restrictTo } from '../controllers/session.controller';
 
 const productsRouter = express.Router();
+
+// Get, Delete,... all purchases of product
+productsRouter.use('/:productID/purchases', purchaseRouter);
 
 // ADVANCED //////////
 
