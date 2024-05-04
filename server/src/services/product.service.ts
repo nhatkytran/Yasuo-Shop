@@ -1,4 +1,4 @@
-import { Model, QueryOptions, UpdateQuery } from 'mongoose';
+import { Model } from 'mongoose';
 
 import APIFeatures from '../utils/apiFeatures';
 import removeEmptyArray from '../utils/removeEmptyArray';
@@ -10,6 +10,8 @@ import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
 import {
   CreateEntity,
   FindAllEntities,
+  FindAndDeleteEntity,
+  FindAndUpdateEntity,
   FindEntityByID,
 } from './common.service';
 
@@ -96,7 +98,7 @@ export const findProductEditions = async (
   ]);
 };
 
-// CRUD //////////
+// CRUD - Read //////////
 
 export const findAllProducts: FindAllEntities<ProductDocument> = async ({
   language,
@@ -144,6 +146,8 @@ export const findProductByID: FindEntityByID<ProductDocument> = async ({
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
 
+// CRUD - Create //////////
+
 type CreateProduct = CreateEntity<ProductInput, ProductDocument>;
 
 export const createProduct: CreateProduct = async ({ language, input }) => {
@@ -154,28 +158,15 @@ export const createProduct: CreateProduct = async ({ language, input }) => {
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
 
-type FindAndUpdateProduct = ({
-  language,
-  productID,
-  update,
-  options,
-}: {
-  language: string;
-  productID: string;
-  update: UpdateQuery<ProductDocument>;
-  options: QueryOptions;
-}) => Promise<ProductDocument | null>;
+// CRUD - Update //////////
 
-export const findAndUpdateProduct: FindAndUpdateProduct = async ({
-  language,
-  productID,
-  update,
-  options,
-}) => {
+export const findAndUpdateProduct: FindAndUpdateEntity<
+  ProductDocument
+> = async ({ language, entityID, update, options }) => {
   const ProductModel = getProductModel(language);
 
   const product = await ProductModel.findByIdAndUpdate(
-    productID,
+    entityID,
     update,
     options
   );
@@ -184,18 +175,13 @@ export const findAndUpdateProduct: FindAndUpdateProduct = async ({
   return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
 
-type FindAndDeleteProduct = ({
-  language,
-  productID,
-}: {
-  language: string;
-  productID: string;
-}) => Promise<void>;
+// CRUD - Delete //////////
 
-export const findAndDeleteProduct: FindAndDeleteProduct = async ({
+export const findAndDeleteProduct: FindAndDeleteEntity = async ({
   language,
-  productID,
+  entityID,
 }) => {
   const ProductModel = getProductModel(language);
-  await ProductModel.findByIdAndDelete(productID);
+
+  await ProductModel.findByIdAndDelete(entityID);
 };

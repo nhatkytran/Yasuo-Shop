@@ -1,4 +1,4 @@
-import { FilterQuery, QueryOptions, Types } from 'mongoose';
+import { FilterQuery, QueryOptions, Types, UpdateQuery } from 'mongoose';
 
 import { UserDocument } from '../models/users/schemaDefs';
 import User from '../models/users/user.model';
@@ -9,18 +9,6 @@ import { hashToken } from '../utils/tokenAndHash';
 import { unauthenticatedError } from './session.service';
 
 // Common Types //////////
-
-export type CreateEntity<T, U> = ({
-  language,
-  input,
-}: {
-  language: string;
-  input: T;
-}) => Promise<U>;
-
-export interface UserAndToken extends UserObject {
-  token: string;
-}
 
 export type FindAllEntities<T> = ({
   language,
@@ -45,6 +33,38 @@ export type FindEntityByID<T> = ({
   entityID: string;
   options?: FindEntityByIDOptions;
 }) => Promise<T>;
+
+export type CreateEntity<T, U> = ({
+  language,
+  input,
+}: {
+  language: string;
+  input: T;
+}) => Promise<U>;
+
+export interface UserAndToken extends UserObject {
+  token: string;
+}
+
+export type FindAndUpdateEntity<T> = ({
+  language,
+  entityID,
+  update,
+  options,
+}: {
+  language: string;
+  entityID: string;
+  update: UpdateQuery<T>;
+  options: QueryOptions;
+}) => Promise<T | null>;
+
+export type FindAndDeleteEntity = ({
+  language,
+  entityID,
+}: {
+  language: string;
+  entityID: string;
+}) => Promise<void>;
 
 // Throw error when user have not issue token yet
 export const preventNotIssuedToken = ({

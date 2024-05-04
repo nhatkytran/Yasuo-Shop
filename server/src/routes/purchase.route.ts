@@ -7,13 +7,17 @@ import {
   checkGetAllPurchases,
   checkNewPurchase,
   createNewPurchase,
+  deletePurchase,
   getAllPurchases,
   getPurchase,
+  updatePurchase,
 } from '../controllers/purchase.controller';
 
 import {
   createPurchaseSchema,
   getAllPurchasesSchema,
+  getPurchaseSchema,
+  updatePurchaseSchema,
 } from '../schemas/purchase.schema';
 
 const purchaseRouter = express.Router({ mergeParams: true });
@@ -26,10 +30,17 @@ purchaseRouter.use(restrictTo('admin'));
 
 purchaseRouter
   .route('/')
-  // get all purchases supports nested routes user and product
   .get(validate(getAllPurchasesSchema), checkGetAllPurchases, getAllPurchases)
   .post(validate(createPurchaseSchema), checkNewPurchase, createNewPurchase);
 
-purchaseRouter.route('/:purchaseID').get(getPurchase);
+purchaseRouter
+  .route('/:purchaseID')
+  .get(validate(getPurchaseSchema), getPurchase)
+  .patch(
+    validate(getPurchaseSchema),
+    validate(updatePurchaseSchema),
+    updatePurchase
+  )
+  .delete(validate(getPurchaseSchema), deletePurchase);
 
 export default purchaseRouter;

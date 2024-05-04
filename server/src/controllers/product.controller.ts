@@ -55,7 +55,7 @@ export const aliasTopProducts = (
   next();
 };
 
-// CRUD //////////
+// CRUD - Read //////////
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
@@ -94,6 +94,8 @@ export const getProduct = catchAsync(
   }
 );
 
+// CRUD - Create //////////
+
 export const createNewProduct = catchAsync(
   async (req: Request<{}, {}, CreateProductInput['body']>, res: Response) => {
     const language: string = res.locals.language;
@@ -105,32 +107,34 @@ export const createNewProduct = catchAsync(
   }
 );
 
+// CRUD - Update //////////
+
 export const updateProduct = catchAsync(
   async (
     req: Request<UpdateProductInput['params'], {}, UpdateProductInput['body']>,
     res: Response
   ) => {
     const language: string = res.locals.language;
-    const productID: string = req.params.productID;
-    const update = { ...req.body };
 
     const product = await findAndUpdateProduct({
       language,
-      productID,
-      update,
+      entityID: req.params.productID,
+      update: req.body,
       options: { new: true, runValidators: true },
     });
 
-    sendSuccess(res, { language, numResults: product ? 1 : 0, product });
+    sendSuccess(res, { language, numResults: Number(!!product), product });
   }
 );
+
+// CRUD - Delete //////////
 
 export const deleteProduct = catchAsync(
   async (req: Request<DeleteProductInput['params']>, res: Response) => {
     const language: string = res.locals.language;
     const productID: string = req.params.productID;
 
-    await findAndDeleteProduct({ language, productID });
+    await findAndDeleteProduct({ language, entityID: productID });
 
     sendSuccess(res, {
       statusCode: 204,

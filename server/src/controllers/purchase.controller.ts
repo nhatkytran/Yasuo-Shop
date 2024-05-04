@@ -10,15 +10,19 @@ import { findProductByID } from '../services/product.service';
 import {
   CreatePurchaseInput,
   GetAllPurchasesInput,
+  GetPurchaseInput,
+  UpdatePurchaseInput,
 } from '../schemas/purchase.schema';
 
 import {
   createPurchase,
   findAllPurchases,
+  findAndDeletePurchase,
+  findAndUpdatePurchase,
   findPurchaseByID,
 } from '../services/purchase.service';
 
-// Find a specific purchase and all purchases //////////
+// CRUD - Read //////////
 
 export const checkGetAllPurchases = catchAsync(
   async (
@@ -66,23 +70,25 @@ export const getAllPurchases = catchAsync(
   }
 );
 
-export const getPurchase = catchAsync(async (req: Request, res: Response) => {
-  const language = res.locals.language as string;
-  const { purchaseID } = req.params;
-  const options = { ...req.query };
+export const getPurchase = catchAsync(
+  async (req: Request<GetPurchaseInput['params']>, res: Response) => {
+    const language = res.locals.language as string;
+    const { purchaseID } = req.params;
+    const options = { ...req.query };
 
-  if (env.dev || env.test) console.log(purchaseID, options);
+    if (env.dev || env.test) console.log(purchaseID, options);
 
-  const purchase = await findPurchaseByID({
-    language,
-    entityID: purchaseID,
-    options,
-  });
+    const purchase = await findPurchaseByID({
+      language,
+      entityID: purchaseID,
+      options,
+    });
 
-  sendSuccess(res, { language, numResults: 1, purchase });
-});
+    sendSuccess(res, { language, numResults: 1, purchase });
+  }
+);
 
-// Create purchase - admin //////////
+// CRUD - Create //////////
 
 export const checkNewPurchase = catchAsync(
   async (
@@ -120,5 +126,47 @@ export const createNewPurchase = catchAsync(
     });
 
     sendSuccess(res, { statusCode: 201, language, numResults: 1, purchase });
+  }
+);
+
+// CRUD - Update //////////
+
+export const updatePurchase = catchAsync(
+  async (
+    req: Request<GetPurchaseInput['params'], {}, UpdatePurchaseInput['body']>,
+    res: Response
+  ) => {
+    const language = res.locals.language as string;
+
+    const purchase = await findAndUpdatePurchase({
+      language,
+      entityID: req.params.purchaseID,
+      update: req.body,
+      options: { new: true, runValidators: true },
+    });
+
+    sendSuccess(res, { language, numResults: Number(!!purchase), purchase });
+  }
+);
+
+// CRUD - Delete //////////
+
+export const deleteAllPurchases = catchAsync(
+  async (req: Request, res: Response) => {}
+);
+
+export const deletePurchase = catchAsync(
+  async (req: Request<GetPurchaseInput['params']>, res: Response) => {
+    const language: string = res.locals.language;
+    const purchaseID: string = req.params.purchaseID;
+
+    await findAndDeletePurchase({ language, entityID: purchaseID });
+
+    sendSuccess(res, {
+      statusCode: 204,
+      language,
+      numResults: 0,
+      product: null,
+    });
   }
 );

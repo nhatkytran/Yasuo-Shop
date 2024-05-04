@@ -8,6 +8,8 @@ import PurchaseFR from '../models/purchases/purchaseFr.model';
 import {
   CreateEntity,
   FindAllEntities,
+  FindAndDeleteEntity,
+  FindAndUpdateEntity,
   FindEntityByID,
 } from './common.service';
 
@@ -81,4 +83,32 @@ export const createPurchase: CreatePurchase = async ({ language, input }) => {
   const product = await PurchaseModel.create(input);
 
   return product.toJSON() as PurchaseDocument;
+};
+
+// CRUD - Update //////////
+
+export const findAndUpdatePurchase: FindAndUpdateEntity<
+  PurchaseDocument
+> = async ({ language, entityID, update, options }) => {
+  const PurchaseModel = getPurchaseModel(language);
+
+  const purchase = await PurchaseModel.findByIdAndUpdate(
+    entityID,
+    update,
+    options
+  );
+
+  if (!purchase) return null;
+  return purchase.toJSON() as PurchaseDocument;
+};
+
+// CRUD - Delete //////////
+
+export const findAndDeletePurchase: FindAndDeleteEntity = async ({
+  language,
+  entityID,
+}) => {
+  const PurchaseModel = getPurchaseModel(language);
+
+  await PurchaseModel.findByIdAndDelete(entityID);
 };
