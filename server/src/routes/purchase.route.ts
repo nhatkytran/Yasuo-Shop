@@ -8,7 +8,9 @@ import {
   checkNewPurchase,
   createNewPurchase,
   getAllPurchases,
+  getPurchase,
 } from '../controllers/purchase.controller';
+
 import {
   createPurchaseSchema,
   getAllPurchasesSchema,
@@ -27,5 +29,7 @@ purchaseRouter
   // get all purchases supports nested routes user and product
   .get(validate(getAllPurchasesSchema), checkGetAllPurchases, getAllPurchases)
   .post(validate(createPurchaseSchema), checkNewPurchase, createNewPurchase);
+
+purchaseRouter.route('/:purchaseID').get(getPurchase);
 
 export default purchaseRouter;

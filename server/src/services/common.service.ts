@@ -1,4 +1,4 @@
-import { FilterQuery, Types } from 'mongoose';
+import { FilterQuery, QueryOptions, Types } from 'mongoose';
 
 import { UserDocument } from '../models/users/schemaDefs';
 import User from '../models/users/user.model';
@@ -9,16 +9,6 @@ import { hashToken } from '../utils/tokenAndHash';
 import { unauthenticatedError } from './session.service';
 
 // Common Types //////////
-
-export type FindAllEntities<T> = ({
-  language,
-  reqQuery,
-  findOptions,
-}: {
-  language: string;
-  reqQuery?: FilterQuery<T>;
-  findOptions?: { [key: string]: Types.ObjectId };
-}) => Promise<T[]>;
 
 export type CreateEntity<T, U> = ({
   language,
@@ -31,6 +21,30 @@ export type CreateEntity<T, U> = ({
 export interface UserAndToken extends UserObject {
   token: string;
 }
+
+export type FindAllEntities<T> = ({
+  language,
+  reqQuery,
+  findOptions,
+}: {
+  language: string;
+  reqQuery?: FilterQuery<T>;
+  findOptions?: { [key: string]: Types.ObjectId };
+}) => Promise<T[]>;
+
+interface FindEntityByIDOptions extends QueryOptions {
+  fields?: string | string[];
+}
+
+export type FindEntityByID<T> = ({
+  language,
+  entityID,
+  options,
+}: {
+  language: string;
+  entityID: string;
+  options?: FindEntityByIDOptions;
+}) => Promise<T>;
 
 // Throw error when user have not issue token yet
 export const preventNotIssuedToken = ({

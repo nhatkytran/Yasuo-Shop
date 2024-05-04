@@ -82,9 +82,13 @@ export const getProduct = catchAsync(
     const { productID } = req.params;
     const options = { ...req.query };
 
-    if (env.dev) console.log(productID, options);
+    if (env.dev || env.test) console.log(productID, options);
 
-    const product = await findProductByID({ language, productID, options });
+    const product = await findProductByID({
+      language,
+      entityID: productID,
+      options,
+    });
 
     sendSuccess(res, { language, numResults: 1, product });
   }

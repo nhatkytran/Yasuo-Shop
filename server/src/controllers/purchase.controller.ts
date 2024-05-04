@@ -6,11 +6,17 @@ import catchAsync from '../utils/catchAsync';
 import sendSuccess from '../utils/sendSuccess';
 import { findUser } from '../services/user.service';
 import { findProductByID } from '../services/product.service';
+
 import {
   CreatePurchaseInput,
   GetAllPurchasesInput,
 } from '../schemas/purchase.schema';
-import { createPurchase, findAllPurchases } from '../services/purchase.service';
+
+import {
+  createPurchase,
+  findAllPurchases,
+  findPurchaseByID,
+} from '../services/purchase.service';
 
 // Find a specific purchase and all purchases //////////
 
@@ -32,7 +38,7 @@ export const checkGetAllPurchases = catchAsync(
     }
 
     if (productID) {
-      const product = await findProductByID({ language, productID });
+      const product = await findProductByID({ language, entityID: productID });
 
       findOptions.product = product._id;
     }
@@ -60,6 +66,22 @@ export const getAllPurchases = catchAsync(
   }
 );
 
+export const getPurchase = catchAsync(async (req: Request, res: Response) => {
+  const language = res.locals.language as string;
+  const { purchaseID } = req.params;
+  const options = { ...req.query };
+
+  if (env.dev || env.test) console.log(purchaseID, options);
+
+  const purchase = await findPurchaseByID({
+    language,
+    entityID: purchaseID,
+    options,
+  });
+
+  sendSuccess(res, { language, numResults: 1, purchase });
+});
+
 // Create purchase - admin //////////
 
 export const checkNewPurchase = catchAsync(
@@ -74,7 +96,7 @@ export const checkNewPurchase = catchAsync(
 
     const targetProduct = await findProductByID({
       language: res.locals.language as string,
-      productID: product,
+      entityID: product,
     });
 
     res.locals.user = targetUser;

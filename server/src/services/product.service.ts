@@ -6,7 +6,12 @@ import AppError from '../utils/appError';
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
-import { CreateEntity, FindAllEntities } from './common.service';
+
+import {
+  CreateEntity,
+  FindAllEntities,
+  FindEntityByID,
+} from './common.service';
 
 // Helper functions //////////
 
@@ -115,22 +120,9 @@ export const findAllProducts: FindAllEntities<ProductDocument> = async ({
   ) as ProductDocument[];
 };
 
-interface FindProductByIDOptions extends QueryOptions {
-  fields?: string | string[];
-}
-
-type FindProductByID = ({
+export const findProductByID: FindEntityByID<ProductDocument> = async ({
   language,
-  productID,
-}: {
-  language: string;
-  productID: string;
-  options?: FindProductByIDOptions;
-}) => Promise<ProductDocument>;
-
-export const findProductByID: FindProductByID = async ({
-  language,
-  productID,
+  entityID,
   options = {},
 }) => {
   const ProductModel = getProductModel(language);
@@ -144,7 +136,7 @@ export const findProductByID: FindProductByID = async ({
     fields.forEach(field => (selectOptions[field] = true));
   }
 
-  const product = await ProductModel.findById(productID, selectOptions);
+  const product = await ProductModel.findById(entityID, selectOptions);
 
   if (!product)
     throw new AppError({ message: 'Product not found!', statusCode: 404 });
