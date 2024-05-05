@@ -18,10 +18,12 @@ import {
 import {
   createCheckoutSession,
   createPurchase,
+  createWebhookCheckoutPurchases,
   findAllPurchases,
   findAndDeletePurchase,
   findAndUpdatePurchase,
   findPurchaseByID,
+  handleWebhookCheckoutEvent,
 } from '../services/purchase.service';
 
 // Checkouts //////////
@@ -39,6 +41,15 @@ export const checkoutSession = catchAsync(
     sendSuccess(res, { language, session });
   }
 );
+
+export const webhookCheckout = (req: Request, res: Response) => {
+  const { session, error } = handleWebhookCheckoutEvent(req);
+
+  if (!session) return res.status(400).send(`Webhook error: ${error.message}`);
+  else createWebhookCheckoutPurchases(session);
+
+  sendSuccess(res, { received: true });
+};
 
 // CRUD - Read //////////
 

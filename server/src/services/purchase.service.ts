@@ -1,10 +1,14 @@
+import { Request } from 'express';
 import { Model } from 'mongoose';
 import Stripe from 'stripe';
 import config from 'config';
+
 import AppError from '../utils/appError';
 import APIFeatures from '../utils/apiFeatures';
+import logger from '../utils/logger';
 import PurchaseEnUS from '../models/purchases/purchaseEnUS.model';
 import PurchaseFR from '../models/purchases/purchaseFr.model';
+import { findProductByID } from './product.service';
 
 import {
   CreateEntity,
@@ -18,7 +22,7 @@ import {
   PurchaseDocument,
   PurchaseInput,
 } from '../models/purchases/schemaDefs';
-import { findProductByID } from './product.service';
+import { findUser } from './user.service';
 
 // Helper functions //////////
 
@@ -62,10 +66,12 @@ const checkoutSessionPrice = async ({
   return Number(totalPrice.toFixed(2));
 };
 
+type CheckoutProduct = { productID: string; quantity: number };
+
 type CreateCheckoutSessionOptions = {
   language: string;
   customerEmail: string;
-  products: { productID: string; quantity: number }[];
+  products: CheckoutProduct[];
 };
 
 export const createCheckoutSession = async ({
@@ -80,13 +86,15 @@ export const createCheckoutSession = async ({
 
   const totalPrice = await checkoutSessionPrice({ language, products });
 
+  const clientReferenceID = JSON.stringify({ language, products });
+
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
     success_url: `${clientOriginUrl}?payment=success`,
     cancel_url: `${clientOriginUrl}?payment=error`,
     customer_email: customerEmail,
-    client_reference_id: JSON.stringify(products),
+    client_reference_id: clientReferenceID,
     line_items: [
       {
         quantity: 1,
@@ -107,6 +115,66 @@ export const createCheckoutSession = async ({
   });
 
   return session;
+};
+
+export const handleWebhookCheckoutEvent = (req: Request) => {
+  try {
+    const stripeSecretKey = config.get<string>('stripeSecretKey');
+    const stripeWebhookSecret = config.get<string>('stripeWebhookSecret');
+
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: '2024-04-10' });
+
+    const signature = req.headers['stripe-signature'] as string;
+
+    const event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      stripeWebhookSecret
+    );
+
+    if (event.type === 'checkout.session.completed')
+      return { session: event.data.object, error: null };
+
+    throw new Error('Something went wrong!');
+  } catch (error: any) {
+    logger.error(error, 'Webhook Checkout Event Failed!');
+
+    return { session: null, error };
+  }
+};
+
+type ClientReferenceID = { language: string; products: CheckoutProduct[] };
+
+export const createWebhookCheckoutPurchases = async (
+  session: Stripe.Checkout.Session
+) => {
+  const user = await findUser({
+    query: { email: session.customer_email as string },
+  });
+
+  const { language, products }: ClientReferenceID = JSON.parse(
+    session.client_reference_id as string
+  );
+
+  const PurchaseModel = getPurchaseModel(language);
+
+  const newProducts = await Promise.all(
+    products.map(async ({ productID, quantity }) => {
+      const product = await findProductByID({ language, entityID: productID });
+
+      const price = product.price.default - product.price.saleAmount!;
+
+      return {
+        user: user._id.toString(),
+        product: product._id.toString(),
+        price: Number(price.toFixed(2)),
+        quantity,
+        paid: true,
+      };
+    })
+  );
+
+  await PurchaseModel.create(newProducts);
 };
 
 // CRUD - Read //////////

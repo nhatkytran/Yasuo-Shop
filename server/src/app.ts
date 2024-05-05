@@ -16,6 +16,7 @@ import AppError from './utils/appError';
 import globalErrorHandler from './controllers/error.controller';
 import env from './utils/env';
 import xssSanitize from './middleware/xssSanitize';
+import { webhookCheckout } from './controllers/purchase.controller';
 
 const init = () => {
   const app = express();
@@ -31,6 +32,13 @@ const init = () => {
 
   // Config static files
   app.use(express.static(path.join(__dirname, 'public')));
+
+  // Stripe webhook checkout
+  app.post(
+    '/webhook-checkout',
+    express.raw({ type: 'application/json' }),
+    webhookCheckout
+  );
 
   // Parse data for req.body and multipart form
   app.use(express.json({ limit: '10kb' }));
