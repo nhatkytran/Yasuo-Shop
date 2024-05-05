@@ -22,3 +22,12 @@ export const schemaDefs = {
   paid: { type: Boolean, default: false },
   shipped: { type: Boolean, default: false },
 };
+
+export const virtutalProperties = (schema: mongoose.Schema) => {
+  schema.virtual('totalPrice').get(function () {
+    const totalPrice: number =
+      (this.price as number) * (this.quantity as number);
+
+    return Number(totalPrice.toFixed(2));
+  });
+};
