@@ -5,12 +5,12 @@ import { schemaSups } from '../commonDefs';
 
 const schema = new mongoose.Schema<PurchaseDocument>(
   {
-    ...schemaDefs,
     product: {
       type: mongoose.Schema.ObjectId,
       ref: 'ProductFR',
       required: true,
     },
+    ...schemaDefs,
   },
   schemaSups
 );

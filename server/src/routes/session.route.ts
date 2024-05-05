@@ -41,7 +41,7 @@ sessionRouter.post(
 );
 
 sessionRouter.get('/signout', protect, signout);
-sessionRouter.get('/signoutEverywhere', protect, signoutEverywhere);
+sessionRouter.get('/signout-everywhere', protect, signoutEverywhere);
 
 // Sessions: Get, Delete, Deactivate (Update), Create (signin creates session)
 

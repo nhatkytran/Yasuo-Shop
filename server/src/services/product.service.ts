@@ -107,11 +107,8 @@ export const findAllProducts: FindAllEntities<ProductDocument> = async ({
 }) => {
   const ProductModel = getProductModel(language);
 
-  const features = await APIFeatures({
-    model: ProductModel,
-    reqQuery,
-    findOptions,
-  });
+  const options = { model: ProductModel, reqQuery, findOptions };
+  const features = await APIFeatures(options);
 
   features.filter().sort().project().paginate();
 

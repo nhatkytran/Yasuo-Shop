@@ -1,7 +1,9 @@
 import express from 'express';
 
 import purchaseRouter from './purchase.route';
+import reviewRouter from './review.route';
 import validate from '../middleware/validateResource';
+import { protect, restrictTo } from '../controllers/session.controller';
 
 import {
   aliasTopProducts,
@@ -20,26 +22,28 @@ import {
   getProductSchema,
   updateProductSchema,
 } from '../schemas/product.schema';
-import { protect, restrictTo } from '../controllers/session.controller';
 
 const productsRouter = express.Router();
 
-// Get, Delete,... all purchases of product
+// Actions for purchases of product
 productsRouter.use('/:productID/purchases', purchaseRouter);
+
+// Actions for reviews of priduct
+productsRouter.use('/:productID/reviews', reviewRouter);
 
 // ADVANCED //////////
 
 productsRouter.get('/top-5-cheap', aliasTopProducts, getAllProducts);
 
 productsRouter.get(
-  '/statsCategory',
+  '/stats-category',
   protect,
   restrictTo('admin'),
   getProductStats
 );
 
 productsRouter.get(
-  '/statsEditions',
+  '/stats-editions',
   protect,
   restrictTo('admin'),
   getProductEditions

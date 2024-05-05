@@ -26,7 +26,7 @@ import { findUser } from './user.service';
 
 // Helper functions //////////
 
-const getPurchaseModel = (language: string): Model<PurchaseDocument> => {
+export const getPurchaseModel = (language: string): Model<PurchaseDocument> => {
   let PurchaseModel: Model<PurchaseDocument> = PurchaseEnUS; // 'en-us'
   if (language === 'fr') PurchaseModel = PurchaseFR;
 
@@ -186,11 +186,8 @@ export const findAllPurchases: FindAllEntities<PurchaseDocument> = async ({
 }) => {
   const PurchaseModel = getPurchaseModel(language);
 
-  const features = await APIFeatures({
-    model: PurchaseModel,
-    reqQuery,
-    findOptions,
-  });
+  const options = { model: PurchaseModel, reqQuery, findOptions };
+  const features = await APIFeatures(options);
 
   features.filter().sort().project().paginate();
 

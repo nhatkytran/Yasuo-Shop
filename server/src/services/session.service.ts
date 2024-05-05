@@ -252,7 +252,8 @@ export const findAllSessions: FindAllEntities<SessionDocument> = async ({
   reqQuery = {},
   findOptions = {},
 }) => {
-  const features = await APIFeatures({ model: Session, reqQuery, findOptions });
+  const options = { model: Session, reqQuery, findOptions };
+  const features = await APIFeatures(options);
 
   features.filter().sort().project().paginate();
 

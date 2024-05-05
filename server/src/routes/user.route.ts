@@ -48,21 +48,25 @@ userRouter.use('/:userID/purchases', purchaseRouter);
 
 userRouter.post('/signup', validate(signupUserSchema), signup);
 
-userRouter.get('/activateCode/:email', validate(emailSchema), getActivateCode);
+userRouter.get('/activate-code/:email', validate(emailSchema), getActivateCode);
 userRouter.patch('/activate', validate(activateSchema), activate);
 
 // Passwords: forgot, reset, update //////////
 
-userRouter.get('/forgotPassword/:email', validate(emailSchema), forgotPassword);
+userRouter.get(
+  '/forgot-password/:email',
+  validate(emailSchema),
+  forgotPassword
+);
 
 userRouter.patch(
-  '/resetPassword',
+  '/reset-password',
   validate(resetPasswordSchema),
   resetPassword
 );
 
 userRouter.patch(
-  '/updatePassword',
+  '/update-password',
   protect,
   validate(updatePasswordSchema),
   updatePassword
@@ -72,7 +76,7 @@ userRouter.patch(
 
 // admin can restore any user
 userRouter.patch(
-  '/adminRestore/:email',
+  '/admin-restore/:email',
   protect,
   restrictTo('admin'),
   validate(emailSchema),
@@ -81,17 +85,17 @@ userRouter.patch(
 
 // user restore their own account and that account was not be deleted by admin
 userRouter.get(
-  '/userRestoreCode/:email',
+  '/user-restore-code/:email',
   validate(emailSchema),
   getRestoreCode
 );
 
-userRouter.patch('/userRestore', validate(activateSchema), userRestoreUser);
+userRouter.patch('/user-restore', validate(activateSchema), userRestoreUser);
 
 // Admin ban user using email //////////
 
 userRouter.post(
-  '/banAccount',
+  '/ban-account',
   protect,
   restrictTo('admin'),
   validate(bannedSchema),
@@ -102,7 +106,12 @@ userRouter.post(
 
 // new only admin can access this route because I use AWS S3 for uploading photo
 // and it can charge me money
-userRouter.get('/uploadPhotoUrl', protect, restrictTo('admin'), getS3SignedUrl);
+userRouter.get(
+  '/upload-photo-url',
+  protect,
+  restrictTo('admin'),
+  getS3SignedUrl
+);
 
 // CRD //////////
 
