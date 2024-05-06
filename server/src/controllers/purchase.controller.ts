@@ -87,12 +87,11 @@ export const getAllPurchases = catchAsync(
     if (env.dev || env.test) console.log('req.query ->', req.query);
 
     const language = res.locals.language as string;
-    const { findOptions } = res.locals;
 
     const purchases = await findAllPurchases({
       language,
       reqQuery: req.query,
-      findOptions,
+      findOptions: res.locals.findOptions,
     });
 
     sendSuccess(res, { language, numResults: purchases.length, purchases });

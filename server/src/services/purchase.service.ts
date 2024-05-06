@@ -184,7 +184,7 @@ export const findAllPurchases: FindAllEntities<PurchaseDocument> = async ({
   reqQuery = {},
   findOptions = {},
 }) => {
-  const PurchaseModel = getPurchaseModel(language);
+  const PurchaseModel = getPurchaseModel(language!);
 
   const options = { model: PurchaseModel, reqQuery, findOptions };
   const features = await APIFeatures(options);

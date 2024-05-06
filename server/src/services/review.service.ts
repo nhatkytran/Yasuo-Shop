@@ -24,7 +24,7 @@ export const findAllReviews: FindAllEntities<ReviewDocument> = async ({
   reqQuery = {},
   findOptions = {},
 }) => {
-  const ReviewModel = getReviewModel(language);
+  const ReviewModel = getReviewModel(language!);
 
   const options = { model: ReviewModel, reqQuery, findOptions };
   const features = await APIFeatures(options);

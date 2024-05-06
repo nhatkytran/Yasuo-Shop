@@ -15,7 +15,7 @@ export type FindAllEntities<T> = ({
   reqQuery,
   findOptions,
 }: {
-  language: string;
+  language?: string;
   reqQuery?: FilterQuery<T>;
   findOptions?: { [key: string]: Types.ObjectId };
 }) => Promise<T[]>;

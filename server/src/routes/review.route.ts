@@ -1,17 +1,20 @@
 import express from 'express';
 
 import validate from '../middleware/validateResource';
+import { protect, restrictTo } from '../controllers/session.controller';
+
 import {
   createReviewSchema,
   getProductReviewsSchema,
 } from '../schemas/review.schema';
 
 import {
+  checkGetAllReviews,
   checkNewReview,
   createNewReview,
+  getAllReviews,
   getProductReviews,
 } from '../controllers/review.controller';
-import { protect, restrictTo } from '../controllers/session.controller';
 
 const reviewRouter = express.Router({ mergeParams: true });
 
@@ -24,6 +27,9 @@ reviewRouter.get(
 
 reviewRouter
   .route('/')
+  // only admin can get all reviews, user can can only get reviews of their own
+  .get(protect, checkGetAllReviews, getAllReviews)
+  // only user that has already bought a product can review that product (only 1 review)
   .post(
     protect,
     restrictTo('user'),
@@ -31,11 +37,5 @@ reviewRouter
     checkNewReview,
     createNewReview
   );
-
-// reviewRouter
-//   .route('/')
-//   // admin get all reviews or specific reviews of product or user
-//   // user can get all of their reviews or get specific reviews of a product
-//   .get(checkGetAllReviews, getAllReviews);
 
 export default reviewRouter;

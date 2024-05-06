@@ -28,7 +28,7 @@ const productsRouter = express.Router();
 // Actions for purchases of product
 productsRouter.use('/:productID/purchases', purchaseRouter);
 
-// Actions for reviews of priduct
+// Actions for reviews of product
 productsRouter.use('/:productID/reviews', reviewRouter);
 
 // ADVANCED //////////
