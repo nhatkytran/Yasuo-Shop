@@ -60,20 +60,29 @@ export const checkGetAllPurchases = catchAsync(
     next: NextFunction
   ) => {
     const language = res.locals.language as string;
-    const { userID, productID } = req.params;
+    const { user } = res.locals;
 
     const findOptions: { user?: ObjectId; product?: ObjectId } = {};
 
-    if (userID) {
-      const user = await findUser({ query: { _id: userID } });
+    if (user.role === 'user') findOptions.user = user._id;
 
-      findOptions.user = user._id;
-    }
+    if (user.role === 'admin') {
+      const { userID, productID } = req.params;
 
-    if (productID) {
-      const product = await findProductByID({ language, entityID: productID });
+      if (userID) {
+        const targetUser = await findUser({ query: { _id: userID } });
 
-      findOptions.product = product._id;
+        findOptions.user = targetUser._id;
+      }
+
+      if (productID) {
+        const product = await findProductByID({
+          language,
+          entityID: productID,
+        });
+
+        findOptions.product = product._id;
+      }
     }
 
     res.locals.findOptions = findOptions;

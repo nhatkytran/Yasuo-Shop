@@ -32,10 +32,19 @@ purchaseRouter.post(
   checkoutSession
 );
 
+// user get all purchases of their own
+purchaseRouter.get(
+  '/user-purchases',
+  restrictTo('user'),
+  checkGetAllPurchases,
+  getAllPurchases
+);
+
 purchaseRouter.use(restrictTo('admin'));
 
 purchaseRouter
   .route('/')
+  // admin get all purchases (all | user | product)
   .get(validate(getAllPurchasesSchema), checkGetAllPurchases, getAllPurchases)
   .post(validate(createPurchaseSchema), checkNewPurchase, createNewPurchase);
 
