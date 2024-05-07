@@ -1,12 +1,17 @@
 import { Model } from 'mongoose';
 
-import { CreateEntity, FindAllEntities } from './common.service';
 import { ReviewDocument, ReviewInput } from '../models/reviews/schemaDefs';
 import ReviewEnUS from '../models/reviews/reviewEnUS.model';
 import ReviewFR from '../models/reviews/reviewFr.model';
 import APIFeatures from '../utils/apiFeatures';
 import { getPurchaseModel } from './purchase.service';
 import AppError from '../utils/appError';
+
+import {
+  CreateEntity,
+  FindAllEntities,
+  FindAndUpdateEntity,
+} from './common.service';
 
 // Helper functions //////////
 
@@ -34,6 +39,23 @@ export const findAllReviews: FindAllEntities<ReviewDocument> = async ({
   const reviews = await features.result();
 
   return reviews.map(product => product.toJSON()) as ReviewDocument[];
+};
+
+type FindReviewOptions = { language: string; reviewID: string; userID: string };
+
+export const findReview = async ({
+  language,
+  reviewID,
+  userID,
+}: FindReviewOptions): Promise<ReviewDocument | never> => {
+  const ReviewModel = getReviewModel(language);
+
+  const review = await ReviewModel.findOne({ _id: reviewID, user: userID });
+
+  if (!review)
+    throw new AppError({ message: 'Review not found!', statusCode: 404 });
+
+  return review;
 };
 
 // CRUD - Create //////////
@@ -70,5 +92,37 @@ export const createReview: CreateReview = async ({ language, input }) => {
 
   const review = await ReviewModel.create(input);
 
+  return review.toJSON() as ReviewDocument;
+};
+
+// CRUD - Update //////////
+
+export const findAndUpdateReview: FindAndUpdateEntity<ReviewDocument> = async ({
+  language,
+  entityID,
+  update,
+  options,
+}) => {
+  const ReviewModel = getReviewModel(language);
+
+  if (!update.hasOwnProperty('review') && !update.hasOwnProperty('rating'))
+    throw new AppError({
+      message: 'This route can only update < review > and < rating >!',
+      statusCode: 400,
+    });
+
+  const newUpdate = Object.entries(update).reduce((acc, [field, value]) => {
+    if (field === 'review' || field === 'rating') acc[field] = value;
+
+    return acc;
+  }, {} as { review?: string; rating?: number });
+
+  const review = await ReviewModel.findByIdAndUpdate(
+    entityID,
+    newUpdate,
+    options
+  );
+
+  if (!review) return null;
   return review.toJSON() as ReviewDocument;
 };

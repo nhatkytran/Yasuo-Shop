@@ -6,6 +6,8 @@ import { protect, restrictTo } from '../controllers/session.controller';
 import {
   createReviewSchema,
   getProductReviewsSchema,
+  getReviewSchema,
+  updateReviewSchema,
 } from '../schemas/review.schema';
 
 import {
@@ -14,6 +16,7 @@ import {
   createNewReview,
   getAllReviews,
   getProductReviews,
+  updateReview,
 } from '../controllers/review.controller';
 
 const reviewRouter = express.Router({ mergeParams: true });
@@ -36,6 +39,16 @@ reviewRouter
     validate(createReviewSchema),
     checkNewReview,
     createNewReview
+  );
+
+reviewRouter
+  .route('/:reviewID')
+  .patch(
+    protect,
+    restrictTo('user'),
+    validate(getReviewSchema),
+    validate(updateReviewSchema),
+    updateReview
   );
 
 export default reviewRouter;

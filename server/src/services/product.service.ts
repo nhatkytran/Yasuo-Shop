@@ -105,7 +105,7 @@ export const findAllProducts: FindAllEntities<ProductDocument> = async ({
   reqQuery = {},
   findOptions = {},
 }) => {
-  const ProductModel = getProductModel(language);
+  const ProductModel = getProductModel(language!);
 
   const options = { model: ProductModel, reqQuery, findOptions };
   const features = await APIFeatures(options);

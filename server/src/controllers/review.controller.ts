@@ -10,11 +10,15 @@ import {
   checkPurchaseExist,
   createReview,
   findAllReviews,
+  findAndUpdateReview,
+  findReview,
 } from '../services/review.service';
 
 import {
   CreateReviewInput,
   GetProductReviewsInput,
+  GetReviewInput,
+  UpdateReviewInput,
 } from '../schemas/review.schema';
 
 // CRUD - Read //////////
@@ -103,5 +107,37 @@ export const createNewReview = catchAsync(
     const review = await createReview({ language, input });
 
     sendSuccess(res, { statusCode: 201, language, numResults: 1, review });
+  }
+);
+
+// CRUD - Update //////////
+
+export const updateReview = catchAsync(
+  async (
+    req: Request<GetReviewInput['params'], {}, UpdateReviewInput['body']>,
+    res: Response
+  ) => {
+    const language = res.locals.language as string;
+    const { user } = res.locals;
+    const { reviewID } = req.params;
+
+    const review = await findReview({
+      language,
+      userID: user._id.toString(),
+      reviewID,
+    });
+
+    const newReview = await findAndUpdateReview({
+      language,
+      entityID: review._id.toString(),
+      update: req.body,
+      options: { new: true, runValidators: true },
+    });
+
+    sendSuccess(res, {
+      language,
+      numResults: Number(!!newReview),
+      review: newReview,
+    });
   }
 );
