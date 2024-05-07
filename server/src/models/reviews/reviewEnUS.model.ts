@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { ReviewDocument, schemaDefs } from './schemaDefs';
+import { ReviewDocument, populates, schemaDefs } from './schemaDefs';
 import { schemaSups } from '../commonDefs';
 
 const schema = new mongoose.Schema<ReviewDocument>(
@@ -14,6 +14,8 @@ const schema = new mongoose.Schema<ReviewDocument>(
   },
   schemaSups
 );
+
+populates(schema);
 
 const ReviewEnUS = mongoose.model<ReviewDocument>(
   'ReviewEnUS',

@@ -48,8 +48,6 @@ export const checkGetAllReviews = catchAsync(
     const { user } = res.locals;
     const findOptions: { user?: ObjectId } = {};
 
-    console.log(user.role);
-
     if (user.role === 'user') findOptions.user = user._id;
 
     res.locals.findOptions = findOptions;

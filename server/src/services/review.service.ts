@@ -39,7 +39,13 @@ export const findAllReviews: FindAllEntities<ReviewDocument> = async ({
 
   const reviews = await features.result();
 
-  return reviews.map(product => product.toJSON()) as ReviewDocument[];
+  return reviews.map(rev => {
+    const review = rev.toJSON();
+
+    delete review.product.price; // populate also gets virtual properties
+
+    return review;
+  }) as ReviewDocument[];
 };
 
 type FindReviewOptions = { language: string; reviewID: string; userID: string };

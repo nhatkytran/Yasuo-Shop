@@ -18,3 +18,12 @@ export const schemaDefs = {
   review: { type: String, required: true, trim: true, maxLength: 300 },
   rating: { type: Number, required: true, min: 1, max: 5 },
 };
+
+export const populates = (schema: mongoose.Schema) => {
+  schema.pre<ReviewDocument>(/^find/, function (next) {
+    this.populate({ path: 'product', select: 'name' });
+    this.populate({ path: 'user', select: 'name photo' });
+
+    next();
+  });
+};
