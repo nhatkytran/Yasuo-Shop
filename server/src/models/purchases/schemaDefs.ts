@@ -31,3 +31,12 @@ export const virtutalProperties = (schema: mongoose.Schema) => {
     return Number(totalPrice.toFixed(2));
   });
 };
+
+export const populates = (schema: mongoose.Schema) => {
+  schema.pre<PurchaseDocument>(/^find/, function (next) {
+    this.populate({ path: 'user', select: 'name photo' });
+    this.populate({ path: 'product', select: 'name price' });
+
+    next();
+  });
+};

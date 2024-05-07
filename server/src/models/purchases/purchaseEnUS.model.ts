@@ -1,6 +1,12 @@
 import mongoose from 'mongoose';
 
-import { PurchaseDocument, schemaDefs, virtutalProperties } from './schemaDefs';
+import {
+  PurchaseDocument,
+  populates,
+  schemaDefs,
+  virtutalProperties,
+} from './schemaDefs';
+
 import { schemaSups } from '../commonDefs';
 
 const schema = new mongoose.Schema<PurchaseDocument>(
@@ -16,6 +22,7 @@ const schema = new mongoose.Schema<PurchaseDocument>(
 );
 
 virtutalProperties(schema);
+populates(schema);
 
 const PurchaseEnUS = mongoose.model<PurchaseDocument>(
   'PurchaseEnUS',
