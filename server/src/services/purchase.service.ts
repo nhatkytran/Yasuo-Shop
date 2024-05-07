@@ -88,6 +88,9 @@ export const createCheckoutSession = async ({
 
   const clientReferenceID = JSON.stringify({ language, products });
 
+  let currency: string = 'usd'; // 'en-us'
+  if (language === 'fr') currency = 'eur';
+
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
@@ -99,7 +102,7 @@ export const createCheckoutSession = async ({
       {
         quantity: 1,
         price_data: {
-          currency: 'usd',
+          currency,
           unit_amount: totalPrice * 100,
           product_data: {
             name: 'Yasuo API - Yasuo Shop Items',

@@ -72,15 +72,8 @@ export const schemaDefs = {
     enum: ['figure', 'game', 'cloth', 'item'],
     required: true,
   },
-  category: {
-    type: String,
-    enum: ['featured', 'sale'],
-    required: true,
-  },
-  optional: {
-    title: { type: String },
-    image: { type: String },
-  },
+  category: { type: String, enum: ['featured', 'sale'], required: true },
+  optional: { title: { type: String }, image: { type: String } },
   sizes: [String],
   platforms: [String],
   regions: [String],
@@ -90,21 +83,17 @@ export const schemaDefs = {
   quote: { type: String },
   descriptions: { type: [mongoose.Schema.Types.Mixed] },
   features: [String],
-  approximateDimensions: {
-    value: [[Number]],
-    en: [String],
-    other: [String],
-  },
+  approximateDimensions: { value: [[Number]], en: [String], other: [String] },
   funFact: { type: String },
   series: { type: String },
   materials: [String],
 };
 
-export const virtutalProperties = (schema: mongoose.Schema) => {
-  schema.virtual('price.priceAfterSale').get(function () {
-    const price = this.price as Price;
-
-    if (price.saleAmount !== 0)
-      return Number((price.default - price.saleAmount!).toFixed(2));
+export const virtutalProperties = (
+  schema: mongoose.Schema<ProductDocument>
+) => {
+  schema.virtual<ProductDocument>('price.priceAfterSale').get(function () {
+    if (this.price.saleAmount !== 0)
+      return Number((this.price.default - this.price.saleAmount!).toFixed(2));
   });
 };
