@@ -13,7 +13,9 @@ import {
 import {
   checkGetAllReviews,
   checkNewReview,
+  checkWhoDeleteReview,
   createNewReview,
+  deleteReview,
   getAllReviews,
   getProductReviews,
   updateReview,
@@ -49,6 +51,13 @@ reviewRouter
     validate(getReviewSchema),
     validate(updateReviewSchema),
     updateReview
+  )
+  .delete(
+    protect,
+    restrictTo('user'),
+    validate(getReviewSchema),
+    checkWhoDeleteReview,
+    deleteReview
   );
 
 export default reviewRouter;

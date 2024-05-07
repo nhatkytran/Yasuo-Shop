@@ -10,6 +10,7 @@ import {
   checkPurchaseExist,
   createReview,
   findAllReviews,
+  findAndDeleteReview,
   findAndUpdateReview,
   findReview,
 } from '../services/review.service';
@@ -139,5 +140,37 @@ export const updateReview = catchAsync(
       numResults: Number(!!newReview),
       review: newReview,
     });
+  }
+);
+
+// CRUD - Delete //////////
+
+export const checkWhoDeleteReview = catchAsync(
+  async (
+    req: Request<GetReviewInput['params']>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { user } = res.locals;
+
+    if (user.role === 'user')
+      await findReview({
+        language: res.locals.language as string,
+        userID: user._id.toString(),
+        reviewID: req.params.reviewID,
+      });
+
+    next();
+  }
+);
+
+export const deleteReview = catchAsync(
+  async (req: Request<GetReviewInput['params']>, res: Response) => {
+    const language = res.locals.language as string;
+    const { reviewID } = req.params;
+
+    await findAndDeleteReview({ language, entityID: reviewID });
+
+    sendSuccess(res, { statusCode: 204 });
   }
 );

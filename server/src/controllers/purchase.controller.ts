@@ -185,16 +185,11 @@ export const deleteAllPurchases = catchAsync(
 
 export const deletePurchase = catchAsync(
   async (req: Request<GetPurchaseInput['params']>, res: Response) => {
-    const language: string = res.locals.language;
-    const purchaseID: string = req.params.purchaseID;
+    const language = res.locals.language as string;
+    const { purchaseID } = req.params;
 
     await findAndDeletePurchase({ language, entityID: purchaseID });
 
-    sendSuccess(res, {
-      statusCode: 204,
-      language,
-      numResults: 0,
-      product: null,
-    });
+    sendSuccess(res, { statusCode: 204 });
   }
 );

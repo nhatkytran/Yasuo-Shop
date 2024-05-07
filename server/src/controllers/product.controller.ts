@@ -136,11 +136,6 @@ export const deleteProduct = catchAsync(
 
     await findAndDeleteProduct({ language, entityID: productID });
 
-    sendSuccess(res, {
-      statusCode: 204,
-      language,
-      numResults: 0,
-      product: null,
-    });
+    sendSuccess(res, { statusCode: 204 });
   }
 );

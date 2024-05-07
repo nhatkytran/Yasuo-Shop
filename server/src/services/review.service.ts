@@ -10,6 +10,7 @@ import AppError from '../utils/appError';
 import {
   CreateEntity,
   FindAllEntities,
+  FindAndDeleteEntity,
   FindAndUpdateEntity,
 } from './common.service';
 
@@ -125,4 +126,15 @@ export const findAndUpdateReview: FindAndUpdateEntity<ReviewDocument> = async ({
 
   if (!review) return null;
   return review.toJSON() as ReviewDocument;
+};
+
+// CRUD - Delete //////////
+
+export const findAndDeleteReview: FindAndDeleteEntity = async ({
+  language,
+  entityID,
+}) => {
+  const ReviewModel = getReviewModel(language);
+
+  await ReviewModel.findByIdAndDelete(entityID);
 };
