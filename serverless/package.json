@@ -4,12 +4,17 @@
   "description": "This API provides metadata for Yasuo API server.",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "netlify": "tsc && netlify dev"
   },
   "license": "MIT",
+  "dependencies": {
+    "airtable": "^0.12.2",
+    "dotenv": "^16.4.5"
+  },
   "devDependencies": {
     "@netlify/functions": "^2.6.3",
-    "netlify-cli": "10.6.2",
+    "netlify-cli": "^10.6.2",
     "typescript": "^5.4.5"
   }
 }

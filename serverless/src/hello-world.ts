@@ -1,10 +1,8 @@
 import type { Handler } from '@netlify/functions';
+import success from './utils/sendSuccess';
 
 const handler: Handler = async function (event, context, cb) {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: 'Hello World!' }),
-  };
+  return success({ data: { message: 'Hello World!' } });
 };
 
 export { handler };

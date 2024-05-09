@@ -8,7 +8,7 @@ import reviewRouter from './review.route';
 
 const routes = (app: Express) => {
   // Hello World
-  app.get('/helloWorld', (_, res: Response) => res.send('Hello World!'));
+  app.get('/hello-world', (_, res: Response) => res.send('Hello World!'));
 
   // Health check route
   app.get('/', (req: Request, res: Response) =>
