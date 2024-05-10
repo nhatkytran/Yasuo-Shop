@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
+import dotenv from 'dotenv';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import cookieParser from 'cookie-parser';
@@ -8,8 +9,11 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 import mongoSanitize from 'express-mongo-sanitize';
-import config from 'config';
 
+// Config .env file -> process.env
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+import config from 'config';
 import routes from './routes/routes';
 import trackLanguage from './middleware/trackLanguage';
 import AppError from './utils/appError';

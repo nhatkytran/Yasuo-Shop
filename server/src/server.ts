@@ -1,28 +1,24 @@
+import { Express } from 'express';
 import logger from './utils/logger';
 
 // All errors happening in synchronous code -> nodejs process is in unclean state
-process.on('uncaughtException', error => {
+process.on('uncaughtException', (error: any) => {
   logger.error(error, '--- UNCAUGHT EXCEPTION! Shutting down... ---');
   process.exit(1);
 });
 
-import { Express } from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
-
-// Config .env file -> process.env
-dotenv.config({ path: path.join(__dirname, '../.env') });
-
+import init from './app'; // set .env file
 import config from 'config';
-import init from './app';
-import connectDatabase from './connections/database';
 import env from './utils/env';
+import connectDatabase from './connections/database';
 
 // Run Express app
 const app: Express = init();
 
-// Run server at port 1337
+// Server's port: 1337
 const port = config.get<number>('port') || 1337;
+
+// Run server
 const server = app.listen(port, () => {
   logger.info(`App is running at port ${port}...`);
 
@@ -31,7 +27,7 @@ const server = app.listen(port, () => {
 });
 
 // There is a promise that got rejected but it has not been handled
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error: any) => {
   logger.error(error, '--- UNHANDLED REJECTION! Shutting down... ---');
   // number 0 -> exit after success
   // number 1 -> some kind of error and give more information about it

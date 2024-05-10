@@ -49,7 +49,7 @@ const globalErrorHandler = (
 
   const errorObject = { error: newError, statusCode, status, message };
 
-  if (env.dev) sendErrorDev({ ...errorObject, stack }, res);
+  if (env.dev || env.test) sendErrorDev({ ...errorObject, stack }, res);
   if (env.prod) sendErrorProd({ ...errorObject, isOperational }, res);
 };
 
