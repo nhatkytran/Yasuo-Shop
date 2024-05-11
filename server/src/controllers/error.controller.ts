@@ -28,7 +28,7 @@ const globalErrorHandler = (
   res: Response,
   _: NextFunction
 ) => {
-  let newError = env.dev ? error : Object.create(error);
+  let newError = env.dev || env.test ? error : Object.create(error);
 
   if (env.prod) {
     // CastError --> Invalid id

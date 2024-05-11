@@ -235,12 +235,12 @@ export const validatePassword = async ({
 
 type CreateSessionOptions = {
   userID: mongoose.Schema.Types.ObjectId;
-  userAgent: string;
+  userAgent?: string;
 };
 
 export const createSession = async ({
   userID,
-  userAgent,
+  userAgent = '',
 }: CreateSessionOptions): Promise<SessionDocument> => {
   const session = await Session.create({ user: userID, userAgent });
   return session as SessionDocument;

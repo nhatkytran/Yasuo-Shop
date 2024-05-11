@@ -2,8 +2,9 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/**/*.test.ts'],
+  testMatch: [`${__dirname}/src/__tests__/*.test.ts`],
   verbose: true, // report for each test
   forceExit: true,
-  // testTimeout: 30 * 1000,
+  // clearMocks: true,
+  // testTimeout: 30 * 1000, // default is 5 seconds
 };

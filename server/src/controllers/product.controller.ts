@@ -59,7 +59,7 @@ export const aliasTopProducts = (
 
 export const getAllProducts = catchAsync(
   async (req: Request, res: Response) => {
-    if (env.dev) console.log('req.query ->', req.query);
+    if (env.dev || env.test) console.log('req.query ->', req.query);
 
     const language: string = res.locals.language;
 

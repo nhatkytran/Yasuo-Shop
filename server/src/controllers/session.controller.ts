@@ -233,7 +233,7 @@ export const getSession = catchAsync(
     const { sessionID, userID } = req.params;
     const queryOptions = { ...req.query };
 
-    if (env.dev) console.log(sessionID, userID, queryOptions);
+    if (env.dev || env.test) console.log(sessionID, userID, queryOptions);
 
     let query: object = { _id: sessionID };
 
