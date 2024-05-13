@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -21,6 +21,8 @@ import globalErrorHandler from './controllers/error.controller';
 import env from './utils/env';
 import xssSanitize from './middleware/xssSanitize';
 import { webhookCheckout } from './controllers/purchase.controller';
+import responseTime from 'response-time';
+import { restResponseTimeHistogram } from './connections/prometheus';
 
 const init = () => {
   const app = express();
@@ -84,6 +86,20 @@ const init = () => {
 
   // Prevent parameter polution
   app.use(hpp({ whitelist: config.get('parameterWhiteList') }));
+
+  // Prometheus metrics
+  app.use(
+    responseTime((req: Request, res: Response, time: number) =>
+      restResponseTimeHistogram.observe(
+        {
+          method: req.method,
+          route: req.originalUrl,
+          status_code: res.statusCode,
+        },
+        time / 1000
+      )
+    )
+  );
 
   // Check query 'language', default: 'en-us'
   app.use(trackLanguage);

@@ -11,6 +11,7 @@ import init from './app'; // set .env file
 import config from 'config';
 import env from './utils/env';
 import connectDatabase from './connections/database';
+import startMetricsServer from './connections/prometheus';
 
 // Run Express app
 const app: Express = init();
@@ -24,6 +25,9 @@ const server = app.listen(port, () => {
 
   // Connect MongoDB Cloud - Atlas
   connectDatabase();
+
+  // Prometheus metrics
+  if (env.dev) startMetricsServer();
 });
 
 // There is a promise that got rejected but it has not been handled

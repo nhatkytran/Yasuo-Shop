@@ -6,6 +6,7 @@ import AppError from '../utils/appError';
 import ProductEnUS from '../models/products/productEnUs.model';
 import ProductFR from '../models/products/productFr.model';
 import { ProductDocument, ProductInput } from '../models/products/schemaDefs';
+import { databaseResponseTimeHistogram } from '../connections/prometheus';
 
 import {
   CreateEntity,
@@ -124,23 +125,37 @@ export const findProductByID: FindEntityByID<ProductDocument> = async ({
   entityID,
   options = {},
 }) => {
-  const ProductModel = getProductModel(language);
+  const metricsLabels = { operation: 'findProductByID' };
 
-  // { name: true, price.default: true,... } -> projecting
-  let selectOptions: { [key: string]: true } = {};
-  let { fields } = options;
+  const timer = databaseResponseTimeHistogram.startTimer();
 
-  if (fields) {
-    if (!Array.isArray(fields)) fields = fields.split(',');
-    fields.forEach(field => (selectOptions[field] = true));
+  try {
+    const ProductModel = getProductModel(language);
+
+    // { name: true, price.default: true,... } -> projecting
+    let selectOptions: { [key: string]: true } = {};
+    let { fields } = options;
+
+    if (fields) {
+      if (!Array.isArray(fields)) fields = fields.split(',');
+      fields.forEach(field => (selectOptions[field] = true));
+    }
+
+    const product = await ProductModel.findById(entityID, selectOptions);
+
+    if (!product)
+      throw new AppError({ message: 'Product not found!', statusCode: 404 });
+
+    const result = removeEmptyArray(product.toJSON()) as ProductDocument;
+
+    timer({ ...metricsLabels, success: 'true' });
+
+    return result;
+  } catch (error: any) {
+    timer({ ...metricsLabels, success: 'false' });
+
+    throw error;
   }
-
-  const product = await ProductModel.findById(entityID, selectOptions);
-
-  if (!product)
-    throw new AppError({ message: 'Product not found!', statusCode: 404 });
-
-  return removeEmptyArray(product.toJSON()) as ProductDocument;
 };
 
 // CRUD - Create //////////
