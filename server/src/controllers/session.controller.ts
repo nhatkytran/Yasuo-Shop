@@ -62,8 +62,10 @@ const sendSigninTokens = async (
   const accessToken = signAccessJWT(tokenOptions);
   const refreshToken = signRefreshJWT(tokenOptions);
 
-  sendAccessJWTCookie(req, res, accessToken);
-  sendRefreshJWTCookie(req, res, refreshToken);
+  if (!env.test) {
+    sendAccessJWTCookie(req, res, accessToken);
+    sendRefreshJWTCookie(req, res, refreshToken);
+  }
 
   sendSuccess(res, { accessToken, refreshToken });
 };

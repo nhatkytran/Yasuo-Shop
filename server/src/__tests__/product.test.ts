@@ -60,6 +60,17 @@ describe('product', () => {
 
   // CRUD - CREATE //////////
 
+  const signUserJWT = async (userMetadata: any) => {
+    const { user } = await createUser({
+      input: { ...userPayload, ...userMetadata },
+      isAdmin: true, // just a condition, check function code to understand
+    });
+
+    const session = await createSession({ userID: user._id });
+
+    return signAccessJWT({ userID: user._id, sessionID: session._id });
+  };
+
   describe('create product route', () => {
     describe('given the user is not logged in', () => {
       it('should return a 401', async () => {
@@ -68,17 +79,6 @@ describe('product', () => {
         expect(statusCode).toBe(401);
       });
     });
-
-    const signUserJWT = async (userMetadata: any) => {
-      const { user } = await createUser({
-        input: { ...userPayload, ...userMetadata },
-        isAdmin: true, // just a condition, check function code to understand
-      });
-
-      const session = await createSession({ userID: user._id });
-
-      return signAccessJWT({ userID: user._id, sessionID: session._id });
-    };
 
     describe('given the user is logged in (not admin)', () => {
       it('should return a 403', async () => {
