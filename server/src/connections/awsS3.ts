@@ -1,4 +1,5 @@
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import config from 'config';
 import AppError from '../utils/appError';
@@ -8,27 +9,27 @@ const bucketName = config.get<string>('awsBucketName');
 const accessKeyId = config.get<string>('awsAccessKey');
 const secretAccessKey = config.get<string>('awsPrivateKey');
 
-const s3 = new AWS.S3({ region, accessKeyId, secretAccessKey });
+const s3Client = new S3Client({
+  region,
+  credentials: { accessKeyId, secretAccessKey },
+});
 
-const getSignedUrlPromisified = (params: any): Promise<string | void> =>
-  new Promise((resolve, reject) =>
-    s3.getSignedUrl('putObject', params, (error: any, url: string) =>
-      error ? reject(error) : resolve(url)
-    )
-  );
+const s3GetSignedUrl = async (userID: string): Promise<string | void> => {
+  throw new AppError({
+    message: "Sorry, we don't support this action now",
+    statusCode: 500,
+  });
 
-const s3getSingedUrl = async (userID: string): Promise<string | void> => {
   try {
     const filename = `${userID}/${Date.now()}.jpeg`;
 
-    const params = {
+    const command = new PutObjectCommand({
       Bucket: bucketName,
       Key: filename,
       ContentType: 'image/jpeg',
-      Expires: 60,
-    };
+    });
 
-    return await getSignedUrlPromisified(params);
+    return await getSignedUrl(s3Client, command, { expiresIn: 60 });
   } catch (error: any) {
     throw new AppError({
       message: 'Failed to generate pre-signed URL!',
@@ -37,4 +38,4 @@ const s3getSingedUrl = async (userID: string): Promise<string | void> => {
   }
 };
 
-export default s3getSingedUrl;
+export default s3GetSignedUrl;
