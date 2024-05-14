@@ -1,0 +1,327 @@
+openapi: 3.0.3
+info:
+  title: Yasuo API - Yasup Shop
+  description: |-
+    This API provides programmatic access to a vast collection of merchandise related to the popular game League of Legends.
+    Integrate this API into your application to offer users a convenient way to browse, search, and potentially purchase officially licensed League of Legends merchandise.
+
+    This API is created to support 2 languages ['en-us', 'fr'] for now.
+    Get US products: url**?language=en-us**.
+    Get FR products: url**?language=fr**.
+    See more about this in **Products - GET - /api/v1/products**
+
+  contact:
+    email: nhockkutean2@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Source code - Github
+  url: https://github.com/nhatkytran/Yasuo-Shop
+
+servers:
+  - url: http://127.0.0.1:1337
+
+tags:
+  - name: Information
+    description: Check server is live and some information about API
+  - name: Metadata
+    description: Serverless - Metadata for UI
+    externalDocs:
+      description: Netlify Functions
+      url: https://www.netlify.com/platform/core/functions/
+  - name: Products
+    description: League of Legends merchandise
+
+paths:
+  # Information ##########
+
+  /:
+    get:
+      tags:
+        - Information
+      summary: Get API information
+      description: |
+        Returns a JSON response with a status and a message providing information about the API creator.
+      operationId: /
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: The message containing information about the API creator.
+                    example: 'This API is created by Trần Nhật Kỳ. Contact: nhockkutean2@gmail.com'
+  /hello-world:
+    get:
+      tags:
+        - Information
+      summary: Get Hello World message
+      description: |
+        Returns a JSON response with a message saying "Hello World".
+        Used to check if server is alive.
+      operationId: helloWorld
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: The Hello World message.
+                    example: Hello World!
+
+  # Metadata ##########
+
+  # Products ##########
+
+  /api/v1/products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      description: Returns a list of products with detailed information.
+      operationId: getAllProducts
+      parameters:
+        - in: query
+          name: language
+          schema:
+            type: string
+            example: en-us
+          required: false
+          description: The language (en-us | fr) of products to return. **en-us** is the default value.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  products:
+                    type: array
+                    description: A list of products.
+                    items:
+                      $ref: '#/components/schemas/Product'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/FailMessage'
+                  message:
+                    type: string
+                    description: The error message explaining why the request failed.
+                    example: Language 'language' is not supported!
+
+# Advanced Filtering
+
+components:
+  schemas:
+    SuccessMessage:
+      type: string
+      description: The status of the response.
+      example: success
+
+    FailMessage:
+      type: string
+      description: The status of the response.
+      example: fail
+
+    Language:
+      type: string
+      description: The language of the response.
+      example: en-us
+
+    NumResults:
+      type: integer
+      description: The number of items returned.
+      example: 1
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The unique identifier for the product.
+          example: 663e30b7947d905b5b60311b
+        name:
+          type: string
+          description: The name of the product.
+          example: Jimei Palace Aatrox 1/6 Scale Statue
+        price:
+          type: object
+          properties:
+            default:
+              type: number
+              format: float
+              description: The default price of the product.
+              example: 489.99
+            saleAmount:
+              type: number
+              format: float
+              description: The sale amount for the product.
+              example: 0
+            currency:
+              type: string
+              description: The currency of the price.
+              example: USD
+        ratingsAverage:
+          type: number
+          format: float
+          description: The average rating of the product.
+          example: 0
+        ratingsQuantity:
+          type: integer
+          description: The number of ratings for the product.
+          example: 0
+        editions:
+          type: object
+          properties:
+            en:
+              type: array
+              description: Editions in English.
+              items:
+                type: string
+                example: limited edition
+            other:
+              type: array
+              description: Editions in other languages.
+              items:
+                type: string
+                example: ÉDITION LIMITÉE,
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+            example: https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf457399168c2b817/659873e5dc766225e97ebf22/CPX_JIMEIAatrox_Ecomm_1.png
+        type:
+          type: string
+          description: The type of product.
+          example: figure
+        category:
+          type: string
+          description: The category of the product.
+          example: featured
+        optional:
+          type: object
+          description: Metadata about product like give away,...
+          properties:
+            title:
+              type: string
+            image:
+              type: string
+              format: uri
+        sizes:
+          type: array
+          description: The sizes of product like T-Shirt.
+          items:
+            type: string
+            example: XS
+        platforms:
+          type: array
+          description: Product like codes of a game that have indication of supported platforms.
+          items:
+            type: string
+            example: Switch
+        regions:
+          type: array
+          description: Regions where products are only available.
+          items:
+            type: string
+            example: North America
+        check:
+          type: string
+          description: Terms of Service that user has to follow
+          example: I understand the game code is non-refundable and non-exchangeable. The game region and platform I need are selected.
+        warning:
+          type: string
+          description: The warning associated with the product.
+          example: This product is a collector's item intended for ages 14+.
+        shippingDays:
+          type: integer
+          description: The number of days required for shipping.
+          example: 7
+        quote:
+          type: string
+          description: A notable quote related to the product.
+          example: Now, hear the silence of annihilation.
+        descriptions:
+          type: array
+          description: Maybe some stories that are related to the product.
+          items:
+            type: string
+            example: Once a mighty Shuriman champion remade as an Ascended, Aatrox helped halt the onslaught of the Void during the Icathian rebellion. However, in time, with no monarch or existential threat to defend against, Aatrox and the other Sunborn began to clash in a war for the ruins of the world.
+        features:
+          type: array
+          description: The features of the product.
+          items:
+            type: string
+            example: LED sword, eyes, and wings lighting effect.
+        approximateDimensions:
+          type: object
+          description: The approximate dimensions of the product.
+          properties:
+            value:
+              type: array
+              items:
+                type: array
+                items:
+                  type: number
+                  format: float
+                  example: 18.1
+            en:
+              type: array
+              description: In Enlish.
+              items:
+                type: string
+                example: height
+            other:
+              type: array
+              description: In other languages.
+              items:
+                type: string
+                example: hauteur
+        funFact:
+          type: string
+          description: A fun fact about the product.
+          example: Made in partnership with our friends at Jimei Palace.
+        series:
+          type: string
+          description: The series of the product.
+          example: 'Blood Moon Aatrox Figure is number #05 in Series 4.'
+        materials:
+          type: array
+          description: The materials of the product.
+          items:
+            type: string
+            example: Zinc Alloy Masks
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the product was created.
+          example: 2024-05-10T14:35:35.535Z
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date and time when the product was last updated.
+          example: 2024-05-10T14:35:35.535Z

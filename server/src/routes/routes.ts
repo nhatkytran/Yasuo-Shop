@@ -5,15 +5,17 @@ import productsRouter from './product.route';
 import sessionRouter from './session.route';
 import purchaseRouter from './purchase.route';
 import reviewRouter from './review.route';
+import sendSuccess from '../utils/sendSuccess';
 
 const routes = (app: Express) => {
   // Hello World
-  app.get('/hello-world', (_, res: Response) => res.send('Hello World!'));
+  app.get('/hello-world', (_, res: Response) =>
+    sendSuccess(res, { message: 'Hello World!' })
+  );
 
   // Health check route
   app.get('/', (req: Request, res: Response) =>
-    res.status(200).json({
-      status: 'success',
+    sendSuccess(res, {
       message:
         'This API is created by Trần Nhật Kỳ. Contact: nhockkutean2@gmail.com',
     })
