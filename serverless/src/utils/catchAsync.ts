@@ -16,7 +16,14 @@ const catchAsync = (fn: Handler) => {
         console.log(error);
       }
 
-      return { statusCode, body: JSON.stringify({ message }) };
+      return {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        statusCode,
+        body: JSON.stringify({ status: 'fail', message }),
+      };
     }
   };
 

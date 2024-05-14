@@ -1,5 +1,4 @@
 import type { Handler } from '@netlify/functions';
-
 import Airtable, { Attachment, FieldSet } from 'airtable';
 
 import catchAsync from './utils/catchAsync';

@@ -8,17 +8,17 @@ import reviewRouter from './review.route';
 import sendSuccess from '../utils/sendSuccess';
 
 const routes = (app: Express) => {
-  // Hello World
-  app.get('/hello-world', (_, res: Response) =>
-    sendSuccess(res, { message: 'Hello World!' })
-  );
-
   // Health check route
   app.get('/', (req: Request, res: Response) =>
     sendSuccess(res, {
       message:
         'This API is created by Trần Nhật Kỳ. Contact: nhockkutean2@gmail.com',
     })
+  );
+
+  // Current language
+  app.get('/language', (_, res: Response) =>
+    sendSuccess(res, { message: res.locals.language as string })
   );
 
   // Users, Signup, Update password,...
