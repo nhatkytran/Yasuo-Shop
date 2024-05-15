@@ -38,9 +38,9 @@ export const getProductEditions = catchAsync(
   async (req: Request, res: Response) => {
     const language: string = res.locals.language;
 
-    const products = await findProductEditions(language);
+    const stas = await findProductEditions(language);
 
-    sendSuccess(res, { language, products });
+    sendSuccess(res, { language, stas });
   }
 );
 

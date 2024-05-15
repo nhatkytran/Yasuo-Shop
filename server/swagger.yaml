@@ -29,8 +29,11 @@ tags:
       description: Netlify Functions
       url: https://www.netlify.com/platform/core/functions/
 
-  - name: User
-    description: API for user management
+  - name: Users
+    description: API for users management (Sign-up, Activation, Reset Password,...)
+
+  - name: Sessions
+    description: API for sessions management (Sign-in, Sign-out, OAuth,...)
 
   - name: Products
     description: League of Legends merchandise
@@ -224,8 +227,8 @@ paths:
   /api/v1/users/signup:
     post:
       tags:
-        - User
-      summary: User Signup (activation code will sent to user's email)
+        - Users
+      summary: User Sign-up (activation code will sent to user's email)
       description: Creates a new user account and sends an activation code to the user's email.
       operationId: signup
       requestBody:
@@ -240,13 +243,9 @@ paths:
                   description: 'The name of the user.'
                   example: 'Tester'
                 email:
-                  type: string
-                  description: 'The email address of the user.'
-                  example: 'tester@gmail.com'
+                  $ref: '#/components/schemas/Email'
                 password:
-                  type: string
-                  description: 'The password for the user account (Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character).'
-                  example: 'userpassword3Mm$'
+                  $ref: '#/components/schemas/Password'
                 passwordConfirm:
                   type: string
                   description: 'Confirmation of the password.'
@@ -278,9 +277,7 @@ paths:
                         description: 'The name of the user'
                         example: 'Tester'
                       email:
-                        type: string
-                        description: 'The email address of the user'
-                        example: 'tester@gmail.com'
+                        $ref: '#/components/schemas/Email'
                       photo:
                         type: string
                         description: "The URL of the user's profile photo"
@@ -311,7 +308,7 @@ paths:
   /api/v1/users/activate-code/{email}:
     get:
       tags:
-        - User
+        - Users
       summary: Resend Activation Code
       description: Sends a new activation code to the user's email.
       operationId: activateCode
@@ -340,7 +337,7 @@ paths:
   /api/v1/users/activate:
     patch:
       tags:
-        - User
+        - Users
       summary: Activate User Account
       description: Activates a user account using the provided activation code.
       operationId: activate
@@ -381,7 +378,7 @@ paths:
   /api/v1/users/forgot-password/{email}:
     get:
       tags:
-        - User
+        - Users
       summary: Forgot Password
       description: Sends a forgot password code to the user's email.
       operationId: forgotPassword
@@ -411,7 +408,7 @@ paths:
   /api/v1/users/reset-password:
     patch:
       tags:
-        - User
+        - Users
       summary: Reset User Password
       description: Resets a user's password using the provided email, reset code, and new password.
       operationId: resetPassword
@@ -427,9 +424,7 @@ paths:
                 code:
                   $ref: '#/components/schemas/Code'
                 newPassword:
-                  type: string
-                  description: 'The new password for the user account'
-                  example: 'userpassword3Mm$2'
+                  $ref: '#/components/schemas/Password'
       responses:
         '200':
           description: Password successfully reset
@@ -448,6 +443,119 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/InvalidOrExpiredToken'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/me:
+    get:
+      tags:
+        - Users
+      summary: Get Current User
+      description: Retrieves information about the currently authenticated user.
+      operationId: getMe
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        format: MongoID
+                        description: 'The unique identifier for the user'
+                        example: '6644461874a0a872f25dbc1c'
+                      name:
+                        type: string
+                        description: 'The name of the user'
+                        example: 'Tester'
+                      email:
+                        $ref: '#/components/schemas/Email'
+                      photo:
+                        type: string
+                        description: "The URL of the user's profile photo"
+                        example: '/img/users/default.png'
+                      active:
+                        type: boolean
+                        description: "Indicates whether the user's account is active (Use code received in user's email to activate user)"
+                        example: false
+                      role:
+                        type: string
+                        description: 'The role assigned to the user'
+                        example: 'user'
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: 'The timestamp when the user account was created'
+                        example: '2024-05-15T05:12:46.943Z'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: 'The timestamp when the user account was last updated'
+                        example: '2024-05-15T05:12:47.286Z'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # Sessions ##########
+
+  /api/v1/sessions/signin:
+    post:
+      tags:
+        - Sessions
+      summary: User Sign-in
+      description: |
+        Authenticates a user and returns access and refresh tokens (Access and refresh tokens are also sent via Cookie).
+
+        User only has 5 sign-in attempts, if there is not any attempt left, user needs to wait 1 hour.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                password:
+                  $ref: '#/components/schemas/Password'
+      responses:
+        '200':
+          description: User successfully signed in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: 'The status of the request'
+                    example: 'success'
+                  accessToken:
+                    type: string
+                    description: 'The access token for authenticating API requests'
+                    example: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NjQ0NzQyZTkzZDk1YTkxYTU5MzdlNDgiLCJzZXNzaW9uSUQiOiI2NjQ0NzQ2ZTkzZDk1YTkxYTU5MzdlNGQiLCJpYXQiOjE3MTU3NjIyODYsImV4cCI6MTcxNTc2NDA4Nn0.wIe748yVg4d_O6Lc9NEJtAnCsfVaSKZVlTrGYqaBWI19i3jw7fYKCXOTmg0LinOfKPDlUXm2GIzAxg4cV6M5JOT5xCRQ62qxur2B4IxrkDd20Das2DDiq5FUKeK0qUHgFwC2oqEbeQdtm-LgLgE4SXUgqJT0XbjQAcgyXyACSfh-h7rM8A_MnypROvI9RRD7Lc6CvJQeO21QdcSfJZ6a-mLYbNxnf_3j7gFzL5dOthTcvv7Az88jSaiaCvUoYc6WpRHj8WUK9qxX-DRYuy6hbQ1wrDJmckWN8Mc3kaQkkKdWKHKvda41LVCVIdzWLZr1HwlNyd8tGR5U8olpE_5FFdUzW0EP81qH6AnK_dDN4dUfMObA3BOLN-bQ7ZRwSuRPmxBXGyZychRozZXfrmNg99STVrEsdUQpRO2pxXFzOeCG4t1-JOEXoZs-ENbnZydPSe_CUfzN-kV4HkY2Z2AneTUKS_BUrkSllC2TR9aXxxfd1b4Tu6OCiRL3dxxGlL5fzJ3vWGjoJ1q0EukdGycOFecbSY6AK4vDPM7geHiB_3KrCxiEGm4uIuqFOVKzaNcJXDFRTmXPKw4UtdS-f7C8hVVno3Kxvadl2f6pP7CJf76b3wgdLlMTQB88pjm55M-quuh2v1nufVs1DZMTERbFdQJxPuaww9YL5hQ0OvREdL4'
+                  refreshToken:
+                    type: string
+                    description: 'The refresh token for obtaining new access tokens'
+                    example: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NjQ0NzQyZTkzZDk1YTkxYTU5MzdlNDgiLCJzZXNzaW9uSUQiOiI2NjQ0NzQ2ZTkzZDk1YTkxYTU5MzdlNGQiLCJpYXQiOjE3MTU3NjIyODYsImV4cCI6MTcxODM1NDI4Nn0.McOhRIg6hPt8IZ1uP6qDsALI2bCaXzyY5hvro5_VXkllReSkfp9lk2UnUNTxIb3NddAmVfW7IAlFC0ZEpBfF9zaYk-piSR4Unwyn9mGqlKO0XTEZV3kehGayuwMjaAWmEngTFlYWOhw7bFWmzmdSui4fxLPZDHQxGVs9IXRYjTzC8-JAfTCfbwd3m39SNXi8sQ3erf_5y6qxgxDFKg0QVqh8XWjLHZuTi767DMLRBQSs8DE08Aqa5Xi07IIWW6L8nmSCsr_Jw1JE0zBcU8TXHoDfFB4onK6WHIWhR66zKk-k6NNoq6UO1DeU0zvKQTGIgQs3fYt2cYbvrzrnPi4do1LEy_DVf1gIE4RM2uJIYYiAv8yzJ7_gXn1UBHLL3RB8nplw24fs_2QQkLDRxqLBiaBslHnGQgt9J34pcjRYQIKftALFLk9EOC1lRLeV8f8QRiQjMpe9qXJM2IWgwatD40q2iF-x9LOuurRvhyoEGmMkRPzapaLxPE5qnHbv-tjUXNZSMQSwD5qP7_Z3lWQjWYUV1UxPrkhPQKvY2qfLdAG15J5l7Gau9VIC90ct9B9uETieXuoVWXhM0QivD4OXgGj7BoBO63t5SthU9dozXPXUUI1uarxowD-BJpOJVm29dZnldgCeWeqdNmEorZ7SxnrYYN6XQ9cL-lUmgD9SY_E'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -487,6 +595,50 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+    post:
+      tags:
+        - Products
+      summary: Create a new product - Admin
+      description: |
+        Creates a new product with the provided details.
+
+        **Only Admin can perform this action**
+      operationId: createProduct
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  products:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /api/v1/products/{productID}:
     get:
       tags:
@@ -514,6 +666,84 @@ paths:
                     $ref: '#/components/schemas/NumResults'
                   products:
                     $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    patch:
+      tags:
+        - Products
+      summary: Update a product - Admin
+      description: |
+        Updates a product with the specified ID.
+
+        **Only Admin can perform this action**
+      operationId: updateProduct
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - $ref: '#/components/parameters/ProductIDParam'
+      requestBody:
+        description: Admin can update any field of a product (only declare fields that need updating)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  products:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Products
+      summary: Delete a product - Admin
+      description: |
+        Deletes a product with the specified ID.
+
+        **Only Admin can perform this action**
+      operationId: deleteProduct
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - $ref: '#/components/parameters/ProductIDParam'
+      responses:
+        '204':
+          description: Product deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
         '500':
@@ -559,6 +789,82 @@ paths:
                     description: A list of products.
                     items:
                       $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/products/stats-category:
+    get:
+      tags:
+        - Products
+      summary: Get product statistics by category - Admin
+      description: |
+        Retrieves statistics about products grouped by category.
+
+        **Only Admin can perform this action**
+      operationId: getStatsCategory
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+      responses:
+        '200':
+          description: Product statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  stats:
+                    $ref: '#/components/schemas/Stats'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/products/stats-editions:
+    get:
+      tags:
+        - Products
+      summary: Get product statistics by editions - Admin
+      description: |
+        Retrieves statistics about products grouped by editions.
+
+        **Only Admin can perform this action**
+      operationId: getStatsEditions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+      responses:
+        '200':
+          description: Product statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  stats:
+                    $ref: '#/components/schemas/Stats'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -788,6 +1094,92 @@ components:
       description: "The code sent to the user's email"
       example: '0b0ada25c3ba'
 
+    Password:
+      type: string
+      description: 'The new password for the user account (Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character).'
+      example: 'userpassword3Mm$'
+
+    Stats:
+      type: array
+      items:
+        type: object
+        properties:
+          _id:
+            type: string
+            description: 'The identifier'
+            example: 'IDENTIFIER'
+          numProducts:
+            $ref: '#/components/schemas/NumResults'
+          productID:
+            type: array
+            items:
+              type: string
+            description: 'An array of product IDs in the category'
+            example: ['663e30b7947d905b5b603126']
+          ratingsAverage:
+            type: number
+            description: 'The average rating of products in the category'
+            example: 4.2
+          avgShippingDays:
+            type: number
+            description: 'The average shipping days of products in the category'
+            example: 5
+          avgPrice:
+            type: number
+            format: float
+            description: 'The average price of products in the category'
+            example: 55.99
+          minPrice:
+            type: number
+            format: float
+            description: 'The minimum price of products in the category'
+            example: 25.99
+          maxPrice:
+            type: number
+            format: float
+            description: 'The maximum price of products in the category'
+            example: 89.99
+          avgSaleAmount:
+            type: number
+            format: float
+            description: 'The average sale amount of products in the category'
+            example: 10.5
+          minSaleAmount:
+            type: number
+            format: float
+            description: 'The minimum sale amount of products in the category'
+            example: 5.99
+          maxSaleAmount:
+            type: number
+            format: float
+            description: 'The maximum sale amount of products in the category'
+            example: 15.99
+          avgPriceAfterSale:
+            type: number
+            format: float
+            description: 'The average price after sale of products in the category'
+            example: 45.99
+          minPriceAfterSale:
+            type: number
+            format: float
+            description: 'The minimum price after sale of products in the category'
+            example: 39.99
+          maxPriceAfterSale:
+            type: number
+            format: float
+            description: 'The maximum price after sale of products in the category'
+            example: 59.99
+          currency:
+            type: string
+            description: 'The currency used for prices'
+            example: 'USD'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   parameters:
     LanguageQuery:
       in: query
@@ -861,7 +1253,7 @@ components:
               message:
                 type: string
                 description: The error message explaining why the request failed.
-                example: Something went wrong! (This can be any string based on the received bad error)
+                example: Something went wrong! (This can be any string based on the received error)
 
     LanguageNotSupported:
       description: Bad request - Language is not supported!
@@ -917,3 +1309,31 @@ components:
                 type: string
                 description: The error message explaining why the request failed.
                 example: Invalid token or token has expired!
+
+    Unauthenticated:
+      description: Unauthenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/FailMessage'
+              message:
+                type: string
+                description: 'A message indicating that the user is unauthenticated'
+                example: 'Unauthenticated! (This can be any string based on the received error)'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/FailMessage'
+              message:
+                type: string
+                description: 'A message indicating that the user is unauthorized'
+                example: 'Unauthorized! (This can be any string based on the received error)'

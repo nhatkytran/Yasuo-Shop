@@ -152,9 +152,14 @@ export const banAccount = catchAsync(
 
 // CRUD //////////
 
-export const getMe = catchAsync(async (req: Request, res: Response) =>
-  sendSuccess(res, { user: res.locals.user })
-);
+export const getMe = catchAsync(async (req: Request, res: Response) => {
+  const { _id, name, email, photo, active, role, createdAt, updatedAt } =
+    res.locals.user;
+
+  sendSuccess(res, {
+    user: { _id, name, email, photo, active, role, createdAt, updatedAt },
+  });
+});
 
 export const updateMe = catchAsync(
   async (req: Request<{}, {}, UpdateMeInput['body']>, res: Response) => {
