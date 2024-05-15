@@ -41,7 +41,9 @@ export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
     const { user, token } = await createUser({ input: req.body });
 
-    if (env.prod) await sendCreateUserEmail({ user, token });
+    await sendCreateUserEmail({ user, token });
+
+    if (env.dev) console.log(token);
 
     sendSuccess(res, {
       statusCode: 201,
@@ -63,8 +65,10 @@ export const getActivateCode = catchAsync(
 
     await sendActivateTokenEmail({ user, token });
 
+    if (env.dev) console.log(token);
+
     sendSuccess(res, {
-      message: 'Activate code has been sent to your email. Please check.',
+      message: 'Activation code has been sent to your email. Please check.',
     });
   }
 );
@@ -92,6 +96,8 @@ export const forgotPassword = catchAsync(
     const token = await createForgotPasswordToken({ user });
 
     await sendForgotPasswordTokenEmail({ user, token });
+
+    if (env.dev) console.log(token);
 
     sendSuccess(res, {
       message:

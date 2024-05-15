@@ -46,7 +46,14 @@ export const createUser = async ({
   if (!isAdmin) token = await createActionToken({ user, type: 'activate' });
 
   return {
-    user: omit(user.toJSON(), 'password', 'ban') as UserDocument,
+    user: omit(
+      user.toJSON(),
+      'password',
+      'ban',
+      'signinAttempts',
+      'signinTimestamp',
+      'activateToken'
+    ) as UserDocument,
     token,
   };
 };

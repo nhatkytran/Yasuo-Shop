@@ -29,6 +29,9 @@ tags:
       description: Netlify Functions
       url: https://www.netlify.com/platform/core/functions/
 
+  - name: User
+    description: API for user management
+
   - name: Products
     description: League of Legends merchandise
 
@@ -199,6 +202,10 @@ paths:
                           example: rechbp4YPWOtG8ZhU
                         category:
                           type: string
+                          enum:
+                            - main
+                            - featured
+                            - sale
                           description: The category of the promo.
                           example: featured
                         collection:
@@ -211,6 +218,240 @@ paths:
                           example: 'https://v5.airtableusercontent.com/v3/u/29/29/1715760000000/VfAW5o0ouafshZjK9KTUbw/CpRBOaiKhlzTZZNee0kNKnpn-TsSkhLNHQdCt2kK4L9nNmJu0iXaE8yjCZuIjLe7Hy460i-o0emQ7fhMk1ODOKdumkpdZqHeQ2447RdQa1aeZ9_TZoIhm0rifV1WGCyw-utSkMRJGNg-NaoVvgFgCcRdpFFXvO_SzF7re5iw44c/AL-qH-ISk-sjcTvPaPvKFUhpvQuFKxy3zR0-NyyKGmI'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  # User ##########
+
+  /api/v1/users/signup:
+    post:
+      tags:
+        - User
+      summary: User Signup (activation code will sent to user's email)
+      description: Creates a new user account and sends an activation code to the user's email.
+      operationId: signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The name of the user.'
+                  example: 'Tester'
+                email:
+                  type: string
+                  description: 'The email address of the user.'
+                  example: 'tester@gmail.com'
+                password:
+                  type: string
+                  description: 'The password for the user account (Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character).'
+                  example: 'userpassword3Mm$'
+                passwordConfirm:
+                  type: string
+                  description: 'Confirmation of the password.'
+                  example: 'userpassword3Mm$'
+      responses:
+        '201':
+          description: User successfully signed up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the outcome of the signup process'
+                    example: 'Sign up successfully. Your activate code is sent to your email! Please check.'
+                  user:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        format: MongoID
+                        description: 'The unique identifier for the user'
+                        example: '6644461874a0a872f25dbc1c'
+                      name:
+                        type: string
+                        description: 'The name of the user'
+                        example: 'Tester'
+                      email:
+                        type: string
+                        description: 'The email address of the user'
+                        example: 'tester@gmail.com'
+                      photo:
+                        type: string
+                        description: "The URL of the user's profile photo"
+                        example: '/img/users/default.png'
+                      active:
+                        type: boolean
+                        description: "Indicates whether the user's account is active (Use code received in user's email to activate user)"
+                        example: false
+                      role:
+                        type: string
+                        description: 'The role assigned to the user'
+                        example: 'user'
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: 'The timestamp when the user account was created'
+                        example: '2024-05-15T05:12:46.943Z'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: 'The timestamp when the user account was last updated'
+                        example: '2024-05-15T05:12:47.286Z'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/activate-code/{email}:
+    get:
+      tags:
+        - User
+      summary: Resend Activation Code
+      description: Sends a new activation code to the user's email.
+      operationId: activateCode
+      parameters:
+        - $ref: '#/components/parameters/EmailParam'
+      responses:
+        '200':
+          description: Activation code successfully sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    description: 'A message indicating the outcome of the activation code resend process'
+                    example: 'Activation code has been sent to your email. Please check.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/activate:
+    patch:
+      tags:
+        - User
+      summary: Activate User Account
+      description: Activates a user account using the provided activation code.
+      operationId: activate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                code:
+                  $ref: '#/components/schemas/Code'
+      responses:
+        '200':
+          description: User account successfully activated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the outcome of the account activation process'
+                    example: 'Activate account successfully.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/InvalidOrExpiredToken'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/forgot-password/{email}:
+    get:
+      tags:
+        - User
+      summary: Forgot Password
+      description: Sends a forgot password code to the user's email.
+      operationId: forgotPassword
+      parameters:
+        - $ref: '#/components/parameters/EmailParam'
+      responses:
+        '200':
+          description: Forgot password code successfully sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the outcome of the forgot password code request'
+                    example: 'Forgot password code has been sent to your email. Please check.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/reset-password:
+    patch:
+      tags:
+        - User
+      summary: Reset User Password
+      description: Resets a user's password using the provided email, reset code, and new password.
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                code:
+                  $ref: '#/components/schemas/Code'
+                newPassword:
+                  type: string
+                  description: 'The new password for the user account'
+                  example: 'userpassword3Mm$2'
+      responses:
+        '200':
+          description: Password successfully reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the outcome of the password reset process'
+                    example: 'Reset password successfully.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/InvalidOrExpiredToken'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
 
   # Products ##########
 
@@ -355,6 +596,7 @@ components:
       properties:
         _id:
           type: string
+          format: MongoID
           description: The unique identifier for the product.
           example: 663e30b7947d905b5b60311b
         name:
@@ -395,6 +637,10 @@ components:
               description: Editions in English.
               items:
                 type: string
+                enum:
+                  - limited edition
+                  - preorder
+                  - special edition
                 example: limited edition
             other:
               type: array
@@ -410,10 +656,18 @@ components:
             example: https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf457399168c2b817/659873e5dc766225e97ebf22/CPX_JIMEIAatrox_Ecomm_1.png
         type:
           type: string
+          enum:
+            - figure
+            - game
+            - cloth
+            - item
           description: The type of product.
           example: figure
         category:
           type: string
+          enum:
+            - featured
+            - sale
           description: The category of the product.
           example: featured
         optional:
@@ -488,6 +742,10 @@ components:
               description: In Enlish.
               items:
                 type: string
+                enum:
+                  - height
+                  - width
+                  - depth
                 example: height
             other:
               type: array
@@ -519,6 +777,16 @@ components:
           format: date-time
           description: The date and time when the product was last updated.
           example: 2024-05-10T14:35:35.535Z
+
+    Email:
+      type: string
+      description: 'The email address of the user'
+      example: 'tester@gmail.com'
+
+    Code:
+      type: string
+      description: "The code sent to the user's email"
+      example: '0b0ada25c3ba'
 
   parameters:
     LanguageQuery:
@@ -571,7 +839,30 @@ components:
       schema:
         type: string
 
+    EmailParam:
+      in: path
+      name: email
+      required: true
+      schema:
+        type: string
+      description: The email address of the user.
+      example: 'tester@gmail.com'
+
   responses:
+    BadRequest:
+      description: Bad request!
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/FailMessage'
+              message:
+                type: string
+                description: The error message explaining why the request failed.
+                example: Something went wrong! (This can be any string based on the received bad error)
+
     LanguageNotSupported:
       description: Bad request - Language is not supported!
       content:
@@ -612,3 +903,17 @@ components:
               message:
                 type: string
                 example: Something went wrong!
+
+    InvalidOrExpiredToken:
+      description: Invalid or Expired Token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/FailMessage'
+              message:
+                type: string
+                description: The error message explaining why the request failed.
+                example: Invalid token or token has expired!
