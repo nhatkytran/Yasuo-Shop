@@ -19,11 +19,16 @@ servers:
 tags:
   - name: Information
     description: Check server is live and some information about API
+
   - name: Metadata
-    description: Serverless - Metadata for UI
+    description: |
+      Serverless - Metadata for UI
+
+      **https://yasuo-api-serverless.netlify.app**
     externalDocs:
       description: Netlify Functions
       url: https://www.netlify.com/platform/core/functions/
+
   - name: Products
     description: League of Legends merchandise
 
@@ -80,18 +85,7 @@ paths:
                     description: The current language setting.
                     example: en-us
         '400':
-          description: Bad request - Language is not supported!
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/FailMessage'
-                  message:
-                    type: string
-                    description: The error message explaining why the request failed.
-                    example: Language 'language' is not supported!
+          $ref: '#/components/responses/LanguageNotSupported'
 
   # Metadata ##########
 
@@ -111,6 +105,112 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  _id:
+                    type: string
+                    description: The unique identifier for the slide.
+                    example: rec9jVapZERCuknP6
+                  name:
+                    type: string
+                    description: The name of the slide.
+                    example: Secretlab x VALORANT
+                  image:
+                    type: string
+                    format: uri
+                    example: 'https://v5.airtableusercontent.com/v3/u/29/29/1715760000000/uBxV5D2kiHZy4dxCGCRdog/koTBcedmUK-BsGgXTaXfYYEQf7zgs04hFk9_vjz49KE34tI6zm0tyLCV27tmd3PgKzWmKSJxxP8jgIs0ZbrGo1vU_K8VPrSiw7ZODoOTu2sBsVPeceregZJwtzIDJ5z-GHYcwn3RgzbIcl8iTfWVth4k0rTDgoK-87NNu16PQpQ/KWg_vo7IO8sPvxmrWBdIz0l70EdRplWkvNCi54hzJZQ'
+        '400':
+          $ref: '#/components/responses/LanguageNotSupported'
+
+  /api/v1/banners:
+    get:
+      tags:
+        - Metadata
+      summary: Get all banners or a single banner
+      description: Returns a list of banners with detailed information.
+      operationId: getAllBanners
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - $ref: '#/components/parameters/ServerlessIDQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  banners:
+                    type: array
+                    description: A list of banners.
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: The unique identifier for the banner.
+                          example: recO9dmWhqEJPUi9e
+                        name:
+                          type: string
+                          description: The name of the banner.
+                          example: Ruination Collectors Edition
+                        description:
+                          type: string
+                          description: The description of the banner.
+                          example: Meet the new Secretlab Memory Foam Lumbar Pillow Poro Party Edition. Fluffy, adorable, and soft as snow - get yours now!
+                        image:
+                          type: string
+                          format: uri
+                          example: 'https://v5.airtableusercontent.com/v3/u/29/29/1715760000000/4c9DEZftrf1S4PnmWutCZw/w0goBsvisnN0CCtmQShuF76MnIW3mCiCnvblNEbqaRutV-EWkj-iExS59rQOczQ42-9k_uzyn5vPLUJsNOSSvJAAHhFFC9_Ton8b0berrrlPIATZbmF0NyFiZl8jwDLan_vfGpbuWC38_6_Ri5OyBKykeQHznvDkxdtBUkh-eM8/gtiUr1t5_rYfKk9u3qxMguMZK4e8t-JiEO7gL8B7Kf8'
+        '400':
+          $ref: '#/components/responses/LanguageNotSupported'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/promos:
+    get:
+      tags:
+        - Metadata
+      summary: Get all promos or a single promo
+      description: Returns a list of promos with detailed information.
+      operationId: getAllPromos
+      parameters:
+        - $ref: '#/components/parameters/ServerlessIDQuery'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  promos:
+                    type: array
+                    description: A list of promos.
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: The unique identifier for the promo.
+                          example: rechbp4YPWOtG8ZhU
+                        category:
+                          type: string
+                          description: The category of the promo.
+                          example: featured
+                        collection:
+                          type: string
+                          description: The collection of the promo (Not all promo have 'collection' property).
+                          example: msi
+                        image:
+                          type: string
+                          format: uri
+                          example: 'https://v5.airtableusercontent.com/v3/u/29/29/1715760000000/VfAW5o0ouafshZjK9KTUbw/CpRBOaiKhlzTZZNee0kNKnpn-TsSkhLNHQdCt2kK4L9nNmJu0iXaE8yjCZuIjLe7Hy460i-o0emQ7fhMk1ODOKdumkpdZqHeQ2447RdQa1aeZ9_TZoIhm0rifV1WGCyw-utSkMRJGNg-NaoVvgFgCcRdpFFXvO_SzF7re5iw44c/AL-qH-ISk-sjcTvPaPvKFUhpvQuFKxy3zR0-NyyKGmI'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   # Products ##########
 
@@ -429,6 +529,14 @@ components:
       schema:
         type: string
 
+    ServerlessIDQuery:
+      in: query
+      name: id
+      description: The ID of entitity to return.
+      required: false
+      schema:
+        type: string
+
     AdvancedFilteringQuery:
       in: query
       name: additions
@@ -464,6 +572,20 @@ components:
         type: string
 
   responses:
+    LanguageNotSupported:
+      description: Bad request - Language is not supported!
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/FailMessage'
+              message:
+                type: string
+                description: The error message explaining why the request failed.
+                example: Language 'language' is not supported!
+
     NotFound:
       description: Not Found
       content:
