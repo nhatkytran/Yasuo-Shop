@@ -83,7 +83,7 @@ userRouter.patch(
   adminRestoreUser
 );
 
-// user restore their own account and that account was not be deleted by admin
+// users can restore their own accounts, which have not been deleted by the admin
 userRouter.get(
   '/user-restore-code/:email',
   validate(emailSchema),
@@ -102,16 +102,9 @@ userRouter.post(
   banAccount
 );
 
-// Upload photo AWS S3 and U - Update user's name and photo //////////
+// AWS S3 //////////
 
-// new only admin can access this route because I use AWS S3 for uploading photo
-// and it can charge me money
-userRouter.get(
-  '/upload-photo-url',
-  protect,
-  restrictTo('admin'),
-  getS3SignedUrl
-);
+userRouter.get('/upload-photo-presigned-url', protect, getS3SignedUrl);
 
 // CRD //////////
 

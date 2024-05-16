@@ -228,7 +228,7 @@ paths:
     post:
       tags:
         - Users
-      summary: User Sign-up (activation code will sent to user's email)
+      summary: Sign-up (activation code will sent to user's email)
       description: Creates a new user account and sends an activation code to the user's email.
       operationId: signup
       requestBody:
@@ -448,11 +448,154 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /api/v1/users/update-password:
+    patch:
+      tags:
+        - Users
+      summary: Update user password
+      description: Updates the password of the authenticated user.
+      operationId: updatePassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  $ref: '#/components/schemas/Password'
+                newPassword:
+                  type: string
+                  description: 'The new password to be set'
+                  example: 'userpassword3Mm$2'
+                passwordConfirm:
+                  type: string
+                  description: 'Confirmation of the new password'
+                  example: 'userpassword3Mm$2'
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the success of the operation'
+                    example: 'Update password successfully!'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/ban-account:
+    post:
+      tags:
+        - Users
+      summary: Ban a user account - Admin
+      description: |
+        Bans a user account based on the provided email.
+
+        **Only Admin can perform this action**
+      operationId: banAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: 'The email address of the user to ban'
+                  example: 'tester@gmail.com'
+      responses:
+        '200':
+          description: User account banned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the success of the operation'
+                    example: 'User has been banned!'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/upload-photo-presigned-url:
+    get:
+      tags:
+        - Users
+      summary: Get pre-signed URL for photo upload
+      description: Generates a pre-signed URL for uploading a user photo. The URL is valid for 1 minute and can be used only once to upload an image.
+      operationId: uploadPhotoPresignedUrl
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Pre-signed URL generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating the successful generation of the pre-signed URL
+                    example: 'Generate pre-signed URL successfully (only valid for 1 minute and only be used to upload one image).'
+                  url:
+                    type: string
+                    description: The pre-signed URL for uploading the image
+                    example: 'https://presignedurldemo.s3.eu-west-2.amazonaws.com/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJJWZ7B6WCRGMKFGQ%2F20180210%2Feu-west-2%2Fs3%2Faws4_request&X-Amz-Date=20180210T171315Z&X-Amz-Expires=1800&X-Amz-Signature=12b74b0788aa036bc7c3d03b3f20c61f1f91cc9ad8873e3314255dc479a25351&X-Amz-SignedHeaders=host'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '405':
+          description: Internal Server Error, an unexpected error occurred
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#components/schemas/FailMessage'
+                  message:
+                    type: string
+                    description: A message indicating the reason for the failure
+                    example: Sorry, we don't support this action now
+        '500':
+          $ref: '#/components/responses/ServerError'
+
   /api/v1/users/me:
     get:
       tags:
         - Users
-      summary: Get Current User
+      summary: Get user's own data
       description: Retrieves information about the currently authenticated user.
       operationId: getMe
       security:
@@ -468,43 +611,340 @@ paths:
                   status:
                     $ref: '#/components/schemas/SuccessMessage'
                   user:
-                    type: object
-                    properties:
-                      _id:
-                        type: string
-                        format: MongoID
-                        description: 'The unique identifier for the user'
-                        example: '6644461874a0a872f25dbc1c'
-                      name:
-                        type: string
-                        description: 'The name of the user'
-                        example: 'Tester'
-                      email:
-                        $ref: '#/components/schemas/Email'
-                      photo:
-                        type: string
-                        description: "The URL of the user's profile photo"
-                        example: '/img/users/default.png'
-                      active:
-                        type: boolean
-                        description: "Indicates whether the user's account is active (Use code received in user's email to activate user)"
-                        example: false
-                      role:
-                        type: string
-                        description: 'The role assigned to the user'
-                        example: 'user'
-                      createdAt:
-                        type: string
-                        format: date-time
-                        description: 'The timestamp when the user account was created'
-                        example: '2024-05-15T05:12:46.943Z'
-                      updatedAt:
-                        type: string
-                        format: date-time
-                        description: 'The timestamp when the user account was last updated'
-                        example: '2024-05-15T05:12:47.286Z'
+                    $ref: '#/components/schemas/User'
         '401':
           $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    patch:
+      tags:
+        - Users
+      summary: Update user profile
+      description: Updates the profile information of the authenticated user.
+      operationId: updateMe
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: This route can only update the name, the photo, or both of the user.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "The user's name"
+                  example: 'Tester'
+                photo:
+                  type: string
+                  description: "The path to the user's profile photo"
+                  example: '/img/users/default.png'
+      responses:
+        '200':
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the success of the operation'
+                    example: 'Update user successfully.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users:
+    get:
+      tags:
+        - Users
+      summary: Get all users - Admin
+      description: |
+        Retrieves a list of all users.
+
+        **Only Admin can perform this action**
+      operationId: getAllUsers
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "name": "Tester" }
+
+            Sorting: { "sort": "name" }
+
+            Projecting: { "fields": "name" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Users retrieved successfully - User data can have more fileds than the example value.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Users
+      summary: Create a new user - Admin
+      description: |
+        Creates a new user account with the provided details.
+
+        **Only Admin can perform this action**
+      operationId: createUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: The request body can have more fields based on the admin's needs.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The name of the user'
+                  example: 'Tester'
+                email:
+                  $ref: '#/components/schemas/Email'
+                password:
+                  $ref: '#/components/schemas/Password'
+                active:
+                  type: boolean
+                  description: 'The active status of the user'
+                  example: true
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: 'A message indicating the success of the operation'
+                    example: 'Create user successfully.'
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/{email}:
+    get:
+      tags:
+        - Users
+      summary: Get user by email - Admin
+      description: |
+        Retrieves the details of a user by their email address.
+
+        **Only Admin can perform this action**
+      operationId: getUser
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EmailParam'
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                    numResults:
+                      $ref: '#/components/schemas/NumResults'
+                    user:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete user by email
+      description: |
+        Deletes a user by their email address.
+
+        **An admin can delete any user.
+        Users can only delete their own accounts.
+        Deleting does not actually remove the user; it just marks the user as deleted.**
+      operationId: deleteUser
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EmailParam'
+      responses:
+        '204':
+          description: User deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/admin-restore/{email}:
+    patch:
+      tags:
+        - Users
+      summary: Restore a banned user account - Admin
+      description: |
+        Restore a user account that was previously banned (Admin can restore any user).
+
+        **Only Admin can perform this action**
+      operationId: adminRestore
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#components/parameters/EmailParam'
+      responses:
+        '200':
+          description: User restored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: A message indicating the successful restoration of the user
+                    example: 'Restore user successfully.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/user-restore-code/{email}:
+    get:
+      tags:
+        - Users
+      summary: Request restore code for a banned user
+      description: Sends a restore code to the specified email address for a banned user (Users can restore their own accounts, which have not been deleted by the admin).
+      operationId: userRestoreCode
+      parameters:
+        - $ref: '#components/parameters/EmailParam'
+      responses:
+        '200':
+          description: Restore code sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: A message indicating the successful sending of the restore code
+                    example: 'Restore code has been sent to your email. Please check.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/user-restore:
+    patch:
+      tags:
+        - Users
+      summary: Restore a banned user account
+      description: Restore a user account using the provided restore code.
+      operationId: userRestore
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                code:
+                  $ref: '#/components/schemas/Code'
+      responses:
+        '200':
+          description: User restored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: A message indicating the successful restoration of the user
+                    example: 'Restore user successfully.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -514,11 +954,11 @@ paths:
     post:
       tags:
         - Sessions
-      summary: User Sign-in
+      summary: Sign-in
       description: |
         Authenticates a user and returns access and refresh tokens (Access and refresh tokens are also sent via Cookie).
 
-        User only has 5 sign-in attempts, if there is not any attempt left, user needs to wait 1 hour.
+        User only has 5 sign-in attempts, if there is not any attempt left, user needs to wait for an hour.
       requestBody:
         required: true
         content:
@@ -572,7 +1012,22 @@ paths:
       operationId: getAllProducts
       parameters:
         - $ref: '#/components/parameters/LanguageQuery'
-        - $ref: '#/components/parameters/AdvancedFilteringQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "name": "Jimei Palace Aatrox 1/6 Scale Statue" }
+
+            Sorting: { "sort": "price.default" }
+
+            Projecting: { "fields": "name,price" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
       responses:
         '200':
           description: Successful response
@@ -868,8 +1323,6 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
-# Add Technologies description
-
 components:
   schemas:
     SuccessMessage:
@@ -1084,6 +1537,43 @@ components:
           description: The date and time when the product was last updated.
           example: 2024-05-10T14:35:35.535Z
 
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoID
+          description: 'The unique identifier for the user'
+          example: '6644461874a0a872f25dbc1c'
+        name:
+          type: string
+          description: 'The name of the user'
+          example: 'Tester'
+        email:
+          $ref: '#/components/schemas/Email'
+        photo:
+          type: string
+          description: "The URL of the user's profile photo"
+          example: '/img/users/default.png'
+        active:
+          type: boolean
+          description: "Indicates whether the user's account is active (Use code received in user's email to activate user)"
+          example: false
+        role:
+          type: string
+          description: 'The role assigned to the user'
+          example: 'user'
+        createdAt:
+          type: string
+          format: date-time
+          description: 'The timestamp when the user account was created'
+          example: '2024-05-15T05:12:46.943Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 'The timestamp when the user account was last updated'
+          example: '2024-05-15T05:12:47.286Z'
+
     Email:
       type: string
       description: 'The email address of the user'
@@ -1196,24 +1686,6 @@ components:
       required: false
       schema:
         type: string
-
-    AdvancedFilteringQuery:
-      in: query
-      name: additions
-      description: |
-        Advanced filtering, sorting, projecting, pagination.
-
-        Filtering: { "name": "Jimei Palace Aatrox 1/6 Scale Statue" }
-
-        Sorting: { "sort": "price.default" }
-
-        Projecting: { "fields": "name,price" }
-
-        Pagination: { "page": 1, "limit": 3 }
-      required: false
-      schema:
-        type: object
-        additionalProperties: true
 
     ProjectQuery:
       in: query

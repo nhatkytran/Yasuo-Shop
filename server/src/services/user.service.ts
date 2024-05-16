@@ -246,8 +246,12 @@ type UpdateUserOptions = {
   update: UpdateQuery<UserDocument>;
 };
 
-export const updateUser = async ({ filter, update }: UpdateUserOptions) =>
+export const updateUser = async ({ filter, update }: UpdateUserOptions) => {
+  if (!Object.keys(update).length)
+    throw new AppError({ statusCode: 400, message: 'No data received!' });
+
   await User.updateOne(filter, update);
+};
 
 // Who delete user? //////////
 

@@ -17,7 +17,7 @@ const s3Client = new S3Client({
 const s3GetSignedUrl = async (userID: string): Promise<string | void> => {
   throw new AppError({
     message: "Sorry, we don't support this action now",
-    statusCode: 500,
+    statusCode: 405,
   });
 
   try {

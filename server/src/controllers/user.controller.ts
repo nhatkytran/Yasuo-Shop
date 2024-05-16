@@ -171,7 +171,7 @@ export const updateMe = catchAsync(
     if (name) update.name = name;
     if (photo) update.photo = photo;
 
-    if (name || photo) await updateUser({ filter: { _id: user._id }, update });
+    await updateUser({ filter: { _id: user._id }, update });
 
     sendSuccess(res, { message: 'Update user successfully.' });
   }
@@ -271,9 +271,9 @@ export const getRestoreCode = catchAsync(
     const user = await findUser({ query: { email } });
     const token = await createRestoreToken({ user });
 
-    if (env.dev || env.test) console.log(token);
+    await sendRestoreEmail({ user, token });
 
-    if (env.prod) await sendRestoreEmail({ user, token });
+    if (env.dev) console.log(token);
 
     sendSuccess(res, {
       message: 'Restore code has been sent to your email. Please check.',
@@ -300,17 +300,13 @@ export const userRestoreUser = catchAsync(
 
 export const getS3SignedUrl = catchAsync(
   async (req: Request, res: Response) => {
-    return sendSuccess(res, {
-      message: "Sorry, we don't support this action now",
-    });
-
     const { user } = res.locals;
 
     const url = await s3getSingedUrl(user._id.toString());
 
     sendSuccess(res, {
       message:
-        'Generate pre-signed URL successfully. (only valid for 1 minute and only be used to upload one image)',
+        'Generate pre-signed URL successfully(only valid for 1 minute and only be used to upload one image).',
       url,
     });
   }
