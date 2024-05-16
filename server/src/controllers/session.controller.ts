@@ -106,7 +106,7 @@ export const signinGoogleCallback = catchAsync(
 
     if (env.prod && isNew) sendGoogleEmail({ user });
 
-    res.redirect(`${clientOriginUrl}?googleToken=${token}`);
+    res.redirect(`${clientOriginUrl}?email=${user.email}&googleToken=${token}`);
   }
 );
 
@@ -141,7 +141,7 @@ export const signoutEverywhere = catchAsync(
     const { user } = res.locals;
 
     const { modifiedCount, matchedCount } = await updateAllSessions({
-      filter: { user: user._id },
+      filter: { user: user._id, valid: true },
       update: { valid: false },
     });
 

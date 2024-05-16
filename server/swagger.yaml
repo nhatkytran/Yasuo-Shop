@@ -959,6 +959,7 @@ paths:
         Authenticates a user and returns access and refresh tokens (Access and refresh tokens are also sent via Cookie).
 
         User only has 5 sign-in attempts, if there is not any attempt left, user needs to wait for an hour.
+      operationId: signin
       requestBody:
         required: true
         content:
@@ -998,6 +999,180 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions/oauth/google/consent:
+    get:
+      tags:
+        - Sessions
+      summary: Get consent for Google OAuth
+      description: Redirects the user to the Google consent page to grant permission for OAuth.
+      operationId: googleConsent
+      responses:
+        '302':
+          description: Redirect to Google consent page
+          headers:
+            Location:
+              description: URL of the Google consent page
+              schema:
+                type: string
+                example: https://accounts.google.com/o/oauth2/auth
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions/oauth/google/callback:
+    get:
+      tags:
+        - Sessions
+      summary: Google OAuth callback
+      description: Handles the callback from Google OAuth authentication.
+      operationId: googleCallback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          description: Authorization code received from Google
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          description: State parameter received from Google
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect to frontend after successful authentication
+          headers:
+            Location:
+              description: URL to redirect to after successful authentication
+              schema:
+                type: string
+                example: https://frontend.example.com?email=email&googleToken=googleToken
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions/oauth/google/signin:
+    post:
+      tags:
+        - Sessions
+      summary: Sign in with Google OAuth (email & googleToken)
+      description: Sign in using Google OAuth authentication (email & googleToken are from oauth/google/callback redirection).
+      operationId: googleSignin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                googleToken:
+                  type: string
+                  description: Token received from Google OAuth authentication
+                  example: 33a7c9f57a8a
+      responses:
+        '200':
+          description: Successfully signed in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the request
+                    example: 'success'
+                  accessToken:
+                    type: string
+                    description: Access token for accessing protected resources
+                    example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NjQ1Y2RkYzk3YWEwNThmYzk1MzRmNTIiLCJzZXNzaW9uSUQiOiI2NjQ1ZDhhMTg0OTJhMzcxNDliMjEyYzgiLCJpYXQiOjE3MTU4NTM0NzMsImV4cCI6MTcxNTg1NTI3M30.f7YNbJS0tXD3WbOeM6HOsZHM3Qq7boHOUNAIT1AhOyZF9TENc6ailDffXyWNFGC-XyXhZhyHk8r332nGlA_PecbOFM65qaziWEQS6vFT2G3RNt0uQtpOOuz0g6RmiW2dM2sVYQsv-a44brNgMIp7RtuXdygZMvuwirKD8boIJ6nwOR3ueYqIH9KIHTvg0ielhjYfxl2gc-6-WphphSjCfM6fhih7sy9zMo20w5SFOxLfEDY42qdJXyP5J5RWjhxpNCiM8vBG4BwNHfekWiz-m37elH56a-4V1YPQXEvluesXSKgnvLlSwX6ScujgMOfEojepQlR0pKOMNi9BNlTl2ikS5mj0C_SypXsr-ykGJJVASEJoMt1etEv8Rv4u-x7QTSbyxLsYO86KJ-M15G8XJelWWkTmurbYCwcDLizJ1dx0WUKAQDjwRmVld-mtDMq46FV8n7nRVHrqPUKm8WGskU9k5ZKPtipbfhCQ-cfFNe8_uOHiMw0BsZ1tjsNO3YXvJMAOA101VzOsSzGfXVxfBiBIqbVRqjyK_bJ19bbiIilHrP2m0Q-FVKw4rGUnol1bFa6-Wto_Ow1FGVbI2DgQZ-oAVqrc-aIN10tnyhyriJDLcVpelumrUeTvOj4fjsTSJugvVb_cXDBxpqHHglIZFO213XWycHuV0zLfGdu2kFc
+                  refreshToken:
+                    type: string
+                    description: Refresh token for obtaining new access tokens
+                    example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NjQ1Y2RkYzk3YWEwNThmYzk1MzRmNTIiLCJzZXNzaW9uSUQiOiI2NjQ1ZDhhMTg0OTJhMzcxNDliMjEyYzgiLCJpYXQiOjE3MTU4NTM0NzMsImV4cCI6MTcxODQ0NTQ3M30.hUlI5MccwrUvLb7C4WcEkDQ101i3aFDOHOjRCVZvZiEPyQ1wDb9eOPBMuCf967lKkQWkvxdfabITPbnhkl2gQN4IoNAijs0EQeACa8SN-NYE3LgnjEXiv1ubHS6IboOCicC0PiirqWSKkBiK_BEp3EXzo_GkPbEUhaV59VB3yKT3J24fhVu3IdL6aqfhCBsFajtSRWFYb0nGASVtBTfqh23uFocoK0nDEoVWvYIWQy2dBPsohPV4DiB9Y9HneYcL62ZxAHr3t18OaOdySGDuJWg_LVfK3JfONgk9emcypW9B-5C_DKjwPhs1TkheAqUsxIhDEs3LmKdCj8qNSqwlSX0ucoH3FL9yTE1hL56fUGz9_EVJx2AULYIe5--AIZL0W-WqSwVq-7RTgTWpTx3x6VnFB-8qguJ0f7G9gknLcQJEDb4f6R0e7cPb8l7iAQBOV-MwJbVGGTgeKVwkVmMacDbHMAAD2tIkRiO0l4bx_-bBxsIAW0C44ZgBtvbEI6-oDFluepFCpYywRGuX7-foBNzwqOjoco6TR-H1axcrV0L_TFP8nJXcSdn9OWUdZWGA0GGcI64DfUk8uCy45WHyLo06QEQfp-nB9bxtyqezvFl1XqkiH0zPHN665K6NzrRPXn9R5iKVUEbSikSv0ZB0-htblmwJDipHfmVOZOqL0nc
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions/signout:
+    get:
+      tags:
+        - Sessions
+      summary: Sign-out
+      description: Sign out the currently authenticated user
+      operationId: signout
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully signed out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: A message indicating the success of the operation
+                    example: 'Sign out successfully.'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions/signout-everywhere:
+    get:
+      tags:
+        - Sessions
+      summary: Sign out everywhere
+      description: Sign out the user from all active sessions
+      operationId: signoutEverywhere
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully signed out from all sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  message:
+                    type: string
+                    description: A message indicating the success of the operation
+                    example: 'Sign out everywhere successfully.'
+                  modifiedCount:
+                    type: integer
+                    description: The number of documents modified in the operation
+                    example: 1
+                  matchedCount:
+                    type: integer
+                    description: The number of documents matched in the operation
+                    example: 1
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/ServerError'
 
