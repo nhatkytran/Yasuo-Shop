@@ -56,14 +56,11 @@ sessionRouter
   // Deactivate all sessions for one user (also for admin)
   .patch(validate(getAllSessionsSchema), deactivateAllSessions)
   // Delete all sessions except for admin
-  // Delete all sessions for one user (also for admin)
+  // Delete all sessions for one user
   .delete(deleteAllSessions);
 
 sessionRouter
   .route('/:sessionID')
-  // api/v1/users/:userID/sessions/:sessionID
-  // Get a specific session by sessionID or sessionID with userID
-  // Deactivate and Delete only uses sessionID
   .get(validate(getSessionSchema), getSession)
   .patch(validate(getSessionSchema), deactivateSession)
   .delete(validate(getSessionSchema), deleteSession);

@@ -268,10 +268,7 @@ paths:
                     type: object
                     properties:
                       _id:
-                        type: string
-                        format: MongoID
-                        description: 'The unique identifier for the user'
-                        example: '6644461874a0a872f25dbc1c'
+                        $ref: '#/components/schemas/ID'
                       name:
                         type: string
                         description: 'The name of the user'
@@ -583,7 +580,7 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '#components/schemas/FailMessage'
+                    $ref: '#/components/schemas/FailMessage'
                   message:
                     type: string
                     description: A message indicating the reason for the failure
@@ -849,7 +846,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - $ref: '#components/parameters/EmailParam'
+        - $ref: '#/components/parameters/EmailParam'
       responses:
         '200':
           description: User restored successfully
@@ -859,7 +856,7 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '#components/schemas/SuccessMessage'
+                    $ref: '#/components/schemas/SuccessMessage'
                   message:
                     type: string
                     description: A message indicating the successful restoration of the user
@@ -883,7 +880,7 @@ paths:
       description: Sends a restore code to the specified email address for a banned user (Users can restore their own accounts, which have not been deleted by the admin).
       operationId: userRestoreCode
       parameters:
-        - $ref: '#components/parameters/EmailParam'
+        - $ref: '#/components/parameters/EmailParam'
       responses:
         '200':
           description: Restore code sent successfully
@@ -893,7 +890,7 @@ paths:
                 type: object
                 properties:
                   status:
-                    $ref: '#components/schemas/SuccessMessage'
+                    $ref: '#/components/schemas/SuccessMessage'
                   message:
                     type: string
                     description: A message indicating the successful sending of the restore code
@@ -1162,17 +1159,347 @@ paths:
                     description: A message indicating the success of the operation
                     example: 'Sign out everywhere successfully.'
                   modifiedCount:
-                    type: integer
-                    description: The number of documents modified in the operation
-                    example: 1
+                    $ref: '#/components/schemas/ModifiedCount'
                   matchedCount:
-                    type: integer
-                    description: The number of documents matched in the operation
-                    example: 1
+                    $ref: '#/components/schemas/MatchedCount'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '403':
           $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions:
+    get:
+      tags:
+        - Sessions
+      summary: Get all sessions - Admin
+      description: |
+        Retrieve information about all sessions
+
+        **Only Admin can perform this action**
+      operationId: getAllSessions
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "user": "6644742e93d95a91a5937e48" }
+
+            Sorting: { "sort": "createdAt" }
+
+            Projecting: { "fields": "user" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successfully retrieved all session information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  sessions:
+                    type: array
+                    description: Array containing session information
+                    items:
+                      $ref: '#/components/schemas/Session'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    patch:
+      tags:
+        - Sessions
+      summary: Deactivate all sessions - Admin
+      description: |
+        Deactivate all sessions except for those associated with admin users
+
+        **Only Admin can perform this action**
+      operationId: deactivateAllSessions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Sessions successfully deactivated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  modifiedCount:
+                    $ref: '#/components/schemas/ModifiedCount'
+                  matchedCount:
+                    $ref: '#/components/schemas/MatchedCount'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Sessions
+      summary: Delete all sessions - Admin
+      description: |
+        Delete all sessions except for those associated with admin users
+
+        **Only Admin can perform this action**
+      operationId: deleteAllSessions
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Sessions successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/{userID}/sessions:
+    get:
+      tags:
+        - Sessions
+      summary: Get user sessions - Admin
+      description: |
+        Retrieve information about sessions associated with a specific user
+
+        **Only Admin can perform this action**
+      operationId: getUserSessions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIDParam'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "user": "6644742e93d95a91a5937e48" }
+
+            Sorting: { "sort": "createdAt" }
+
+            Projecting: { "fields": "user" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successfully retrieved user session information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  sessions:
+                    type: array
+                    description: Array containing session information
+                    items:
+                      $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    patch:
+      tags:
+        - Sessions
+      summary: Deactivate user sessions - Admin
+      description: |
+        Deactivate all sessions associated with a specific user
+
+        **Only Admin can perform this action**
+      operationId: deactivateUserSesssions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIDParam'
+      responses:
+        '200':
+          description: Sessions successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  modifiedCount:
+                    $ref: '#/components/schemas/ModifiedCount'
+                  matchedCount:
+                    $ref: '#/components/schemas/MatchedCount'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Sessions
+      summary: Delete all sessions for a user - Admin
+      description: |
+        Deletes all sessions for a specific user
+
+        **Only Admin can perform this action**
+      operationId: deleteUserSesssions
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIDParam'
+      responses:
+        '204':
+          description: Sessions successfully deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/sessions/{sessionID}:
+    get:
+      tags:
+        - Sessions
+      summary: Get session - Admin
+      description: |
+        Retrieves details of a specific session
+
+        **Only Admin can perform this action**
+      operationId: getSession
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SessionIDParam'
+        - $ref: '#/components/parameters/ProjectQuery'
+      responses:
+        '200':
+          description: Session details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    patch:
+      tags:
+        - Sessions
+      summary: Deactivate session - Admin
+      description: |
+        Deactivates a specific session, making it invalid
+
+        **Only Admin can perform this action**
+      operationId: deactivateSession
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SessionIDParam'
+      responses:
+        '200':
+          description: Session deactivated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  session:
+                    $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Sessions
+      summary: Delete session - Admin
+      description: |
+        Deletes a specific session
+
+        **Only Admin can perform this action**
+      operationId: deleteSession
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/SessionIDParam'
+      responses:
+        '204':
+          description: Session deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ServerError'
 
@@ -1277,9 +1604,9 @@ paths:
       description: Returns detailed information about a specific product by its ID.
       operationId: getProduct
       parameters:
+        - $ref: '#/components/parameters/ProductIDParam'
         - $ref: '#/components/parameters/LanguageQuery'
         - $ref: '#/components/parameters/ProjectQuery'
-        - $ref: '#/components/parameters/ProductIDParam'
       responses:
         '200':
           description: Successful response with product details
@@ -1525,14 +1852,39 @@ components:
       description: The number of entities returned.
       example: 1
 
+    ID:
+      type: string
+      format: MongoID
+      description: The unique identifier for the entity.
+      example: '6644461874a0a872f25dbc1c'
+
+    CreatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the entity was created.
+      example: 2024-05-10T14:35:35.535Z
+
+    UpdatedAt:
+      type: string
+      format: date-time
+      description: The date and time when the entity was last updated.
+      example: 2024-05-10T14:35:35.535Z
+
+    ModifiedCount:
+      type: integer
+      description: The number of documents modified in the operation
+      example: 1
+
+    MatchedCount:
+      type: integer
+      description: The number of documents matched in the operation
+      example: 1
+
     Product:
       type: object
       properties:
         _id:
-          type: string
-          format: MongoID
-          description: The unique identifier for the product.
-          example: 663e30b7947d905b5b60311b
+          $ref: '#/components/schemas/ID'
         name:
           type: string
           description: The name of the product.
@@ -1702,24 +2054,15 @@ components:
             type: string
             example: Zinc Alloy Masks
         createdAt:
-          type: string
-          format: date-time
-          description: The date and time when the product was created.
-          example: 2024-05-10T14:35:35.535Z
+          $ref: '#/components/schemas/CreatedAt'
         updatedAt:
-          type: string
-          format: date-time
-          description: The date and time when the product was last updated.
-          example: 2024-05-10T14:35:35.535Z
+          $ref: '#/components/schemas/UpdatedAt'
 
     User:
       type: object
       properties:
         _id:
-          type: string
-          format: MongoID
-          description: 'The unique identifier for the user'
-          example: '6644461874a0a872f25dbc1c'
+          $ref: '#/components/schemas/ID'
         name:
           type: string
           description: 'The name of the user'
@@ -1739,15 +2082,29 @@ components:
           description: 'The role assigned to the user'
           example: 'user'
         createdAt:
-          type: string
-          format: date-time
-          description: 'The timestamp when the user account was created'
-          example: '2024-05-15T05:12:46.943Z'
+          $ref: '#/components/schemas/CreatedAt'
         updatedAt:
+          $ref: '#/components/schemas/UpdatedAt'
+
+    Session:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ID'
+        user:
+          $ref: '#/components/schemas/ID'
+        valid:
+          type: boolean
+          description: Indicates if the session is valid
+          example: true
+        userAgent:
           type: string
-          format: date-time
-          description: 'The timestamp when the user account was last updated'
-          example: '2024-05-15T05:12:47.286Z'
+          description: User agent string of the client
+          example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        updatedAt:
+          $ref: '#/components/schemas/UpdatedAt'
 
     Email:
       type: string
@@ -1886,6 +2243,22 @@ components:
         type: string
       description: The email address of the user.
       example: 'tester@gmail.com'
+
+    UserIDParam:
+      in: path
+      name: userID
+      required: true
+      description: The ID of the user whose entities to retrieve
+      schema:
+        type: string
+
+    SessionIDParam:
+      in: path
+      name: sessionID
+      required: true
+      description: The ID of the session to retrieve
+      schema:
+        type: string
 
   responses:
     BadRequest:

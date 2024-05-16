@@ -2,9 +2,6 @@ import { TypeOf, object, string } from 'zod';
 
 import { PasswordType, Email } from './user.schema';
 
-const SessionID = {
-  sessionID: string({ required_error: `Session's ID is required!` }),
-};
 const OptionalUserID = { userID: string().optional() };
 
 const paramsOptionalUserID = { params: object({ ...OptionalUserID }) };
@@ -22,7 +19,7 @@ export const getAllSessionsSchema = object({
 });
 
 export const getSessionSchema = object({
-  params: object({ ...SessionID, ...OptionalUserID }),
+  params: object({ sessionID: string() }),
 });
 
 export type SigninUserInput = TypeOf<typeof signinUserSchema>;

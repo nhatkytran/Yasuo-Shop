@@ -226,26 +226,21 @@ interface GetSessionOptions extends QueryOptions {
   fields?: string | string[];
 }
 
-// Get a specific session by sessionID or sessionID with userID
+// Get a specific session by sessionID
 export const getSession = catchAsync(
   async (
     req: Request<GetSessionInput['params'], {}, {}, GetSessionOptions>,
     res: Response
   ) => {
-    const { sessionID, userID } = req.params;
+    const { sessionID } = req.params;
     const queryOptions = { ...req.query };
 
-    if (env.dev || env.test) console.log(sessionID, userID, queryOptions);
+    if (env.dev) console.log(sessionID, queryOptions);
 
-    let query: object = { _id: sessionID };
-
-    if (userID) {
-      const user = await findUser({ query: { _id: userID } });
-
-      query = { ...query, user: user._id };
-    }
-
-    const session = await findSession({ query, queryOptions });
+    const session = await findSession({
+      query: { _id: sessionID },
+      queryOptions,
+    });
 
     sendSuccess(res, { numResults: 1, session });
   }
@@ -255,9 +250,11 @@ export const getSession = catchAsync(
 const ddAllSessionsFilter = async ({
   adminUser,
   targetUserID,
+  filterOptions = {},
 }: {
   adminUser: UserDocument;
   targetUserID?: string;
+  filterOptions?: { [key: string]: any };
 }) => {
   let filter: object = { user: { $ne: adminUser._id } };
 
@@ -266,11 +263,11 @@ const ddAllSessionsFilter = async ({
     filter = { user: targetUser._id };
   }
 
-  return filter;
+  return { ...filter, ...filterOptions };
 };
 
 // Deactivate all sessions except for admin
-// Deactivate all sessions for one user (also for admin)
+// Deactivate all sessions for one user
 export const deactivateAllSessions = catchAsync(
   async (req: Request<GetAllSessionsInput['params']>, res: Response) => {
     const { user } = res.locals; // admin user
@@ -280,6 +277,7 @@ export const deactivateAllSessions = catchAsync(
       filter: await ddAllSessionsFilter({
         adminUser: user,
         targetUserID: userID,
+        filterOptions: { valid: true },
       }),
       update: { valid: false },
     });
@@ -306,27 +304,31 @@ export const deleteAllSessions = catchAsync(
   }
 );
 
-// Only uses sessionID
+// Deactivate a specific session by sessionID
 export const deactivateSession = catchAsync(
   async (req: Request<GetSessionInput['params']>, res: Response) => {
     const { sessionID } = req.params;
 
-    const session = await findAndUpdateSession({
-      sessionID,
+    const session = await findSession({ query: { _id: sessionID } });
+
+    const updatedSession = await findAndUpdateSession({
+      sessionID: session._id,
       update: { valid: false },
       options: { new: true, runValidators: true },
     });
 
-    sendSuccess(res, { numResults: session ? 1 : 0, session });
+    sendSuccess(res, { numResults: 1, session: updatedSession });
   }
 );
 
-// Only uses sessionID
+// Delete a specific session by sessionID
 export const deleteSession = catchAsync(
   async (req: Request<GetSessionInput['params']>, res: Response) => {
     const { sessionID } = req.params;
 
-    await findAndDeleteSession({ sessionID });
+    const session = await findSession({ query: { _id: sessionID } });
+
+    await findAndDeleteSession({ sessionID: session._id });
 
     sendSuccess(res, { statusCode: 204 });
   }
