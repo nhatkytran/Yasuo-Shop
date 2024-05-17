@@ -38,6 +38,9 @@ tags:
   - name: Products
     description: League of Legends merchandise
 
+  - name: Purchases
+    description: League of Legends merchandise
+
 paths:
   # Information ##########
 
@@ -1825,6 +1828,544 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  # Purchases ##########
+
+  /api/v1/purchases/checkout-session:
+    post:
+      tags:
+        - Purchases
+      summary: Create a checkout session for Stripe payment
+      description: This endpoint creates a checkout session using Stripe for the specified purchase.
+      operationId: createCheckoutSession
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  description: List of products to be purchased
+                  items:
+                    type: object
+                    properties:
+                      productID:
+                        $ref: '#/components/schemas/ID'
+                      quantity:
+                        type: integer
+                        description: The quantity of the product to purchase
+                        example: 1
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  session:
+                    type: object
+                    description: Stripe checkout session details
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /webhook-checkout:
+    post:
+      tags:
+        - Purchases
+      summary: Handle Stripe webhook events - Stripe
+      description: This endpoint handles Stripe webhook events related to checkout sessions. It processes the event data sent by Stripe to perform actions such as updating purchase statuses.
+      operationId: handleStripeWebhook
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session:
+                    type: object
+                  error:
+                    example: null
+
+  /api/v1/purchases/user-purchases:
+    get:
+      tags:
+        - Purchases
+      summary: Get all purchases of the authenticated user
+      description: |
+        Returns a list of all purchases made by the authenticated user.
+
+        **Only Users can perform this action**
+      operationId: getUserPurchases
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "price": 20 }
+
+            Sorting: { "sort": "price" }
+
+            Projecting: { "fields": "price" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchases:
+                    type: 'array'
+                    items:
+                      $ref: '#/components/schemas/Purchase'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/purchases:
+    get:
+      tags:
+        - Purchases
+      summary: Get a list of all purchases - Admin
+      description: |
+        Returns a list of all purchases made by users.
+
+        **Only Admin can perform this action**
+      operationId: getAllPurchases
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "price": 20 }
+
+            Sorting: { "sort": "price" }
+
+            Projecting: { "fields": "price" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchases:
+                    type: 'array'
+                    items:
+                      $ref: '#/components/schemas/Purchase'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Purchases
+      summary: Create a new purchase - Admin
+      description: |
+        This endpoint creates a new purchase record with the provided details.
+
+        **Only Admin can perform this action**
+      operationId: createPurchase
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/ID'
+                product:
+                  $ref: '#/components/schemas/ID'
+                price:
+                  type: number
+                  format: float
+                  description: The price of a single unit of the purchased item
+                  example: 1111
+                quantity:
+                  type: integer
+                  description: The quantity of the purchased item
+                  example: 11
+                paid:
+                  type: boolean
+                  description: Whether the purchase has been paid for
+                  example: true
+                shipped:
+                  type: boolean
+                  description: Whether the purchase has been shipped
+                  example: true
+                createdAt:
+                  $ref: '#/components/schemas/CreatedAt'
+                updatedAt:
+                  $ref: '#/components/schemas/UpdatedAt'
+      responses:
+        '201':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchase:
+                    type: object
+                    properties:
+                      _id:
+                        $ref: '#/components/schemas/ID'
+                      user:
+                        $ref: '#/components/schemas/ID'
+                      product:
+                        $ref: '#/components/schemas/ID'
+                      price:
+                        type: number
+                        format: float
+                        description: The price of a single unit of the purchased item
+                        example: 1111
+                      quantity:
+                        type: integer
+                        description: The quantity of the purchased item
+                        example: 11
+                      paid:
+                        type: boolean
+                        description: Whether the purchase has been paid for
+                        example: true
+                      shipped:
+                        type: boolean
+                        description: Whether the purchase has been shipped
+                        example: true
+                      createdAt:
+                        $ref: '#/components/schemas/CreatedAt'
+                      updatedAt:
+                        $ref: '#/components/schemas/UpdatedAt'
+                      totalPrice:
+                        type: number
+                        format: float
+                        description: The total price for the purchase (price * quantity)
+                        example: 40
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/users/{userID}/purchases:
+    get:
+      tags:
+        - Purchases
+      summary: Get purchases for a specific user - Admin
+      description: |
+        Returns a list of all purchases made by the specified user.
+
+        **Only Admin can perform this action**
+      operationId: getUserPurchasesByID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "price": 20 }
+
+            Sorting: { "sort": "price" }
+
+            Projecting: { "fields": "price" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchases:
+                    type: 'array'
+                    items:
+                      $ref: '#/components/schemas/Purchase'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/products/{productID}/purchases:
+    get:
+      tags:
+        - Purchases
+      summary: Get purchases for a specific product - Admin
+      description: |
+        Returns a list of all purchases made by the specified product.
+
+        **Only Admin can perform this action**
+      operationId: getProductPurchasesByID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ProductIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "price": 20 }
+
+            Sorting: { "sort": "price" }
+
+            Projecting: { "fields": "price" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchases:
+                    type: 'array'
+                    items:
+                      $ref: '#/components/schemas/Purchase'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/purchases/{purchaseID}:
+    get:
+      tags:
+        - Purchases
+      summary: Get details of a specific purchase - Admin
+      description: |
+        Returns the details of a specific purchase identified by its ID.
+
+        **Only Admin can perform this action**
+      operationId: getPurchase
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PurchaseIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+        - $ref: '#/components/parameters/ProjectQuery'
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchase:
+                    $ref: '#/components/schemas/Purchase'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    patch:
+      tags:
+        - Purchases
+      summary: Update details of a specific purchase - Admin
+      description: |
+        This endpoint updates details of the purchase identified by the purchaseID parameter.
+
+        **Only Admin can perform this action**
+      operationId: updatePurchase
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PurchaseIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+      requestBody:
+        description: Admin can update any field of the purchase
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+                  format: float
+                  description: The price of a single unit of the purchased item
+                  example: 1111
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  purchase:
+                    $ref: '#/components/schemas/Purchase'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Purchases
+      summary: Delete a specific purchase - Admin
+      description: |
+        Deletes the purchase record with the specified ID.
+
+        **Only Admin can perform this action**
+      operationId: deletePurchase
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PurchaseIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+      responses:
+        '204':
+          description: Successfully deleted the purchase
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
 components:
   schemas:
     SuccessMessage:
@@ -2106,6 +2647,81 @@ components:
         updatedAt:
           $ref: '#/components/schemas/UpdatedAt'
 
+    Purchase:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ID'
+        user:
+          type: object
+          description: Information about the user who made the purchase
+          properties:
+            _id:
+              $ref: '#/components/schemas/ID'
+              name:
+                type: string
+                description: The name of the user
+                example: Tester
+              photo:
+                type: string
+                description: URL to the user's photo
+                example: /img/users/default.png
+        price:
+          type: number
+          format: float
+          description: The price of a single unit of the purchased item
+          example: 20
+        quantity:
+          type: integer
+          description: The quantity of the purchased item
+          example: 2
+        paid:
+          type: boolean
+          description: Whether the purchase has been paid for
+          example: true
+        shipped:
+          type: boolean
+          description: Whether the purchase has been shipped
+          example: false
+        product:
+          type: object
+          nullable: true
+          description: The product details
+          properties:
+            _id:
+              $ref: '#/components/schemas/ID'
+            name:
+              type: string
+              description: The name of the product
+              example: Jimei Palace Aatrox 1/6 Scale Statue
+            price:
+              type: object
+              description: Price details of the product
+              properties:
+                default:
+                  type: number
+                  format: float
+                  description: The default price of the product
+                  example: 489.99
+                saleAmount:
+                  type: number
+                  format: float
+                  description: The sale amount deducted from the default price
+                  example: 0
+                currency:
+                  type: string
+                  description: The currency of the price
+                  example: USD
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        updatedAt:
+          $ref: '#/components/schemas/UpdatedAt'
+        totalPrice:
+          type: number
+          format: float
+          description: The total price for the purchase (price * quantity)
+          example: 40
+
     Email:
       type: string
       description: 'The email address of the user'
@@ -2257,6 +2873,14 @@ components:
       name: sessionID
       required: true
       description: The ID of the session to retrieve
+      schema:
+        type: string
+
+    PurchaseIDParam:
+      in: path
+      name: purchaseID
+      required: true
+      description: The ID of the purchase to retrieve
       schema:
         type: string
 

@@ -93,7 +93,7 @@ export const checkGetAllPurchases = catchAsync(
 
 export const getAllPurchases = catchAsync(
   async (req: Request, res: Response) => {
-    if (env.dev || env.test) console.log('req.query ->', req.query);
+    if (env.dev) console.log('req.query ->', req.query);
 
     const language = res.locals.language as string;
 
@@ -175,29 +175,33 @@ export const updatePurchase = catchAsync(
   ) => {
     const language = res.locals.language as string;
 
-    const purchase = await findAndUpdatePurchase({
+    const purchase = await findPurchaseByID({
       language,
       entityID: req.params.purchaseID,
+    });
+
+    const updatedPurchase = await findAndUpdatePurchase({
+      language,
+      entityID: purchase._id,
       update: req.body,
       options: { new: true, runValidators: true },
     });
 
-    sendSuccess(res, { language, numResults: Number(!!purchase), purchase });
+    sendSuccess(res, { language, numResults: 1, purchase: updatePurchase });
   }
 );
 
 // CRUD - Delete //////////
-
-export const deleteAllPurchases = catchAsync(
-  async (req: Request, res: Response) => {}
-);
-
 export const deletePurchase = catchAsync(
   async (req: Request<GetPurchaseInput['params']>, res: Response) => {
     const language = res.locals.language as string;
-    const { purchaseID } = req.params;
 
-    await findAndDeletePurchase({ language, entityID: purchaseID });
+    const purchase = await findPurchaseByID({
+      language,
+      entityID: req.params.purchaseID,
+    });
+
+    await findAndDeletePurchase({ language, entityID: purchase._id });
 
     sendSuccess(res, { statusCode: 204 });
   }

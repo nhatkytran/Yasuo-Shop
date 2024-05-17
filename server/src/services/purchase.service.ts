@@ -103,7 +103,7 @@ export const createCheckoutSession = async ({
         quantity: 1,
         price_data: {
           currency,
-          unit_amount: totalPrice * 100,
+          unit_amount: Math.round(totalPrice * 100),
           product_data: {
             name: 'Yasuo API - Yasuo Shop Items',
             description:

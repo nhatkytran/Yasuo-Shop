@@ -1,6 +1,7 @@
 import express from 'express';
 
 import validate from '../middleware/validateResource';
+
 import {
   getAllSessionsSchema,
   getSessionSchema,
