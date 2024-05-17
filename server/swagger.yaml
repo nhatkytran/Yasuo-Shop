@@ -36,10 +36,13 @@ tags:
     description: API for sessions management (Sign-in, Sign-out, OAuth,...)
 
   - name: Products
-    description: League of Legends merchandise
+    description: API for products management
 
   - name: Purchases
-    description: League of Legends merchandise
+    description: API for purchases management
+
+  - name: Reviews
+    description: API for reviews management
 
 paths:
   # Information ##########
@@ -2366,6 +2369,270 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  # Reviews ##########
+
+  /api/v1/products/{productID}/reviews/product-reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Retrieve reviews for a specific product
+      description: |
+        Returns a list of reviews for the specified product ID.
+      operationId: getProductReviews
+      parameters:
+        - $ref: '#/components/parameters/ProductIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "rating": 5 }
+
+            Sorting: { "sort": "rating" }
+
+            Projecting: { "fields": "rating" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  reviews:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Retrieve reviews
+      description: |
+        Returns a list of reviews. Admin users can retrieve all reviews, while regular users can only retrieve their own reviews.
+      operationId: getAllReviews
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+        - in: query
+          name: additions
+          description: |
+            Advanced filtering, sorting, projecting, pagination.
+
+            Filtering: { "rating": 5 }
+
+            Sorting: { "sort": "rating" }
+
+            Projecting: { "fields": "rating" }
+
+            Pagination: { "page": 1, "limit": 3 }
+          required: false
+          schema:
+            type: object
+            additionalProperties: true
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  reviews:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Reviews
+      summary: Create a new review
+      description: |
+        Creates a new review for a product. Only users who have already bought the product can review it, and only one review per user per product is allowed.
+      operationId: createReview
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LanguageQuery'
+      requestBody:
+        description: Review details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  $ref: '#/components/schemas/ID'
+                review:
+                  type: string
+                  example: 'Amazing'
+                rating:
+                  type: integer
+                  example: 5
+      responses:
+        '201':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  review:
+                    type: object
+                    properties:
+                      _id:
+                        $ref: '#/components/schemas/ID'
+                      product:
+                        $ref: '#/components/schemas/ID'
+                      user:
+                        $ref: '#/components/schemas/ID'
+                      review:
+                        type: string
+                        example: 'Amazing'
+                      rating:
+                        type: integer
+                        example: 5
+                      createdAt:
+                        $ref: '#/components/schemas/CreatedAt'
+                      updatedAt:
+                        $ref: '#/components/schemas/UpdatedAt'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/v1/reviews/{reviewID}:
+    patch:
+      tags:
+        - Reviews
+      summary: Update a review
+      description: |
+        Updates an existing review. Only the user who created the review can update it.
+      operationId: updateReview
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ReviewIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+      requestBody:
+        description: Review details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                review:
+                  type: string
+                  example: 'Amazing'
+                rating:
+                  type: integer
+                  example: 5
+      responses:
+        '200':
+          description: Successful response containing the list of purchases
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/SuccessMessage'
+                  language:
+                    $ref: '#/components/schemas/Language'
+                  numResults:
+                    $ref: '#/components/schemas/NumResults'
+                  review:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Reviews
+      summary: Delete a review
+      description: |
+        Deletes an existing review. Only the user who created the review or an admin can delete it.
+      operationId: deleteReview
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ReviewIDParam'
+        - $ref: '#/components/parameters/LanguageQuery'
+      responses:
+        '204':
+          description: Review deleted successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
 components:
   schemas:
     SuccessMessage:
@@ -2722,6 +2989,41 @@ components:
           description: The total price for the purchase (price * quantity)
           example: 40
 
+    Review:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ID'
+          product:
+            type: object
+            properties:
+              _id:
+                $ref: '#/components/schemas/ID'
+              name:
+                type: string
+                example: 'Jimei Palace Aatrox 1/6 Scale Statue'
+        user:
+          type: object
+          properties:
+            _id:
+              $ref: '#/components/schemas/ID'
+            name:
+              type: string
+              example: 'Tester'
+            photo:
+              type: string
+              example: '/img/users/default.png'
+        review:
+          type: string
+          example: 'Amazing'
+        rating:
+          type: integer
+          example: 5
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        updatedAt:
+          $ref: '#/components/schemas/UpdatedAt'
+
     Email:
       type: string
       description: 'The email address of the user'
@@ -2847,6 +3149,14 @@ components:
       in: path
       name: productID
       description: The unique identifier of the product.
+      required: true
+      schema:
+        type: string
+
+    ReviewIDParam:
+      in: path
+      name: reviewID
+      description: The unique identifier of the review.
       required: true
       schema:
         type: string

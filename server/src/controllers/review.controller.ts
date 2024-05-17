@@ -26,7 +26,7 @@ import {
 
 export const getProductReviews = catchAsync(
   async (req: Request<GetProductReviewsInput['params']>, res: Response) => {
-    if (env.dev || env.test) console.log('req.query ->', req.query);
+    if (env.dev) console.log('req.query ->', req.query);
 
     const language = res.locals.language as string;
     const { productID } = req.params;
@@ -57,7 +57,7 @@ export const checkGetAllReviews = catchAsync(
 );
 
 export const getAllReviews = catchAsync(async (req: Request, res: Response) => {
-  if (env.dev || env.test) console.log('req.query ->', req.query);
+  if (env.dev) console.log('req.query ->', req.query);
 
   const language = res.locals.language as string;
 
@@ -119,6 +119,7 @@ export const updateReview = catchAsync(
     const language = res.locals.language as string;
     const { user } = res.locals;
     const { reviewID } = req.params;
+    const { review: reviewField, rating } = req.body;
 
     const review = await findReview({
       language,
@@ -126,10 +127,15 @@ export const updateReview = catchAsync(
       reviewID,
     });
 
+    const update: { review?: string; rating?: number } = {};
+
+    if (reviewField) update.review = reviewField;
+    if (rating) update.rating = rating;
+
     const newReview = await findAndUpdateReview({
       language,
       entityID: review._id.toString(),
-      update: req.body,
+      update,
       options: { new: true, runValidators: true },
     });
 
