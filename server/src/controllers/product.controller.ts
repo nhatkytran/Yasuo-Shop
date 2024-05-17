@@ -82,7 +82,7 @@ export const getProduct = catchAsync(
     const { productID } = req.params;
     const options = { ...req.query };
 
-    if (env.dev || env.test) console.log(productID, options);
+    if (env.dev) console.log(productID, options);
 
     const product = await findProductByID({
       language,
@@ -116,14 +116,19 @@ export const updateProduct = catchAsync(
   ) => {
     const language: string = res.locals.language;
 
-    const product = await findAndUpdateProduct({
+    const product = await findProductByID({
       language,
       entityID: req.params.productID,
+    });
+
+    const updatedProduct = await findAndUpdateProduct({
+      language,
+      entityID: product._id,
       update: req.body,
       options: { new: true, runValidators: true },
     });
 
-    sendSuccess(res, { language, numResults: Number(!!product), product });
+    sendSuccess(res, { language, numResults: 1, product: updatedProduct });
   }
 );
 
@@ -132,9 +137,13 @@ export const updateProduct = catchAsync(
 export const deleteProduct = catchAsync(
   async (req: Request<DeleteProductInput['params']>, res: Response) => {
     const language: string = res.locals.language;
-    const productID: string = req.params.productID;
 
-    await findAndDeleteProduct({ language, entityID: productID });
+    const product = await findProductByID({
+      language,
+      entityID: req.params.productID,
+    });
+
+    await findAndDeleteProduct({ language, entityID: product._id });
 
     sendSuccess(res, { statusCode: 204 });
   }
