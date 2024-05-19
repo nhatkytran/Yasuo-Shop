@@ -1,7 +1,7 @@
 {
   "name": "yasuo-api",
   "version": "1.0.0",
-  "description": "This API provides programmatic access to a vast collection of merchandise related to the popular game League of Legends (LoL).  Integrate this API into your application to offer users a convenient way to browse, search, and potentially purchase officially licensed LoL merchandise.",
+  "description": "This API provides programmatic access to a vast collection of merchandise related to the popular game League of Legends. Integrate this API into your application to offer users a convenient way to browse, search, and potentially purchase officially licensed League of Legends merchandise.",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
