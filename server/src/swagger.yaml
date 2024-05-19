@@ -19,8 +19,9 @@ externalDocs:
   url: https://github.com/nhatkytran/Yasuo-Shop
 
 servers:
-  - url: http://127.0.0.1:1337
+  - url: https://yasuo-api.onrender.com/
   - url: https://yasuo-api-serverless.netlify.app
+  - url: http://127.0.0.1:1337
 
 tags:
   - name: Information
