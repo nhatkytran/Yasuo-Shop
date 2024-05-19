@@ -14,6 +14,8 @@ Server: https://yasuo-api.onrender.com/
 
 Documentation: https://yasuo-api.onrender.com/api-docs
 
+**Run this app on local environment:**
+
 Install all the packages: yarn install
 
 Run this app NODE_ENV=development: yarn dev
