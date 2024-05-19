@@ -1,0 +1,62 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Yasuo API - Yasuo Shop
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE: ${{ secrets.DATABASE }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_COLLECTION_NAME: ${{ secrets.DATABASE_COLLECTION_NAME }}
+      EMAIL_AUTHOR: ${{ secrets.EMAIL_AUTHOR }}
+      MAILTRAP_HOST: ${{ secrets.MAILTRAP_HOST }}
+      MAILTRAP_PORT: ${{ secrets.MAILTRAP_PORT }}
+      MAILTRAP_USERNAME: ${{ secrets.MAILTRAP_USERNAME }}
+      MAILTRAP_PASSWORD: ${{ secrets.MAILTRAP_PASSWORD }}
+      BREVO_HOST: ${{ secrets.BREVO_HOST }}
+      BREVO_PORT: ${{ secrets.BREVO_PORT }}
+      BREVO_KEY_NAME: ${{ secrets.BREVO_KEY_NAME }}
+      BREVO_KEY_VALUE: ${{ secrets.BREVO_KEY_VALUE }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+      GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+      GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+      PRIVATE_KEY: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Backend uses Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+          cache-dependency-path: 'server/yarn.lock'
+
+      - name: Install dependencies
+        run: |
+          cd server
+          yarn install
+
+      - name: Run tests
+        run: |
+          cd server
+          nohub yarn test &
