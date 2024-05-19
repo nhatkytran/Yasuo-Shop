@@ -41,7 +41,7 @@ export const signup = catchAsync(
   async (req: Request<{}, {}, SignupUserInput['body']>, res: Response) => {
     const { user, token } = await createUser({ input: req.body });
 
-    await sendCreateUserEmail({ user, token });
+    if (!env.test) await sendCreateUserEmail({ user, token });
 
     if (env.dev) console.log(token);
 

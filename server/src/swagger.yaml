@@ -5,6 +5,12 @@ info:
     This API provides programmatic access to a vast collection of merchandise related to the popular game League of Legends.
     Integrate this API into your application to offer users a convenient way to browse, search, and potentially purchase officially licensed League of Legends merchandise.
 
+    **Back-end**: TypeScript, NodeJS (ExpressJS), MongoDB (Mongoose), Zod, AWS S3, Stripe Payment, EJS, Acess Token and Refresh Token (Public Key and Private Key), Google OAuth 2.0,...
+
+    **Testing and Performance**: Jest, Supertest, Premetheus
+
+    **Serverless**: Netlify Functions, Airtable, TypeScript
+
   contact:
     email: nhockkutean2@gmail.com
   version: 1.0.0

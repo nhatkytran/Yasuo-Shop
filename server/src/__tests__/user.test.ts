@@ -26,7 +26,11 @@ describe('user', () => {
           .post('/api/v1/users/signup')
           .send(userInput);
 
+        console.log(body);
+        console.log(statusCode);
+
         expect(statusCode).toBe(201);
+
         expect(body).toEqual({
           status: 'success',
           message:
@@ -56,7 +60,7 @@ describe('user', () => {
     });
 
     describe('given the user service throws', () => {
-      it('should return a 409 error', async () => {
+      it('should return a 500', async () => {
         const createUserServiceMock = jest
           .spyOn(UserService, 'createUser')
           .mockRejectedValueOnce('Something went wrong!');

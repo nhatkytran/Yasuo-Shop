@@ -14,6 +14,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 import config from 'config';
+import swagger from './connections/swagger';
 import routes from './routes/routes';
 import trackLanguage from './middleware/trackLanguage';
 import AppError from './utils/appError';
@@ -26,6 +27,9 @@ import { restResponseTimeHistogram } from './connections/prometheus';
 
 const init = () => {
   const app = express();
+
+  // Documentation
+  swagger(app);
 
   // GET /route 304 9.789 ms - - -> Route information
   if (env.dev) app.use(morgan('dev'));

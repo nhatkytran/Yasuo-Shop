@@ -9,6 +9,12 @@ import config from 'config';
 
 import ProductEnUS from '../src/models/products/productEnUs.model';
 import ProductFR from '../src/models/products/productFr.model';
+import PurchaseEnUS from '../src/models/purchases/purchaseEnUS.model';
+import PurchaseFR from '../src/models/purchases/purchaseFr.model';
+import ReviewEnUS from '../src/models/reviews/reviewEnUS.model';
+import ReviewFR from '../src/models/reviews/reviewFr.model';
+import Session from '../src/models/sessions/session.model';
+import User from '../src/models/users/user.model';
 
 const getData = (fileName: string) =>
   JSON.parse(fs.readFileSync(path.join(__dirname, fileName), 'utf-8'));
@@ -73,7 +79,16 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     // products
-    await Promise.all([ProductEnUS.deleteMany(), ProductFR.deleteMany()]);
+    await Promise.all([
+      ProductEnUS.deleteMany(),
+      ProductFR.deleteMany(),
+      PurchaseEnUS.deleteMany(),
+      PurchaseFR.deleteMany(),
+      ReviewEnUS.deleteMany(),
+      ReviewFR.deleteMany(),
+      Session.deleteMany(),
+      User.deleteMany(),
+    ]);
 
     console.log('Data delete - Successful!');
   } catch (error) {
