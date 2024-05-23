@@ -25,7 +25,7 @@ function Layout({ children, type }) {
 }
 
 Layout.propTypes = {
-  children: PropTypes.elementType,
+  children: PropTypes.element,
   type: PropTypes.oneOf([MAIN_LAYOUT, CATEGORY_LAYOUT, NONE_LAYOUT]),
 };
 
