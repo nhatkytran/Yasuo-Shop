@@ -1,4 +1,4 @@
-# Yasuo Shop
+# Yasuo Shop - UI
 
 # React + Vite
 

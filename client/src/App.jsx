@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import GlobalStyles from './styles/GlobalStyles';
-import Layout from './pages/Layout';
-import HomePage from './pages/HomePage';
-import PageNotFound from './pages/PageNotFound';
+import GlobalStyles from '~/styles/GlobalStyles';
+import Layout from '~/layouts';
+import { publicRoutes } from './routes';
+
+// Check language
 
 function App() {
   return (
@@ -12,13 +13,22 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-          <Route index element={<Navigate replace to="/en-us" />}></Route>
+          <Route index element={<Navigate replace to="/en-us" />} />
 
-          <Route path="/:language" element={<Layout />}>
-            <Route index element={<HomePage />}></Route>
-          </Route>
+          {publicRoutes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <Layout type={route.layout}>
+                  <route.component />
+                </Layout>
+              }
+            />
+          ))}
 
-          <Route path="*" element={<PageNotFound />} />
+          {/* Check language and error boundary */}
+          {/* Some thing went wrong page! -> Naviagte to page not found with different error message -> use none layout */}
         </Routes>
       </BrowserRouter>
     </>
