@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { flexCenter } from '~/styles/reuseStyles';
-import { px624 } from '~/styles/GlobalStyles';
+import { px1024, px624 } from '~/styles/GlobalStyles';
 
 function ButtonMain({ content, onClick }) {
   return (
@@ -41,6 +41,14 @@ const StyledButtonMain = styled.button`
     *::before {
       transform: none;
     }
+  }
+
+  @media only screen and (max-width: ${px1024}) {
+    margin-top: 1rem;
+  }
+
+  @media only screen and (max-width: ${px624}) {
+    margin-top: 0.6rem;
   }
 `;
 

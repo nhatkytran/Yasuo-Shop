@@ -34,9 +34,6 @@ function App() {
               />
             );
           })}
-
-          {/* Check language and error boundary */}
-          {/* Some thing went wrong page! -> Naviagte to page not found with different error message -> use none layout */}
         </Routes>
       </BrowserRouter>
     </>
