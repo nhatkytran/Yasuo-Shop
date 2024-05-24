@@ -9,17 +9,6 @@ const GlobalStyles = createGlobalStyle`
     --color-black: #000;
     --color-white: #fff;
 
-    --color-gray-50: #f9fafb;
-    --color-gray-100: #f3f4f6;
-    --color-gray-200: #e5e7eb;
-    --color-gray-300: #d1d5db;
-    --color-gray-400: #9ca3af;
-    --color-gray-500: #6b7280;
-    --color-gray-600: #4b5563;
-    --color-gray-700: #374151;
-    --color-gray-800: #1f2937;
-    --color-gray-900: #111827;
-
     --color-neutral-50: #fafafa;
     --color-neutral-100: #f5f5f5;
     --color-neutral-200: #e5e5e5;
@@ -55,17 +44,6 @@ const GlobalStyles = createGlobalStyle`
     &.dark-mode {
       --color-black: #fff;
       --color-white: #000;
-
-      --color-gray-50: #111827;
-      --color-gray-100: #1f2937;
-      --color-gray-200: #374151;
-      --color-gray-300: #4b5563;
-      --color-gray-400: #6b7280;
-      --color-gray-500: #9ca3af;
-      --color-gray-600: #d1d5db;
-      --color-gray-700: #e5e7eb;
-      --color-gray-800: #f3f4f6;
-      --color-gray-900: #f9fafb;
 
       --color-neutral-50: #171717;
       --color-neutral-100: #262626;
@@ -108,7 +86,7 @@ const GlobalStyles = createGlobalStyle`
     --font-riotsans-regular: RiotSans-Regular, monospace, sans-serif;
 
     --font-inter-bold: Inter-Bold, monospace, sans-serif;
-    --font-inter-regular: Inter-Regular, monospace, sans-serif;
+    --font-inter-medium: Inter-Medium, monospace, sans-serif;
     --font-inter-light: Inter-Light, monospace, sans-serif;
     
     --border-radius-tiny: 3px;
