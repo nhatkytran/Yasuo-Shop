@@ -6,8 +6,7 @@ import { flexCenter } from '~/styles/reuseStyles';
 import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
 import { ButtonMain } from '~/components';
 
-function ErrorFallback({ error }) {
-  //resetErrorBoundary
+function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <>
       <GlobalStyles />
@@ -18,7 +17,7 @@ function ErrorFallback({ error }) {
 
           <HeadingUI as="h2">Something went wrong!</HeadingUI>
 
-          <ButtonMain content="Go Home" />
+          <ButtonMain content="Go Home" onClick={resetErrorBoundary} />
         </ErrorContainerUI>
       </StyledErrorFallback>
     </>

@@ -1,5 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 
+export const px1024 = '64em';
+export const px624 = '39em';
+
 const GlobalStyles = createGlobalStyle`
   :root {
     &, &.light-mode {
@@ -73,6 +76,18 @@ const GlobalStyles = createGlobalStyle`
       --image-grayscale: 10%;
       --image-opacity: 90%;
     }
+
+    --px-1024: 64em;
+
+    --font-sono: Sono, monospace, sans-serif;
+    --font-poppins: Poppins, monospace, sans-serif;
+
+    --font-riotsans-bold: RiotSans-Bold, monospace, sans-serif;
+    --font-riotsans-regular: RiotSans-Regular, monospace, sans-serif;
+
+    --font-inter-bold: Inter-Bold, monospace, sans-serif;
+    --font-inter-regular: Inter-Regular, monospace, sans-serif;
+    --font-inter-light: Inter-Light, monospace, sans-serif;
     
     --border-radius-tiny: 3px;
     --border-radius-sm: 5px;
@@ -127,7 +142,7 @@ const GlobalStyles = createGlobalStyle`
 
   body {
     color: var(--color-grey-800);
-    font-family: Inter-Regular, monospace, sans-serif;
+    font-family: var(--font-inter-regular);
 
     transition: color 0.3s, background-color 0.3s;
     min-height: 100vh;
