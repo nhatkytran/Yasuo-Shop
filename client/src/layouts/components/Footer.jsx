@@ -1,13 +1,11 @@
 import styled from 'styled-components';
-
-import { FooterRibbon } from '~/features/footer';
+import { FooterMain, FooterRibbon } from '~/features/footer';
 
 function Footer() {
   return (
     <>
       <StyledFooter>
-        <div>Footer</div>
-
+        <FooterMain />
         <FooterRibbon />
       </StyledFooter>
     </>
@@ -17,7 +15,7 @@ function Footer() {
 const StyledFooter = styled.footer`
   background-color: var(--color-neutral-800);
   color: var(--color-neutral-50);
-  padding: 8rem 0 16rem;
+  padding: 7.6rem 0 17rem;
   position: relative;
 `;
 

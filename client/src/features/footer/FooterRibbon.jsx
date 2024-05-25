@@ -5,6 +5,7 @@ import { EN_US } from '~/config';
 import { flexCenter, flexBetween } from '~/styles/reuseStyles';
 import { copyrightContents, linkContents } from '~/dataUI/footer';
 import { px924 } from '~/styles/GlobalStyles';
+import { LinkFooterUI } from '~/ui';
 
 function FooterRibbon() {
   const { language } = useParams();
@@ -16,9 +17,12 @@ function FooterRibbon() {
         <ListUI>
           {linkContents[language].map((linkContent, index) => (
             <ItemUI key={index} $language={language}>
-              <LinkUI href={`/${language}${linkContents.links[index]}`}>
+              <LinkFooterUI
+                to={`/${language}${linkContents.links[index]}`}
+                $type="ribbon"
+              >
                 {linkContent}
-              </LinkUI>
+              </LinkFooterUI>
             </ItemUI>
           ))}
         </ListUI>
@@ -87,23 +91,6 @@ const ItemUI = styled.li`
 
   @media only screen and (max-width: ${px924}) {
     margin-top: 0.6rem;
-  }
-`;
-
-const LinkUI = styled.a`
-  &:link,
-  &:visited {
-    display: block;
-    color: var(--color-neutral-100);
-    font-family: var(--font-inter-medium);
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: 1px;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 `;
 

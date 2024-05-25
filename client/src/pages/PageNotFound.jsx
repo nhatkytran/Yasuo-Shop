@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { ButtonMain } from '~/components';
 import {
@@ -12,6 +12,7 @@ import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
 
 function PageNotFound() {
   const { language } = useParams();
+  const navigate = useNavigate();
 
   return (
     <StyledPageNotFound>
@@ -22,7 +23,7 @@ function PageNotFound() {
 
         <ButtonMain
           content={buttonContents[language]}
-          onClick={() => window.location.replace(`/${language}`)}
+          onClick={() => navigate(`/${language}`)}
         />
       </ErrorContainerUI>
 
