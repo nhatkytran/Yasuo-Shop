@@ -1,22 +1,28 @@
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { ButtonMain } from '~/components';
+import {
+  buttonContents,
+  errorHeadings,
+  errorMessages,
+} from '~/dataUI/pageNotFound';
 import { px1024, px624 } from '~/styles/GlobalStyles';
 import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
 
 function PageNotFound() {
+  const { language } = useParams();
+
   return (
     <StyledPageNotFound>
       <ErrorContainerUI>
-        <ErrorMessageUI>Error 404</ErrorMessageUI>
+        <ErrorMessageUI>{errorMessages[language]}</ErrorMessageUI>
 
-        <HeadingUI as="h2">
-          {"We can't find what you're looking for."}
-        </HeadingUI>
+        <HeadingUI as="h2">{errorHeadings[language]}</HeadingUI>
 
         <ButtonMain
-          content="Go Home"
-          onClick={() => window.location.replace('/')}
+          content={buttonContents[language]}
+          onClick={() => window.location.replace(`/${language}`)}
         />
       </ErrorContainerUI>
 

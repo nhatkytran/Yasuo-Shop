@@ -15,7 +15,7 @@ function FooterRibbon() {
         <CopyrightUI>{copyrightContents[language]}</CopyrightUI>
         <ListUI>
           {linkContents[language].map((linkContent, index) => (
-            <ItemUI key={index} language={language}>
+            <ItemUI key={index} $language={language}>
               <LinkUI href={`/${language}${linkContents.links[index]}`}>
                 {linkContent}
               </LinkUI>
@@ -78,7 +78,7 @@ const ItemUI = styled.li`
   padding: 0 1.6rem;
 
   &:not(:first-child) {
-    margin-left: ${props => `${props.language === EN_US ? 3 : 0}rem`};
+    margin-left: ${props => `${props.$language === EN_US ? 3 : 0}rem`};
 
     @media only screen and (max-width: ${px924}) {
       margin-left: 0rem;
