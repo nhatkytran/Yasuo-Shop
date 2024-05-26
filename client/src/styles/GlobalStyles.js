@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export const px1024 = '64em';
 export const px924 = '57.75em';
 export const px624 = '39em';
+export const px524 = '32.75em';
 
 const GlobalStyles = createGlobalStyle`
   :root {

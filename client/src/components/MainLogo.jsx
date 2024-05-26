@@ -83,8 +83,8 @@ const SvgUI = styled.svg`
 `;
 
 MainLogo.propTypes = {
-  isLink: PropTypes.bool,
-  type: PropTypes.oneOf(['main', 'footer']),
+  isLink: PropTypes.bool.isRequired,
+  type: PropTypes.oneOf(['main', 'footer']).isRequired,
 };
 
 export default MainLogo;

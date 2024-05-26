@@ -89,6 +89,9 @@ const ContentUI = styled.span`
   }
 `;
 
-ButtonMain.propTypes = { content: PropTypes.string, onClick: PropTypes.func };
+ButtonMain.propTypes = {
+  content: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default ButtonMain;

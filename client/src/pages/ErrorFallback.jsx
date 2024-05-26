@@ -31,8 +31,8 @@ const StyledErrorFallback = styled.div`
 `;
 
 ErrorFallback.propTypes = {
-  error: PropTypes.any,
-  resetErrorBoundary: PropTypes.func,
+  error: PropTypes.any.isRequired,
+  resetErrorBoundary: PropTypes.func.isRequired,
 };
 
 export default ErrorFallback;

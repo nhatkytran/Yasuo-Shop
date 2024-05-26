@@ -12,6 +12,6 @@ function CheckLanguage({ children }) {
   return children;
 }
 
-CheckLanguage.propTypes = { children: PropTypes.element };
+CheckLanguage.propTypes = { children: PropTypes.element.isRequired };
 
 export default CheckLanguage;

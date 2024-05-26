@@ -25,8 +25,8 @@ function Layout({ children, type }) {
 }
 
 Layout.propTypes = {
-  children: PropTypes.element,
-  type: PropTypes.oneOf([MAIN_LAYOUT, CATEGORY_LAYOUT, NONE_LAYOUT]),
+  children: PropTypes.element.isRequired,
+  type: PropTypes.oneOf([MAIN_LAYOUT, CATEGORY_LAYOUT, NONE_LAYOUT]).isRequired,
 };
 
 export default Layout;
