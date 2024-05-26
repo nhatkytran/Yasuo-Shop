@@ -145,11 +145,14 @@ const GlobalStyles = createGlobalStyle`
   body {
     color: var(--color-grey-800);
     font-family: var(--font-inter-regular);
-
     transition: color 0.3s, background-color 0.3s;
     min-height: 100vh;
     line-height: 1.5;
     font-size: 1.6rem;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   *:disabled {

@@ -1,5 +1,17 @@
 import { EN_US, FR } from '~/config';
 
+export const countryContents = {
+  titles: { [EN_US]: 'Language', [FR]: 'Langue' },
+  countries: { [EN_US]: 'United States', [FR]: 'France' },
+  subTitles: { [EN_US]: 'Select A Country', [FR]: 'Sélectionnez Un Pays' },
+  subTitleSmalls: { [EN_US]: 'Languages', [FR]: 'Langues' },
+  links: {
+    links: ['/en-us', '/fr'],
+    [EN_US]: ['United States', 'France'],
+    [FR]: ['United States', 'France'],
+  },
+};
+
 export const shopContents = {
   titles: { [EN_US]: 'Shop', [FR]: 'Boutique' },
   links: {
