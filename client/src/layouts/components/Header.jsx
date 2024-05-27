@@ -9,8 +9,8 @@ function Header() {
 
 const StyledHeader = styled.header`
   height: 8rem;
-  background-color: var(--color-neutral-900);
-  color: var(--color-neutral-100);
+  background-color: #171717;
+  color: #fff;
 `;
 
 export default Header;

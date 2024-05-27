@@ -66,7 +66,7 @@ const LanguageUI = styled.div`
 const AiFillCaretDownUI = styled(AiFillCaretDown)`
   width: 1.2rem;
   height: 1.2rem;
-  fill: var(--color-neutral-500);
+  fill: #737373;
 `;
 
 const CountryBoxUI = styled.div`

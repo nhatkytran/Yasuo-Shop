@@ -5,6 +5,7 @@ const HeadingUI = styled.h1`
   ${props =>
     props.as === 'h2' &&
     css`
+      color: var(--color-black);
       font-family: var(--font-riotsans-bold);
       font-size: 4.8rem;
       line-height: 1.2;
@@ -34,7 +35,7 @@ const HeadingUI = styled.h1`
   ${props =>
     props.as === 'h5' &&
     css`
-      color: var(--color-neutral-500);
+      color: #737373;
       font-family: var(--font-riotsans-regular);
       font-size: 1.4rem;
       margin-bottom: 2.5rem;

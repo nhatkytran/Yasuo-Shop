@@ -133,9 +133,7 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-
-    /* Creating animations for dark mode */
-    transition: background-color 0.3s, border 0.3s;
+    transition: background-color 0.3s, border 0.3s; /* Creating animations for dark mode */
   }
 
   html {
@@ -143,12 +141,13 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
+    min-height: 100vh;
+    background-color: var(--color-neutral-100);
     color: var(--color-grey-800);
     font-family: var(--font-inter-regular);
-    transition: color 0.3s, background-color 0.3s;
-    min-height: 100vh;
-    line-height: 1.5;
     font-size: 1.6rem;
+    line-height: 1.5;
+    transition: color 0.3s, background-color 0.3s;
 
     &::-webkit-scrollbar {
       display: none;

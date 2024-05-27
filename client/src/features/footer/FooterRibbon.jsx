@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 
+import { useDarkMode } from '~/hooks';
 import { EN_US } from '~/config';
 import { flexCenter, flexBetween } from '~/styles/reuseStyles';
 import { copyrightContents, linkContents } from '~/dataUI/footer';
@@ -9,9 +10,10 @@ import { LinkFooterUI } from '~/ui';
 
 function FooterRibbon() {
   const { language } = useParams();
+  const { isDarkMode } = useDarkMode();
 
   return (
-    <StyledFooterRibbon>
+    <StyledFooterRibbon $isDarkMode={isDarkMode}>
       <FooterRibbonBoxUI>
         <CopyrightUI>{copyrightContents[language]}</CopyrightUI>
         <ListUI>
@@ -34,8 +36,8 @@ function FooterRibbon() {
 const StyledFooterRibbon = styled.div`
   width: 100%;
   min-height: 5.6rem;
-  background-color: var(--color-neutral-800);
-  filter: brightness(1.17);
+  background-color: #262626;
+  ${props => !props.$isDarkMode && 'filter: brightness(1.17)'};
   position: absolute;
   right: 0;
   bottom: 0;
@@ -56,7 +58,7 @@ const FooterRibbonBoxUI = styled.div`
 `;
 
 const CopyrightUI = styled.p`
-  color: var(--color-neutral-300);
+  color: #d4d4d4;
   font-family: var(--font-inter-light);
   font-size: 1.2rem;
   letter-spacing: 1px;

@@ -1,23 +1,28 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useDarkMode } from '~/hooks';
 import { ButtonMain } from '~/components';
+import { px1024, px624 } from '~/styles/GlobalStyles';
+import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
+
 import {
   buttonContents,
   errorHeadings,
   errorMessages,
 } from '~/dataUI/pageNotFound';
-import { px1024, px624 } from '~/styles/GlobalStyles';
-import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
 
 function PageNotFound() {
   const { language } = useParams();
   const navigate = useNavigate();
+  const { isDarkMode } = useDarkMode();
 
   return (
     <StyledPageNotFound>
       <ErrorContainerUI>
-        <ErrorMessageUI>{errorMessages[language]}</ErrorMessageUI>
+        <ErrorMessageUI $isDarkMode={isDarkMode}>
+          {errorMessages[language]}
+        </ErrorMessageUI>
 
         <HeadingUI as="h2">{errorHeadings[language]}</HeadingUI>
 

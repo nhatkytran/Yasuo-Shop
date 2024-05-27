@@ -49,7 +49,7 @@ const StyledModal = styled.div`
 const ModalBox = styled.div`
   width: 100%;
   max-width: 60rem;
-  background-color: var(--color-neutral-100);
+  background-color: var(--color-neutral-50);
   padding: 2rem 4rem;
   position: relative;
 
@@ -77,7 +77,7 @@ const AiOutlineCloseUI = styled(AiOutlineClose)`
 
 const ModalShapeUI = styled.div`
   position: absolute;
-  background-color: var(--color-neutral-100);
+  background-color: var(--color-neutral-50);
   width: calc(100% - 4rem);
   height: 2rem;
   ${props => props.$pos === 'top' && 'top: -2rem'};
@@ -93,7 +93,7 @@ const ModalShapeUI = styled.div`
     top: 0;
     width: 2rem;
     height: 100%;
-    background-color: var(--color-neutral-100);
+    background-color: var(--color-neutral-50);
   }
 
   &::before {

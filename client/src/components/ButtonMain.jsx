@@ -16,18 +16,14 @@ function ButtonMain({ content, onClick }) {
 }
 
 const StyledButtonMain = styled.button`
-  background-color: var(--color-red-600);
-  color: var(--color-white);
+  background-color: #dc2626;
+  color: #fff;
   font-family: var(--font-inter-light);
   padding: 0 3.4rem;
   margin-top: 2.6rem;
   border-radius: 4.6rem;
-  background-color: var(--color-red-600);
-  background-image: linear-gradient(
-    -185deg,
-    var(--color-red-600) 49.5%,
-    var(--color-red-700) 50.5%
-  );
+  background-color: #dc2626;
+  background-image: linear-gradient(-185deg, #dc2626 49.5%, #b91c1c 50.5%);
   background-size: 100% 255%;
   background-position: 50% 0px;
   transition: background-color 0.35s cubic-bezier(0.12, 0.71, 0.31, 0.89) 0s,
@@ -35,7 +31,7 @@ const StyledButtonMain = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: var(--color-red-700);
+    background-color: #b91c1c;
     background-position: 0px 100%;
 
     *::before {
@@ -82,7 +78,7 @@ const ContentUI = styled.span`
     left: 0px;
     width: 100%;
     height: 1px;
-    background-color: var(--color-white);
+    background-color: #fff;
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;

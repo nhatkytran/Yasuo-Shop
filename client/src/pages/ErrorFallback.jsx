@@ -1,26 +1,26 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import GlobalStyles from '~/styles/GlobalStyles';
+import { useDarkMode } from '~/hooks';
 import { flexCenter } from '~/styles/reuseStyles';
 import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
 import { ButtonMain } from '~/components';
 
 function ErrorFallback({ error, resetErrorBoundary }) {
+  const { isDarkMode } = useDarkMode();
+
   return (
-    <>
-      <GlobalStyles />
+    <StyledErrorFallback>
+      <ErrorContainerUI>
+        <ErrorMessageUI $isDarkMode={isDarkMode}>
+          {error.message}
+        </ErrorMessageUI>
 
-      <StyledErrorFallback>
-        <ErrorContainerUI>
-          <ErrorMessageUI>{error.message}</ErrorMessageUI>
+        <HeadingUI as="h2">Something went wrong!</HeadingUI>
 
-          <HeadingUI as="h2">Something went wrong!</HeadingUI>
-
-          <ButtonMain content="Go Home" onClick={resetErrorBoundary} />
-        </ErrorContainerUI>
-      </StyledErrorFallback>
-    </>
+        <ButtonMain content="Go Home" onClick={resetErrorBoundary} />
+      </ErrorContainerUI>
+    </StyledErrorFallback>
   );
 }
 
