@@ -5,13 +5,16 @@ import PropTypes from 'prop-types';
 import { Modal } from '~/features/modal';
 
 function useModal() {
-  const [isModalOpened, setIsModalOpened] = useState(true);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+
+  const openModal = () => setIsModalOpened(true);
+  const closeModal = () => setIsModalOpened(false);
 
   const ModalPortal = ({ children, title }) =>
     ReactDOM.createPortal(
       <Modal
         isModalOpened={isModalOpened}
-        onCloseModal={() => setIsModalOpened(false)}
+        onCloseModal={closeModal}
         title={title}
       >
         {children}
@@ -24,10 +27,7 @@ function useModal() {
     title: PropTypes.string.isRequired,
   };
 
-  return {
-    openModal: () => setIsModalOpened(true),
-    ModalPortal,
-  };
+  return { openModal, ModalPortal };
 }
 
 export default useModal;

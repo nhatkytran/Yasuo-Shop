@@ -1,7 +1,10 @@
 import styled from 'styled-components';
+import { useDarkMode } from '~/hooks';
 
 function Header() {
-  return <StyledHeader>Header</StyledHeader>;
+  const { toggleDarkMode } = useDarkMode();
+
+  return <StyledHeader onClick={toggleDarkMode}>Header</StyledHeader>;
 }
 
 const StyledHeader = styled.header`
