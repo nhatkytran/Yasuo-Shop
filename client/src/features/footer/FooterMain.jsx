@@ -19,7 +19,7 @@ function FooterMain() {
 
 const StyledFooterMain = styled.div`
   width: 100%;
-  max-width: 110rem;
+  max-width: var(--width-main-layout);
   padding: 0 2rem;
   margin: 0 auto;
   display: grid;

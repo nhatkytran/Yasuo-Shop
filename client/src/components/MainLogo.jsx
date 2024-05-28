@@ -1,15 +1,16 @@
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function MainLogo({ isLink, type }) {
   const navigate = useNavigate();
+  const { language } = useParams();
 
   return (
     <StyledMainLogo
       $isLink={isLink}
       $type={type}
-      onClick={() => isLink && navigate('/')}
+      onClick={() => isLink && navigate(`/${language}`)}
     >
       <SvgBoxUI>
         <SvgUI

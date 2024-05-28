@@ -79,6 +79,9 @@ const GlobalStyles = createGlobalStyle`
       --image-opacity: 90%;
     }
 
+    --width-main-layout: 110rem;
+    --width-sub-layout: 60rem;
+
     --px-1024: 64em;
 
     --font-sono: Sono, monospace, sans-serif;
@@ -149,9 +152,9 @@ const GlobalStyles = createGlobalStyle`
     line-height: 1.5;
     transition: color 0.3s, background-color 0.3s;
 
-    &::-webkit-scrollbar {
+    /* &::-webkit-scrollbar {
       display: none;
-    }
+    } */
 
     &::-webkit-scrollbar {
       width: 0.6rem;
@@ -170,7 +173,7 @@ const GlobalStyles = createGlobalStyle`
     cursor: not-allowed;
   }
 
-  button {
+  button, input {
     outline: none;
     border: none;
   }

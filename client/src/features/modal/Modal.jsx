@@ -48,7 +48,7 @@ const StyledModal = styled.div`
 
 const ModalBox = styled.div`
   width: 100%;
-  max-width: 60rem;
+  max-width: var(--width-sub-layout);
   background-color: var(--color-neutral-50);
   padding: 2rem 4rem;
   position: relative;

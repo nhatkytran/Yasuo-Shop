@@ -46,7 +46,7 @@ const StyledFooterRibbon = styled.div`
 
 const FooterRibbonBoxUI = styled.div`
   width: 100%;
-  max-width: 110rem;
+  max-width: var(--width-main-layout);
   ${flexBetween};
   padding: 0 0.4rem;
 

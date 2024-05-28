@@ -55,7 +55,7 @@ const StyledPageNotFound = styled.div`
 const PageNotFoundImageUI = styled.img`
   display: block;
   width: calc(100% - 4rem);
-  max-width: 110rem;
+  max-width: var(--width-main-layout);
   margin: 9rem 2rem 0;
 
   @media only screen and (max-width: ${px1024}) {

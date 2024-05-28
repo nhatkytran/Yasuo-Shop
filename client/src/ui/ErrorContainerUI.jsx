@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const ErrorContainerUI = styled.div`
-  max-width: 60rem;
+  max-width: var(--width-sub-layout);
   text-align: center;
   margin: 0 2rem;
 `;
