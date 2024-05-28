@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { HeaderActions, HeaderLogo, HeaderToAuth } from '.';
+import { HeaderActions, HeaderLogo, HeaderNavbar, HeaderToAuth } from '.';
 import { flexBetween } from '~/styles/reuseStyles';
 
 function HeaderMain() {
@@ -9,8 +9,7 @@ function HeaderMain() {
       <HeaderLogo />
 
       <HeaderMainUI>
-        <div style={{ paddingLeft: '6rem' }}>Navbar</div>
-
+        <HeaderNavbar />
         <HeaderActions />
       </HeaderMainUI>
 

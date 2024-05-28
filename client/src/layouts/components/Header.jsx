@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
-import { HeaderMain } from '~/features/header';
+import { HeaderMain, HeaderMenu } from '~/features/header';
 import { flexCenter } from '~/styles/reuseStyles';
 
 function Header() {
   return (
     <StyledHeader>
       <HeaderMain />
+      <HeaderMenu />
     </StyledHeader>
   );
 }
@@ -18,6 +19,7 @@ const StyledHeader = styled.header`
   position: sticky;
   top: 0;
   z-index: 997;
+  box-shadow: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
   ${flexCenter}
 `;
 

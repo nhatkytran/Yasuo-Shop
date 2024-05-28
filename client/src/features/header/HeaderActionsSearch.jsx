@@ -1,11 +1,16 @@
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
+
 import { flexBetween } from '~/styles/reuseStyles';
+import { searchPlaceholders } from '~/dataUI/header';
 
 function HeaderActionsSearch() {
+  const { language } = useParams();
+
   return (
     <StyledHeaderActionsSearch>
-      <SearchInputUI type="text" placeholder="Search" />
+      <SearchInputUI type="text" placeholder={searchPlaceholders[language]} />
       <AiOutlineSearchUI />
     </StyledHeaderActionsSearch>
   );
@@ -28,7 +33,7 @@ const SearchInputUI = styled.input`
   letter-spacing: 1px;
 
   &::placeholder {
-    color: inherit;
+    color: #a3a3a3;
   }
 `;
 

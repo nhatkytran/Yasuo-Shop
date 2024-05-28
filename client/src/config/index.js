@@ -8,3 +8,7 @@ export const NONE_LAYOUT = 'none-layout';
 
 export const DARK_MODE = 'dark-mode';
 export const LIGHT_MODE = 'light-mode';
+
+export const TYPE_FEATURED = 'featured';
+export const TYPE_ART = 'art';
+export const TYPE_SALE = 'sale';

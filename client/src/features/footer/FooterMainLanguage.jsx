@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { AiFillCaretDown, AiOutlineGlobal } from 'react-icons/ai';
+import { AiOutlineGlobal } from 'react-icons/ai';
 
-import { HeadingUI } from '~/ui';
+import { ArrowDownUI, HeadingUI } from '~/ui';
 import { useModal } from '../modal';
 import { countryContents } from '~/dataUI/footer';
 import { px524 } from '~/styles/GlobalStyles';
@@ -18,7 +18,7 @@ function FooterMainLanguage() {
       <LanguageBoxUI onClick={openModal}>
         <AiOutlineGlobalUI />
         <LanguageUI>{countryContents.countries[language]}</LanguageUI>
-        <AiFillCaretDownUI />
+        <ArrowDownUI />
       </LanguageBoxUI>
 
       <ModalPortal title={countryContents.subTitles[language]}>
@@ -61,12 +61,6 @@ const LanguageUI = styled.div`
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0 0.6rem;
-`;
-
-const AiFillCaretDownUI = styled(AiFillCaretDown)`
-  width: 1.2rem;
-  height: 1.2rem;
-  fill: #737373;
 `;
 
 const CountryBoxUI = styled.div`
