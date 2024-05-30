@@ -8,3 +8,4 @@ export { default as HeaderActionsCart } from '~/features/header/HeaderActionsCar
 export { default as HeaderToAuth } from '~/features/header/HeaderToAuth';
 export { default as HeaderMenu } from '~/features/header/HeaderMenu';
 export { default as HeaderMenuFeatured } from '~/features/header/HeaderMenuFeatured';
+export { default as HeaderMenuCategory } from '~/features/header/HeaderMenuCategory';

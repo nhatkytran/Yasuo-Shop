@@ -17,8 +17,8 @@ function Modal({ children, isModalOpened, onCloseModal, title }) {
   if (!isModalOpened) return null;
 
   return (
-    <StyledModal>
-      <ModalBox>
+    <StyledModal onClick={onCloseModal}>
+      <ModalBox onClick={event => event.stopPropagation()}>
         <ModalShapeUI $pos="top" />
 
         <ModalHeaderUI>
@@ -38,6 +38,7 @@ const StyledModal = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   padding: 0 2rem;
   position: fixed;
   z-index: 9999;

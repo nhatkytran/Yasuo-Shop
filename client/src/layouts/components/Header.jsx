@@ -1,13 +1,22 @@
 import styled from 'styled-components';
 
+import { Menu } from '~/components';
 import { HeaderMain, HeaderMenu } from '~/features/header';
 import { flexCenter } from '~/styles/reuseStyles';
 
 function Header() {
   return (
     <StyledHeader>
-      <HeaderMain />
-      <HeaderMenu />
+      <Menu>
+        <Menu.Open
+          render={open => <HeaderMain onOpenMenu={open} />}
+        ></Menu.Open>
+        <Menu.Window
+          render={(openName, close) => (
+            <HeaderMenu openName={openName} onCloseMenu={close} />
+          )}
+        ></Menu.Window>
+      </Menu>
     </StyledHeader>
   );
 }
@@ -20,7 +29,7 @@ const StyledHeader = styled.header`
   top: 0;
   z-index: 997;
   box-shadow: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
-  ${flexCenter}
+  ${flexCenter};
 `;
 
 export default Header;

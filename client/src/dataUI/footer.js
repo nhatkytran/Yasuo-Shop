@@ -4,7 +4,7 @@ export const countryContents = {
   titles: { [EN_US]: 'Language', [FR]: 'Langue' },
   countries: { [EN_US]: 'United States', [FR]: 'France' },
   subTitles: { [EN_US]: 'Select A Country', [FR]: 'Sélectionnez Un Pays' },
-  subTitleSmalls: { [EN_US]: 'Languages', [FR]: 'Langues' },
+  subTitleSmalls: { [EN_US]: 'Countries', [FR]: 'Pays' },
   links: {
     links: ['/en-us', '/fr'],
     [EN_US]: ['United States', 'France'],

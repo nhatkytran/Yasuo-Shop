@@ -1,12 +1,16 @@
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import { navbarLinks } from '~/dataUI/header';
 import { flexCenter, flexStart } from '~/styles/reuseStyles';
 import { ArrowDownUI } from '~/ui';
 
-function HeaderNavbar() {
+function HeaderNavbar({ onOpenMenu }) {
   const { language } = useParams();
+
+  const handleOpenMenu = navbarLink =>
+    navbarLink.hasMenuOpen && onOpenMenu(navbarLink.type);
 
   return (
     <StyledHeaderNavbar>
@@ -14,7 +18,7 @@ function HeaderNavbar() {
         {navbarLinks.map((navbarLink, index) => {
           return (
             <ItemUI key={index}>
-              <LinkUI to="">
+              <LinkUI to="" onMouseEnter={() => handleOpenMenu(navbarLink)}>
                 <LinkContentUI>{navbarLink.title[language]}</LinkContentUI>
                 {navbarLink.hasMenuOpen && <ArrowDownUI />}
               </LinkUI>
@@ -52,7 +56,7 @@ const ItemUI = styled.li`
     width: 100%;
     background-color: #fff;
     opacity: 0;
-    transform: translateY(50%);
+    transform: translateY(25%);
   }
 `;
 
@@ -81,5 +85,7 @@ export const LinkContentUI = styled.span`
   display: block;
   margin-right: 0.8rem;
 `;
+
+HeaderNavbar.propTypes = { onOpenMenu: PropTypes.func.isRequired };
 
 export default HeaderNavbar;

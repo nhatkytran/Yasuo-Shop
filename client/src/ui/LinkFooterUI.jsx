@@ -14,7 +14,7 @@ const LinkFooterUI = styled(Link)`
   &:link,
   &:visited {
     display: block;
-    ${props => colors[props.$type]}
+    ${props => colors[props.$type]};
     font-family: var(--font-inter-medium);
     font-size: 1.2rem;
     text-transform: uppercase;

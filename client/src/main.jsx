@@ -9,17 +9,17 @@ import GlobalStyles from '~/styles/GlobalStyles';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ErrorBoundary
-      FallbackComponent={ErrorFallback}
-      onReset={() => window.location.replace('/')}
-    >
+    <DarkModeProvider>
       <>
         <GlobalStyles />
 
-        <DarkModeProvider>
+        <ErrorBoundary
+          FallbackComponent={ErrorFallback}
+          onReset={() => window.location.replace('/')}
+        >
           <App />
-        </DarkModeProvider>
+        </ErrorBoundary>
       </>
-    </ErrorBoundary>
+    </DarkModeProvider>
   </React.StrictMode>
 );
