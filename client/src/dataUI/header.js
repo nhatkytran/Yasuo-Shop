@@ -26,26 +26,26 @@ export const menuContents = {
     {
       title: 'VALORANT collection',
       image:
-        'https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltf5507959858f5c02/664bc848e8d9397af6fa735d/VALORANT_Restock_Homepage_Hero_2560x1440.jpg?auto=webp&width=518&quality=170',
+        'https://res.cloudinary.com/dxo1gnffi/image/upload/v1717134237/1_umna9l.webp',
       link: '/collection/valorant',
     },
     {
       title: 'VCT Masters 2024 Collection',
       image:
-        'https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltfde3cf0972c8e250/663e818fe7f45deb2a8b1110/CPX_VCT2Shanghai_NavBar_2560x1440.jpg?auto=webp&width=518&quality=170',
+        'https://res.cloudinary.com/dxo1gnffi/image/upload/v1717134244/2_tkymjv.webp',
       link: '/collection/vct-2024',
     },
 
     {
       title: 'MSI 2024 Collection',
       image:
-        'https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt6ba6ed1e6371d4ee/6622b2fabb637255561dd8a7/MSI_20244_Featured_collection_navbar_2560x1440.jpg?auto=webp&width=518&quality=170',
+        'https://res.cloudinary.com/dxo1gnffi/image/upload/v1717134262/3_eipbi1.webp',
       link: '/collection/msi-2024',
     },
     {
       title: 'Blood Moon Collection Page',
       image:
-        'https://images.contentstack.io/v3/assets/blt5bbf09732528de36/bltb398804699bfb7b6/60cbce00e1b3f7481347d585/Bloodmoon_Promo_Featured.jpg?auto=webp&width=518&quality=170',
+        'https://res.cloudinary.com/dxo1gnffi/image/upload/v1717134314/4_pposib.webp',
       link: '/collection/blood-moon',
     },
   ],
@@ -65,6 +65,20 @@ export const menuContents = {
         [FR]: ['Posters', 'Bandes dessinées et livres', 'Tirages'],
       },
     },
+    posters: [
+      {
+        type: 'comic',
+        image:
+          'https://res.cloudinary.com/dxo1gnffi/image/upload/v1717134706/1_xkgcod.webp',
+        description: 'League of Legends comic',
+      },
+      {
+        type: 'poster',
+        image:
+          'https://res.cloudinary.com/dxo1gnffi/image/upload/v1717134713/2_b58dm3.webp',
+        description: 'League of Legends poster',
+      },
+    ],
   },
 };
 

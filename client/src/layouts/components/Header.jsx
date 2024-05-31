@@ -1,22 +1,16 @@
 import styled from 'styled-components';
 
-import { Menu } from '~/components';
+import { HeaderMenuProvider } from '~/contexts';
 import { HeaderMain, HeaderMenu } from '~/features/header';
 import { flexCenter } from '~/styles/reuseStyles';
 
 function Header() {
   return (
     <StyledHeader>
-      <Menu>
-        <Menu.Open
-          render={open => <HeaderMain onOpenMenu={open} />}
-        ></Menu.Open>
-        <Menu.Window
-          render={(openName, close) => (
-            <HeaderMenu openName={openName} onCloseMenu={close} />
-          )}
-        ></Menu.Window>
-      </Menu>
+      <HeaderMenuProvider>
+        <HeaderMain />
+        <HeaderMenu />
+      </HeaderMenuProvider>
     </StyledHeader>
   );
 }

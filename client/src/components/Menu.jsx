@@ -17,17 +17,17 @@ function Menu({ children }) {
 }
 
 function Open({ render }) {
-  const { open } = useContext(MenuContext);
+  const { openName, open, close } = useContext(MenuContext);
 
-  return render(open);
+  return render({ openName, open, close });
 }
 
 function Window({ render }) {
-  const { openName, close } = useContext(MenuContext);
+  const { openName, open, close } = useContext(MenuContext);
 
   if (!openName) return null;
 
-  return render(openName, close);
+  return render({ openName, open, close });
 }
 
 Menu.Open = Open;

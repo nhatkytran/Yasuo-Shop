@@ -1,16 +1,15 @@
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import { HeaderActions, HeaderLogo, HeaderNavbar, HeaderToAuth } from '.';
 import { flexBetween } from '~/styles/reuseStyles';
 
-function HeaderMain({ onOpenMenu }) {
+function HeaderMain() {
   return (
     <StyledHeaderMain>
       <HeaderLogo />
 
       <HeaderMainUI>
-        <HeaderNavbar onOpenMenu={onOpenMenu} />
+        <HeaderNavbar />
         <HeaderActions />
       </HeaderMainUI>
 
@@ -31,7 +30,5 @@ const HeaderMainUI = styled.div`
   height: 100%;
   ${flexBetween};
 `;
-
-HeaderMain.propTypes = { onOpenMenu: PropTypes.func.isRequired };
 
 export default HeaderMain;

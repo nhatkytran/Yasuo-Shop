@@ -43,7 +43,6 @@ const StyledModal = styled.div`
   position: fixed;
   z-index: 9999;
   ${flexCenter};
-
   animation: 0.25s cubic-bezier(0.42, 0, 0.002, 1) 0s 1 normal none running open;
 `;
 

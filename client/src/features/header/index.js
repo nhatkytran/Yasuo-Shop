@@ -1,6 +1,7 @@
 export { default as HeaderMain } from '~/features/header/HeaderMain';
 export { default as HeaderLogo } from '~/features/header/HeaderLogo';
 export { default as HeaderNavbar } from '~/features/header/HeaderNavbar';
+export { default as HeaderNavbarItem } from '~/features/header/HeaderNavbarItem';
 export { default as HeaderActions } from '~/features/header/HeaderActions';
 export { default as HeaderActionsMode } from '~/features/header/HeaderActionsMode';
 export { default as HeaderActionsSearch } from '~/features/header/HeaderActionsSearch';

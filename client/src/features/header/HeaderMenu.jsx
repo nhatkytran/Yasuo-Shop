@@ -1,12 +1,17 @@
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import { TYPE_ART, TYPE_FEATURED } from '~/config';
+import { useHeaderMenu } from '~/hooks';
 import { HeaderMenuCategory, HeaderMenuFeatured } from '~/features/header';
+import { flexCenter } from '~/styles/reuseStyles';
 
-function HeaderMenu({ openName, onCloseMenu }) {
+function HeaderMenu() {
+  const { openName, closeHeaderMenu } = useHeaderMenu();
+
+  if (!openName) return null;
+
   return (
-    <StyledHeaderMenu onMouseLeave={onCloseMenu}>
+    <StyledHeaderMenu onMouseLeave={closeHeaderMenu}>
       <MenuBoxUI>
         {openName === TYPE_FEATURED && <HeaderMenuFeatured />}
         {openName === TYPE_ART && <HeaderMenuCategory />}
@@ -23,17 +28,14 @@ const StyledHeaderMenu = styled.div`
   bottom: 0;
   transform: translateY(100%);
   z-index: -1;
+  animation: 0.2s cubic-bezier(0.42, 0, 0.002, 1) 0s 1 normal none running open;
 `;
 
 const MenuBoxUI = styled.div`
   max-width: var(--width-main-layout);
-  margin: 4rem auto;
+  min-height: 32rem;
+  margin: 0 auto;
   padding: 0 2rem;
+  ${flexCenter};
 `;
-
-HeaderMenu.propTypes = {
-  openName: PropTypes.string.isRequired,
-  onCloseMenu: PropTypes.func.isRequired,
-};
-
 export default HeaderMenu;

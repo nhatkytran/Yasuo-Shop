@@ -4,23 +4,22 @@ import styled, { css } from 'styled-components';
 import { TYPE_ART } from '~/config';
 import { menuContents } from '~/dataUI/header';
 
-const data = menuContents[TYPE_ART];
-
 function HeaderMenuCategory() {
   const { language } = useParams();
+  const { mainLink, subLink, posters } = menuContents[TYPE_ART];
 
   return (
     <StyledHeaderMenuCategory>
       <BoxUI>
-        <LinkUI to={`${language}${data.mainLink.link}`}>
-          {data.mainLink.title[language]}
+        <LinkUI to={`${language}${mainLink.link}`}>
+          {mainLink.title[language]}
         </LinkUI>
 
         <ListUI>
-          {data.subLink.links.map((link, index) => (
+          {subLink.links.map((link, index) => (
             <ItemUI key={index}>
               <LinkUI to={`${language}${link}`}>
-                {data.subLink.titles[language][index]}
+                {subLink.titles[language][index]}
               </LinkUI>
             </ItemUI>
           ))}
@@ -28,52 +27,20 @@ function HeaderMenuCategory() {
       </BoxUI>
 
       <BoxUI>
-        <PosterUI>
-          <PosterImageUI
-            src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt56e2a48585027aa2/62b20d3a482ba357e65de59a/VLRNTAlphaThreat_2560x2560.png?auto=webp&width=258&quality=85"
-            alt="League of Legends poster"
-            $type="comic"
-          />
-        </PosterUI>
-
-        <PosterUI>
-          <PosterImageUI
-            src="https://images.contentstack.io/v3/assets/blt5bbf09732528de36/blt155572da8dfe826a/62d98d495b080e77825d3d99/SGMangaPOD_Ecomm2560x2560.png?auto=webp&width=258&quality=85"
-            alt="League of Legends poster"
-          />
-        </PosterUI>
+        {posters.map(({ type, image, description }, index) => (
+          <PosterUI key={index}>
+            <PosterImageUI src={image} alt={description} $type={type} />
+          </PosterUI>
+        ))}
       </BoxUI>
     </StyledHeaderMenuCategory>
   );
 }
 
-const PosterUI = styled.div`
-  width: 18.2rem;
-  height: 24rem;
-  background-color: var(--color-neutral-200);
-  position: relative;
-`;
-
-const PosterImageUI = styled.img`
-  display: block;
-  width: 18rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  ${props =>
-    props.$type === 'comic' &&
-    css`
-      transform: scale(1.32);
-      transform-origin: 206% 206%;
-    `};
-`;
-
-//
-
 const StyledHeaderMenuCategory = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 100%;
 `;
 
 const BoxUI = styled.div`
@@ -102,6 +69,28 @@ const LinkUI = styled(Link)`
     text-decoration: none;
     letter-spacing: 1px;
   }
+`;
+
+const PosterUI = styled.div`
+  width: 18.2rem;
+  height: 24rem;
+  background-color: var(--color-neutral-200);
+  position: relative;
+`;
+
+const PosterImageUI = styled.img`
+  display: block;
+  width: 18rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  ${props =>
+    props.$type === 'comic' &&
+    css`
+      transform: scale(1.32);
+      transform-origin: 206% 206%;
+    `};
 `;
 
 export default HeaderMenuCategory;
