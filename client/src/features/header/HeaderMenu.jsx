@@ -28,7 +28,7 @@ const StyledHeaderMenu = styled.div`
   bottom: 0;
   transform: translateY(100%);
   z-index: -1;
-  animation: 0.2s cubic-bezier(0.42, 0, 0.002, 1) 0s 1 normal none running open;
+  animation: 0.15s cubic-bezier(0.42, 0, 0.002, 1) 0s 1 normal none running open;
 `;
 
 const MenuBoxUI = styled.div`

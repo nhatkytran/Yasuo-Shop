@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 
 import { TYPE_ART } from '~/config';
 import { menuContents } from '~/dataUI/header';
+import { Image } from '~/components';
 
 function HeaderMenuCategory() {
   const { language } = useParams();
@@ -29,7 +30,12 @@ function HeaderMenuCategory() {
       <BoxUI>
         {posters.map(({ type, image, description }, index) => (
           <PosterUI key={index}>
-            <PosterImageUI src={image} alt={description} $type={type} />
+            <Image
+              UI={PosterImageUI}
+              $type={type}
+              src={image}
+              alt={description}
+            />
           </PosterUI>
         ))}
       </BoxUI>
@@ -76,6 +82,7 @@ const PosterUI = styled.div`
   height: 24rem;
   background-color: var(--color-neutral-200);
   position: relative;
+  overflow: hidden;
 `;
 
 const PosterImageUI = styled.img`

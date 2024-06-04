@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { TYPE_FEATURED } from '~/config';
 import { menuContents } from '~/dataUI/header';
+import { Image } from '~/components';
 
 function HeaderMenuFeatured() {
   const { language } = useParams();
@@ -11,7 +12,12 @@ function HeaderMenuFeatured() {
     <StyledHeaderMenuFeatured>
       {menuContents[TYPE_FEATURED].map((collection, index) => (
         <LinkUI to={`${language}${collection.link}`} key={index}>
-          <ImageUI src={collection.image} alt="League of Legends collection" />
+          <Image
+            UI={ImageUI}
+            src={collection.image}
+            alt="League of Legends collection"
+          />
+
           <TitleUI>{collection.title}</TitleUI>
         </LinkUI>
       ))}

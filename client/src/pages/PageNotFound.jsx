@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useDarkMode } from '~/hooks';
-import { ButtonMain } from '~/components';
+import { ButtonMain, Image } from '~/components';
 import { px1024, px624 } from '~/styles/GlobalStyles';
 import { ErrorContainerUI, ErrorMessageUI, HeadingUI } from '~/ui';
 
@@ -32,7 +32,8 @@ function PageNotFound() {
         />
       </ErrorContainerUI>
 
-      <PageNotFoundImageUI
+      <Image
+        UI={PageNotFoundImageUI}
         src="https://res.cloudinary.com/dxo1gnffi/image/upload/v1716529741/404_nbibx4.webp"
         alt="League of Legends image"
       />

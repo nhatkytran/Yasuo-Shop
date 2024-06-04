@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 import { HeaderMenuProvider } from '~/contexts';
-import { HeaderMain, HeaderMenu } from '~/features/header';
 import { flexCenter } from '~/styles/reuseStyles';
+import { HeaderMain, HeaderMenu } from '~/features/header';
 
 function Header() {
   return (
@@ -11,6 +11,8 @@ function Header() {
         <HeaderMain />
         <HeaderMenu />
       </HeaderMenuProvider>
+
+      {/* <HeaderSidebar /> */}
     </StyledHeader>
   );
 }
