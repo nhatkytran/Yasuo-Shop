@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { px924 } from '~/styles/GlobalStyles';
+
 function HeaderToAuth() {
   const { language } = useParams();
 
@@ -18,6 +20,10 @@ const StyledHeaderToAuth = styled.div`
   right: 0;
   top: 50%;
   transform: translate(100%, -50%);
+
+  @media only screen and (max-width: ${px924}) {
+    display: none;
+  }
 `;
 
 const LinkUI = styled(Link)`

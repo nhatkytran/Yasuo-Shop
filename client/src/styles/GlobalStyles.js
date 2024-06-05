@@ -176,6 +176,7 @@ const GlobalStyles = createGlobalStyle`
   button, input {
     outline: none;
     border: none;
+    background-color: transparent;
   }
 
   img {

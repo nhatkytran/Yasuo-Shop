@@ -11,7 +11,10 @@ function HeaderMenu() {
   if (!openName) return null;
 
   return (
-    <StyledHeaderMenu onMouseLeave={closeHeaderMenu}>
+    <StyledHeaderMenu
+      onMouseLeave={closeHeaderMenu}
+      onClick={event => event.target.closest('a') && closeHeaderMenu()}
+    >
       <MenuBoxUI>
         {openName === TYPE_FEATURED && <HeaderMenuFeatured />}
         {openName === TYPE_ART && <HeaderMenuCategory />}

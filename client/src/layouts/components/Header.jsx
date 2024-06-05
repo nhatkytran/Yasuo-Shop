@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { HeaderMenuProvider } from '~/contexts';
 import { flexCenter } from '~/styles/reuseStyles';
 import { HeaderMain, HeaderMenu } from '~/features/header';
+import { px924 } from '~/styles/GlobalStyles';
 
 function Header() {
   return (
@@ -26,6 +27,10 @@ const StyledHeader = styled.header`
   z-index: 997;
   box-shadow: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
   ${flexCenter};
+
+  @media only screen and (max-width: ${px924}) {
+    height: 6rem;
+  }
 `;
 
 export default Header;
