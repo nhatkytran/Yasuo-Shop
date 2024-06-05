@@ -110,7 +110,10 @@ const ModalShapeUI = styled.div`
 `;
 
 Modal.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element),
+  ]).isRequired,
   isModalOpened: PropTypes.bool.isRequired,
   onCloseModal: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,

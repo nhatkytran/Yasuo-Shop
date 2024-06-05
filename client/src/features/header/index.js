@@ -12,3 +12,4 @@ export { default as HeaderMenuFeatured } from '~/features/header/HeaderMenuFeatu
 export { default as HeaderMenuCategory } from '~/features/header/HeaderMenuCategory';
 export { default as HeaderSidebarToggle } from '~/features/header/HeaderSidebarToggle';
 export { default as HeaderSidebar } from '~/features/header/HeaderSidebar';
+export { default as HeaderSidebarFooter } from '~/features/header/HeaderSidebarFooter';

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { HeaderMenuProvider } from '~/contexts';
 import { flexCenter } from '~/styles/reuseStyles';
-import { HeaderMain, HeaderMenu } from '~/features/header';
+import { HeaderMain, HeaderMenu, HeaderSidebar } from '~/features/header';
 import { px924 } from '~/styles/GlobalStyles';
 
 function Header() {
@@ -11,9 +11,8 @@ function Header() {
       <HeaderMenuProvider>
         <HeaderMain />
         <HeaderMenu />
+        <HeaderSidebar />
       </HeaderMenuProvider>
-
-      {/* <HeaderSidebar /> */}
     </StyledHeader>
   );
 }

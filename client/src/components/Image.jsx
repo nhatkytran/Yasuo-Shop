@@ -13,6 +13,9 @@ function Image({ UI, ...props }) {
   return createElement(UI, options);
 }
 
-Image.propTypes = { UI: PropTypes.any, props: PropTypes.any };
+Image.propTypes = {
+  UI: PropTypes.elementType.isRequired,
+  props: PropTypes.any,
+};
 
 export default Image;
