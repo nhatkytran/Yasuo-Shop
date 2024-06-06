@@ -1,3 +1,4 @@
+export { default as AiOutlineCloseUI } from '~/ui/AiOutlineCloseUI';
 export { default as AiOutlineGlobalUI } from '~/ui/AiOutlineGlobalUI';
 export { default as ArrowDownUI } from '~/ui/ArrowDownUI';
 export { default as ErrorContainerUI } from '~/ui/ErrorContainerUI';

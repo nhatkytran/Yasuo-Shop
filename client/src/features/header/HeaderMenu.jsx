@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { TYPE_ART, TYPE_FEATURED } from '~/config';
+import { TYPE_FEATURED } from '~/config';
 import { useHeaderMenu } from '~/hooks';
 import { HeaderMenuCategory, HeaderMenuFeatured } from '~/features/header';
 import { flexCenter } from '~/styles/reuseStyles';
@@ -17,7 +17,7 @@ function HeaderMenu() {
     >
       <MenuBoxUI>
         {openName === TYPE_FEATURED && <HeaderMenuFeatured />}
-        {openName === TYPE_ART && <HeaderMenuCategory />}
+        {openName !== TYPE_FEATURED && <HeaderMenuCategory />}
       </MenuBoxUI>
     </StyledHeaderMenu>
   );

@@ -6,11 +6,14 @@ import {
   HeaderSidebarSubmenu,
 } from '~/features/header';
 
+import { useHeaderSidebar } from '~/hooks';
 import { px924 } from '~/styles/GlobalStyles';
 
 function HeaderSidebar() {
+  const { isSidebarOpened } = useHeaderSidebar();
+
   return (
-    <StyledHeaderSidebar>
+    <StyledHeaderSidebar $open={isSidebarOpened}>
       <HeaderSidebarMenu />
       <HeaderSidebarSubmenu />
       <HeaderSidebarFooter />
@@ -29,6 +32,8 @@ const StyledHeaderSidebar = styled.aside`
   background-color: #282828;
   padding: 2rem;
   box-shadow: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
+  transform: translateX(${props => (props.$open ? '0' : '-100%')});
+  transition: transform ease 0.2s;
 
   @media only screen and (max-width: ${px924}) {
     display: block;

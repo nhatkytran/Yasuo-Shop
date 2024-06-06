@@ -1,23 +1,52 @@
-import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import styled, { css } from 'styled-components';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { ArrowDownUI } from '~/ui';
 import { navbarLinks } from '~/dataUI/header';
 import { flexBetween } from '~/styles/reuseStyles';
+import { useHeaderSidebar } from '~/hooks';
 
 function HeaderSidebarMenu() {
   const { language } = useParams();
+  const navigate = useNavigate();
+
+  const {
+    sidebarSubmenuName,
+    closeHeaderSidebar,
+    openHeaderSidebarSubmenu,
+    closeHeaderSidebarSubmenu,
+  } = useHeaderSidebar();
+
+  const handleChooseMenuOptions = navbarLink => {
+    if (!navbarLink.hasMenuOpen) {
+      navigate(`/${language}${navbarLink.mainLink}`);
+      return closeHeaderSidebar();
+    }
+
+    if (navbarLink.type !== sidebarSubmenuName)
+      openHeaderSidebarSubmenu(navbarLink.type);
+    else closeHeaderSidebarSubmenu();
+  };
 
   return (
     <StyledHeaderSidebarMenu>
-      {navbarLinks.map((navbarLink, index) => (
-        <ItemUI key={index}>
-          <ButtonUI>
-            <p>{navbarLink.title[language]}</p>
-            {navbarLink.hasMenuOpen && <ArrowDownUI $side="right" />}
-          </ButtonUI>
-        </ItemUI>
-      ))}
+      {navbarLinks.map((navbarLink, index) => {
+        const active = navbarLink.type === sidebarSubmenuName;
+
+        return (
+          <ItemUI key={index}>
+            <ButtonUI onClick={() => handleChooseMenuOptions(navbarLink)}>
+              <ButtonContentUI $active={active}>
+                {navbarLink.title[language]}
+              </ButtonContentUI>
+
+              {navbarLink.hasMenuOpen && (
+                <ArrowDownUI $side={active ? 'left' : 'right'} />
+              )}
+            </ButtonUI>
+          </ItemUI>
+        );
+      })}
     </StyledHeaderSidebarMenu>
   );
 }
@@ -42,6 +71,14 @@ const ButtonUI = styled.button`
   gap: 0.4rem;
   ${flexBetween};
   cursor: pointer;
+`;
+
+const ButtonContentUI = styled.p`
+  ${props =>
+    props.$active &&
+    css`
+      text-decoration: underline;
+    `};
 `;
 
 export default HeaderSidebarMenu;

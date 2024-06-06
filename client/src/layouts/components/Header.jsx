@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { HeaderMenuProvider } from '~/contexts';
+import { HeaderMenuProvider, HeaderSidebarProvider } from '~/contexts';
 import { flexCenter } from '~/styles/reuseStyles';
 import { HeaderMain, HeaderMenu, HeaderSidebar } from '~/features/header';
 import { px924 } from '~/styles/GlobalStyles';
@@ -9,9 +9,11 @@ function Header() {
   return (
     <StyledHeader>
       <HeaderMenuProvider>
-        <HeaderMain />
-        <HeaderMenu />
-        <HeaderSidebar />
+        <HeaderSidebarProvider>
+          <HeaderMain />
+          <HeaderMenu />
+          <HeaderSidebar />
+        </HeaderSidebarProvider>
       </HeaderMenuProvider>
     </StyledHeader>
   );

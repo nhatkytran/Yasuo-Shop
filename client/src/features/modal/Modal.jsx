@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { HeadingUI } from '~/ui';
+import { AiOutlineCloseUI, HeadingUI } from '~/ui';
 import { flexBetween, flexCenter } from '~/styles/reuseStyles';
 import { px524 } from '~/styles/GlobalStyles';
 
@@ -61,18 +60,6 @@ const ModalBox = styled.div`
 const ModalHeaderUI = styled.div`
   ${flexBetween};
   margin-bottom: 2.4rem;
-`;
-
-const AiOutlineCloseUI = styled(AiOutlineClose)`
-  width: 2.8rem;
-  height: 2.8rem;
-  fill: var(--color-black);
-  cursor: pointer;
-
-  @media only screen and (max-width: ${px524}) {
-    width: 2.4rem;
-    height: 2.4rem;
-  }
 `;
 
 const ModalShapeUI = styled.div`
