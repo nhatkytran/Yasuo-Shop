@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 
-import { HeaderSidebarFooter } from '~/features/header';
+import {
+  HeaderSidebarFooter,
+  HeaderSidebarMenu,
+  HeaderSidebarSubmenu,
+} from '~/features/header';
+
 import { px924 } from '~/styles/GlobalStyles';
 
 function HeaderSidebar() {
   return (
     <StyledHeaderSidebar>
-      <ul>List</ul>
+      <HeaderSidebarMenu />
+      <HeaderSidebarSubmenu />
       <HeaderSidebarFooter />
     </StyledHeaderSidebar>
   );
@@ -21,6 +27,7 @@ const StyledHeaderSidebar = styled.aside`
   width: 100%;
   max-width: 46rem;
   background-color: #282828;
+  padding: 2rem;
   box-shadow: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
 
   @media only screen and (max-width: ${px924}) {

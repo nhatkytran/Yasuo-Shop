@@ -12,14 +12,14 @@ function HeaderMenuCategory() {
   return (
     <StyledHeaderMenuCategory>
       <BoxUI>
-        <LinkUI to={`${language}${mainLink.link}`}>
+        <LinkUI to={`/${language}${mainLink.link}`}>
           {mainLink.title[language]}
         </LinkUI>
 
         <ListUI>
           {subLink.links.map((link, index) => (
             <ItemUI key={index}>
-              <LinkUI to={`${language}${link}`}>
+              <LinkUI to={`/${language}${link}`}>
                 {subLink.titles[language][index]}
               </LinkUI>
             </ItemUI>

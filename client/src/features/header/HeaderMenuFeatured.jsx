@@ -11,7 +11,7 @@ function HeaderMenuFeatured() {
   return (
     <StyledHeaderMenuFeatured>
       {menuContents[TYPE_FEATURED].map((collection, index) => (
-        <LinkUI to={`${language}${collection.link}`} key={index}>
+        <LinkUI to={`/${language}${collection.link}`} key={index}>
           <Image
             UI={ImageUI}
             src={collection.image}
