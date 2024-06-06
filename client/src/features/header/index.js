@@ -17,3 +17,5 @@ export { default as HeaderSidebarSubmenu } from '~/features/header/HeaderSidebar
 export { default as HeaderSidebarSubmenuFeatured } from '~/features/header/HeaderSidebarSubmenuFeatured';
 export { default as HeaderSidebarSubmenuCategory } from '~/features/header/HeaderSidebarSubmenuCategory';
 export { default as HeaderSidebarFooter } from '~/features/header/HeaderSidebarFooter';
+export { default as HeaderSearchMenuProducts } from '~/features/header/HeaderSearchMenuProducts';
+export { default as HeaderSearchMenuLinks } from '~/features/header/HeaderSearchMenuLinks';

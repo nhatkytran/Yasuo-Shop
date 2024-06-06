@@ -31,9 +31,9 @@ function HeaderMenuCategory() {
 }
 
 const StyledHeaderMenuCategory = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  width: 100%;
 `;
 
 const BoxUI = styled.div`

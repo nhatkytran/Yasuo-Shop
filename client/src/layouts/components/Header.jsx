@@ -4,6 +4,7 @@ import { HeaderMenuProvider, HeaderSidebarProvider } from '~/contexts';
 import { flexCenter } from '~/styles/reuseStyles';
 import { HeaderMain, HeaderMenu, HeaderSidebar } from '~/features/header';
 import { px924 } from '~/styles/GlobalStyles';
+import HeaderSearchMenu from '~/features/header/HeaderSearchMenu';
 
 function Header() {
   return (
@@ -12,6 +13,7 @@ function Header() {
         <HeaderSidebarProvider>
           <HeaderMain />
           <HeaderMenu />
+          <HeaderSearchMenu />
           <HeaderSidebar />
         </HeaderSidebarProvider>
       </HeaderMenuProvider>
