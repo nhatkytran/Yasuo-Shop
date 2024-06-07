@@ -5,7 +5,7 @@ import { arrayOf, shape, string } from 'prop-types';
 import { HeadingUI, LinkFooterUI } from '~/ui';
 import { EN_US, FR } from '~/config';
 
-function LinkList({ data }) {
+function FooterLinkList({ data }) {
   const { language } = useParams();
 
   return (
@@ -36,7 +36,7 @@ const ItemUI = styled.li`
   margin-bottom: 1.2rem;
 `;
 
-LinkList.propTypes = {
+FooterLinkList.propTypes = {
   data: shape({
     titles: shape({
       [EN_US]: string.isRequired,
@@ -50,4 +50,4 @@ LinkList.propTypes = {
   }),
 };
 
-export default LinkList;
+export default FooterLinkList;

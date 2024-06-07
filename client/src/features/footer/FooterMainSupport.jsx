@@ -1,10 +1,10 @@
+import { FooterLinkList } from '~/components';
 import { suportContents } from '~/dataUI/footer';
-import LinkList from './components/LinkList';
 
 function FooterMainSupport() {
   return (
     <div>
-      <LinkList data={suportContents} />
+      <FooterLinkList data={suportContents} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { HeaderMenuBoxUI, HeaderMenuUI } from '~/ui';
 import { px1024 } from '~/styles/GlobalStyles';
+// import { Loader } from '~/components';
 
 import {
   HeaderSearchMenuLinks,
@@ -12,6 +13,14 @@ function HeaderSearchMenu() {
   return (
     <HeaderMenuUI>
       <HeaderMenuBoxUI $minHeight="40rem">
+        {/* <Loader /> */}
+
+        {/* <TextMessageUI>No matches found</TextMessageUI> */}
+
+        {/* <TextMessageUI>
+          Something went wrong! Please try again later.
+        </TextMessageUI> */}
+
         <StyledHeaderSearchMenu>
           <HeaderSearchMenuProducts />
           <HeaderSearchMenuLinks />
@@ -31,5 +40,12 @@ const StyledHeaderSearchMenu = styled.div`
     gap: 6rem;
   }
 `;
+
+// const TextMessageUI = styled.p`
+//   color: #f5f5f5;
+//   font-family: var(--font-inter-medium);
+//   font-size: 1.5rem;
+//   letter-spacing: 1px;
+// `;
 
 export default HeaderSearchMenu;

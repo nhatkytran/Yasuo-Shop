@@ -19,3 +19,4 @@ export { default as HeaderSidebarSubmenuCategory } from '~/features/header/Heade
 export { default as HeaderSidebarFooter } from '~/features/header/HeaderSidebarFooter';
 export { default as HeaderSearchMenuProducts } from '~/features/header/HeaderSearchMenuProducts';
 export { default as HeaderSearchMenuLinks } from '~/features/header/HeaderSearchMenuLinks';
+export { default as HeaderSearchSidebar } from '~/features/header/HeaderSearchSidebar';

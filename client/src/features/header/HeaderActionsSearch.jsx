@@ -5,6 +5,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { flexBetween } from '~/styles/reuseStyles';
 import { searchPlaceholders } from '~/dataUI/header';
 import { px924 } from '~/styles/GlobalStyles';
+import { SearchInputUI } from '~/ui';
 
 function HeaderActionsSearch() {
   const { language } = useParams();
@@ -12,7 +13,11 @@ function HeaderActionsSearch() {
   return (
     <>
       <StyledHeaderActionsSearch>
-        <SearchInputUI type="text" placeholder={searchPlaceholders[language]} />
+        <SearchInputUI
+          $width="9.2rem"
+          type="text"
+          placeholder={searchPlaceholders[language]}
+        />
         <AiOutlineSearchUI />
       </StyledHeaderActionsSearch>
 
@@ -33,20 +38,6 @@ const StyledHeaderActionsSearch = styled.div`
 
   @media only screen and (max-width: ${px924}) {
     display: none;
-  }
-`;
-
-const SearchInputUI = styled.input`
-  width: 9.2rem;
-  background-color: transparent;
-  color: #fff;
-  font-family: var(--font-inter-bold);
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-
-  &::placeholder {
-    color: #a3a3a3;
   }
 `;
 

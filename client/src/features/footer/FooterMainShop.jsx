@@ -1,10 +1,10 @@
+import { FooterLinkList } from '~/components';
 import { shopContents } from '~/dataUI/footer';
-import LinkList from './components/LinkList';
 
 function FooterMainShop() {
   return (
     <div>
-      <LinkList data={shopContents} />
+      <FooterLinkList data={shopContents} />
     </div>
   );
 }
