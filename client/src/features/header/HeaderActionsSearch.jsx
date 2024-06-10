@@ -1,24 +1,15 @@
-import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
+import styled from 'styled-components';
 
-import { flexBetween } from '~/styles/reuseStyles';
-import { searchPlaceholders } from '~/dataUI/header';
+import { HeaderSearchInput } from '~/components';
 import { px924 } from '~/styles/GlobalStyles';
-import { SearchInputUI } from '~/ui';
+import { flexBetween, inputSearchSVG } from '~/styles/reuseStyles';
 
 function HeaderActionsSearch() {
-  const { language } = useParams();
-
   return (
     <>
       <StyledHeaderActionsSearch>
-        <SearchInputUI
-          $width="9.2rem"
-          type="text"
-          placeholder={searchPlaceholders[language]}
-        />
-        <AiOutlineSearchUI />
+        <HeaderSearchInput type="menu" />
       </StyledHeaderActionsSearch>
 
       <StyledHeaderActionsSearchMobile>
@@ -31,6 +22,8 @@ function HeaderActionsSearch() {
 // Desktop //////////
 
 const StyledHeaderActionsSearch = styled.div`
+  position: relative;
+  top: 1px;
   background-color: #333;
   padding: 0.4rem 1.4rem;
   border-radius: 1.6rem;
@@ -39,12 +32,10 @@ const StyledHeaderActionsSearch = styled.div`
   @media only screen and (max-width: ${px924}) {
     display: none;
   }
-`;
 
-const AiOutlineSearchUI = styled(AiOutlineSearch)`
-  width: 2rem;
-  height: 2rem;
-  margin-left: 0.4rem;
+  svg {
+    ${inputSearchSVG};
+  }
 `;
 
 // Mobile //////////

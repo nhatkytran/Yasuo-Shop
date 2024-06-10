@@ -1,5 +1,6 @@
 export { default as ButtonMain } from '~/components/ButtonMain';
 export { default as FooterLinkList } from '~/components/FooterLinkList';
+export { default as HeaderSearchInput } from '~/components/HeaderSearchInput';
 export { default as Image } from '~/components/Image';
 export { default as LanguageModal } from '~/components/LanguageModal';
 export { default as Loader } from '~/components/Loader';

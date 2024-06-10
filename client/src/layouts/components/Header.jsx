@@ -1,9 +1,14 @@
 import styled from 'styled-components';
 
-import { HeaderMenuProvider, HeaderSidebarProvider } from '~/contexts';
 import { flexCenter } from '~/styles/reuseStyles';
 // import HeaderSearchMenu from '~/features/header/HeaderSearchMenu';
 import { px924 } from '~/styles/GlobalStyles';
+
+import {
+  HeaderMenuProvider,
+  HeaderSearchProvider,
+  HeaderSidebarProvider,
+} from '~/contexts';
 
 import {
   HeaderMain,
@@ -17,11 +22,15 @@ function Header() {
     <StyledHeader>
       <HeaderMenuProvider>
         <HeaderSidebarProvider>
-          <HeaderMain />
-          <HeaderMenu />
-          {/* <HeaderSearchMenu /> */}
-          <HeaderSidebar />
-          <HeaderSearchSidebar />
+          <HeaderSearchProvider>
+            <HeaderMain />
+
+            <HeaderMenu />
+            {/* <HeaderSearchMenu /> */}
+
+            <HeaderSidebar />
+            <HeaderSearchSidebar />
+          </HeaderSearchProvider>
         </HeaderSidebarProvider>
       </HeaderMenuProvider>
     </StyledHeader>

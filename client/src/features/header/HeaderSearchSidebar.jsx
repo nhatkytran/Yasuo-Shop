@@ -1,11 +1,20 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { SearchAllResultsLink, SearchProduct, SearchTitle } from '~/components';
-import { searchPlaceholders } from '~/dataUI/header';
 import { px924 } from '~/styles/GlobalStyles';
-import { flexBetween } from '~/styles/reuseStyles';
-import { AiOutlineSearchUI, SearchInputUI } from '~/ui';
+
+import {
+  HeaderSearchInput,
+  SearchAllResultsLink,
+  SearchProduct,
+  SearchTitle,
+} from '~/components';
+
+import {
+  customScrollbar,
+  flexBetween,
+  inputSearchSVG,
+} from '~/styles/reuseStyles';
 
 const products = [
   {
@@ -25,13 +34,10 @@ const products = [
 const links = ['Accessories', 'Art', 'Posters', 'League of Legends'];
 
 function HeaderSearchSidebar() {
-  const { language } = useParams();
-
   return (
     <StyledHeaderSearchSidebar>
       <SearchBoxUI>
-        <SearchInputUI type="text" placeholder={searchPlaceholders[language]} />
-        <AiOutlineSearchUI />
+        <HeaderSearchInput type="sidebar" />
       </SearchBoxUI>
 
       <SearchProductsUI>
@@ -69,21 +75,10 @@ const StyledHeaderSearchSidebar = styled.div`
   padding: 3.2rem 2rem;
   box-shadow: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
   overflow-y: scroll;
+  ${customScrollbar};
 
   @media only screen and (max-width: ${px924}) {
     display: block;
-  }
-
-  &::-webkit-scrollbar {
-    width: 0.6rem;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: var(--color-neutral-400);
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--color-neutral-500);
-    box-shadow: 0 3px 13px 1px rgba(0, 0, 0, 0.12);
-    -webkit-box-shadow: 0 3px 13px 1px rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -93,6 +88,10 @@ const SearchBoxUI = styled.div`
   padding: 0.5rem 1.4rem;
   border-radius: 1.6rem;
   ${flexBetween};
+
+  svg {
+    ${inputSearchSVG};
+  }
 `;
 
 const SearchProductsUI = styled.div`

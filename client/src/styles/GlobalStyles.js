@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { customScrollbar } from './reuseStyles';
 
 export const px1024 = '64em';
 export const px924 = '57.75em';
@@ -152,20 +153,10 @@ const GlobalStyles = createGlobalStyle`
     line-height: 1.5;
     transition: color 0.3s, background-color 0.3s;
 
+    ${customScrollbar};
+    
     &::-webkit-scrollbar {
       display: none;
-    }
-
-    &::-webkit-scrollbar {
-      width: 0.6rem;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: var(--color-neutral-400);
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--color-neutral-500);
-      box-shadow: 0 3px 13px 1px rgba(0, 0, 0, 0.12);
-      -webkit-box-shadow: 0 3px 13px 1px rgba(0, 0, 0, 0.12);
     }
   }
 
