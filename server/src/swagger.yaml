@@ -1530,7 +1530,9 @@ paths:
         - in: query
           name: additions
           description: |
-            Advanced filtering, sorting, projecting, pagination.
+            Advanced searching (search by name of a product), filtering, sorting, projecting, pagination.
+
+            Searching: { "search": "aa" }
 
             Filtering: { "name": "Jimei Palace Aatrox 1/6 Scale Statue" }
 

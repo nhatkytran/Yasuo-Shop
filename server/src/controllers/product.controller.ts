@@ -63,7 +63,19 @@ export const getAllProducts = catchAsync(
 
     const language: string = res.locals.language;
 
-    const products = await findAllProducts({ language, reqQuery: req.query });
+    let findOptions: object = {};
+
+    if (req.query.search) {
+      const regex = new RegExp(req.query.search as string, 'i');
+
+      findOptions = { name: { $regex: regex } };
+    }
+
+    const products = await findAllProducts({
+      language,
+      reqQuery: req.query,
+      findOptions,
+    });
 
     sendSuccess(res, { language, numResults: products.length, products });
   }

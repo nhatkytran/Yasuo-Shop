@@ -1,4 +1,4 @@
-import { FilterQuery, QueryOptions, Types, UpdateQuery } from 'mongoose';
+import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 
 import { UserDocument } from '../models/users/schemaDefs';
 import User from '../models/users/user.model';
@@ -17,7 +17,7 @@ export type FindAllEntities<T> = ({
 }: {
   language?: string;
   reqQuery?: FilterQuery<T>;
-  findOptions?: { [key: string]: Types.ObjectId };
+  findOptions?: { [key: string]: any };
 }) => Promise<T[]>;
 
 interface FindEntityByIDOptions extends QueryOptions {
